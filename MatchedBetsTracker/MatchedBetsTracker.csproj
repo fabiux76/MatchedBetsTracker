@@ -209,6 +209,10 @@
     <Compile Include="Migrations\201808131043034_AddBrokerAccount.Designer.cs">
       <DependentUpon>201808131043034_AddBrokerAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808131058450_AddBrokerAccount1.cs" />
+    <Compile Include="Migrations\201808131058450_AddBrokerAccount1.Designer.cs">
+      <DependentUpon>201808131058450_AddBrokerAccount1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BrokerAccount.cs" />
@@ -297,6 +301,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808131043034_AddBrokerAccount.resx">
       <DependentUpon>201808131043034_AddBrokerAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131058450_AddBrokerAccount1.resx">
+      <DependentUpon>201808131058450_AddBrokerAccount1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
