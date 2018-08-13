@@ -233,6 +233,10 @@
     <Compile Include="Migrations\201808131325084_ReferenceBetsInTransactions.Designer.cs">
       <DependentUpon>201808131325084_ReferenceBetsInTransactions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808131327345_PopulateTransactionTypes.cs" />
+    <Compile Include="Migrations\201808131327345_PopulateTransactionTypes.Designer.cs">
+      <DependentUpon>201808131327345_PopulateTransactionTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -343,6 +347,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808131325084_ReferenceBetsInTransactions.resx">
       <DependentUpon>201808131325084_ReferenceBetsInTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131327345_PopulateTransactionTypes.resx">
+      <DependentUpon>201808131327345_PopulateTransactionTypes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
