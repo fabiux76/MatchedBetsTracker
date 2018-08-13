@@ -18,6 +18,7 @@ namespace MatchedBetsTracker.Models
         public double BetAmount { get; set; }
         public double Responsability { get; set; }
         public BetStatus Status { get; set; }
+        public byte BetStatusId { get; set; }
         public double ProfitLoss { get; set; }
         public int MatchedBetId { get; set; }
     }

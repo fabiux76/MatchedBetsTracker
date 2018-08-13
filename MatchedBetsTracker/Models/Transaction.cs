@@ -15,5 +15,7 @@ namespace MatchedBetsTracker.Models
         public bool Validated { get; set; }
         public BrokerAccount BrokerAccount { get; set; }
         public int BrokerAccountId { get; set; }
+        public Bet Bet { get; set; }
+        public int BetId { get; set; }
     }
 }
