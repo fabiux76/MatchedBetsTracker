@@ -21,6 +21,7 @@ namespace MatchedBetsTracker.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<BrokerAccount> BrokerAccounts { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
