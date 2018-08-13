@@ -225,8 +225,14 @@
     <Compile Include="Migrations\201808131309170_AddRefToBrokerAccountInTransactions.Designer.cs">
       <DependentUpon>201808131309170_AddRefToBrokerAccountInTransactions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808131319305_AddBets.cs" />
+    <Compile Include="Migrations\201808131319305_AddBets.Designer.cs">
+      <DependentUpon>201808131319305_AddBets.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Bet.cs" />
+    <Compile Include="Models\BetStatus.cs" />
     <Compile Include="Models\BrokerAccount.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -327,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808131309170_AddRefToBrokerAccountInTransactions.resx">
       <DependentUpon>201808131309170_AddRefToBrokerAccountInTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131319305_AddBets.resx">
+      <DependentUpon>201808131319305_AddBets.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
