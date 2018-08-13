@@ -217,6 +217,10 @@
     <Compile Include="Migrations\201808131305277_AddTransactions.Designer.cs">
       <DependentUpon>201808131305277_AddTransactions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808131307000_FixTransactionAttribute.cs" />
+    <Compile Include="Migrations\201808131307000_FixTransactionAttribute.Designer.cs">
+      <DependentUpon>201808131307000_FixTransactionAttribute.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BrokerAccount.cs" />
@@ -313,6 +317,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808131305277_AddTransactions.resx">
       <DependentUpon>201808131305277_AddTransactions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131307000_FixTransactionAttribute.resx">
+      <DependentUpon>201808131307000_FixTransactionAttribute.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

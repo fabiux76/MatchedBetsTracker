@@ -10,7 +10,7 @@ namespace MatchedBetsTracker.Models
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public TransactionType TransactionType { get; set; }
-        public double Amoount { get; set; }
+        public double Amount { get; set; }
         public bool Validated { get; set; }
     }
 }
