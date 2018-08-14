@@ -6,9 +6,18 @@
 
 <h2>Broker Accounts</h2>
 
-<ul>
-    @foreach (var brokerAccount in Model)
-    {
-        <li>@brokerAccount.Name</li>
-    }
-</ul>
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Broker Account</th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var brokerAccount in Model)
+        {
+            <tr>
+                <td>@brokerAccount.Name</td> 
+            </tr>
+        }
+    </tbody>
+</table>
