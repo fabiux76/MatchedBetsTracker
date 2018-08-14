@@ -10,13 +10,15 @@
     <thead>
     <tr>
         <th>Broker Account</th>
+        <th>Additional Column</th>
     </tr>
     </thead>
     <tbody>
         @foreach (var brokerAccount in Model)
         {
             <tr>
-                <td>@brokerAccount.Name</td> 
+                <td>@Html.ActionLink(brokerAccount.Name, "Details", "BrokerAccount", new {Id = brokerAccount.Id}, null)</td> 
+                <td>Available</td>
             </tr>
         }
     </tbody>

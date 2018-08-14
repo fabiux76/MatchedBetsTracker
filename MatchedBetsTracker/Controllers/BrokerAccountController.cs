@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MatchedBetsTracker.Models;
+using MatchedBetsTracker.ViewModels;
 
 namespace MatchedBetsTracker.Controllers
 {
@@ -27,6 +28,18 @@ namespace MatchedBetsTracker.Controllers
             var brokerAccounts = _context.BrokerAccounts;
 
             return View(brokerAccounts);
+        }
+
+        public ActionResult Details(int id)
+        {
+            var brokerAccount = _context.BrokerAccounts.SingleOrDefault(account => account.Id == id);
+
+            if (brokerAccount == null) return HttpNotFound();            
+
+            return View(new BrokerAccountDetailsViewModel
+            {
+                BrokerAccount = brokerAccount
+            });
         }
     }
 }
