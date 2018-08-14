@@ -45,5 +45,10 @@ namespace MatchedBetsTracker.Controllers
                 Transactions = transactions
             });
         }
+
+        public ActionResult New()
+        {
+            return View();
+        }
     }
 }
