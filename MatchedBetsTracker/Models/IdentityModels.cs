@@ -23,6 +23,7 @@ namespace MatchedBetsTracker.Models
         public DbSet<BrokerAccount> BrokerAccounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Bet> Bets { get; set; }
+        public DbSet<MatchedBet> MatchedBets { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

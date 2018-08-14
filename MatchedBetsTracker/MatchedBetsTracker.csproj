@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201808131344187_PopulateTransactionTypesReally.Designer.cs">
       <DependentUpon>201808131344187_PopulateTransactionTypesReally.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808141100119_AddMatchedBets.cs" />
+    <Compile Include="Migrations\201808141100119_AddMatchedBets.Designer.cs">
+      <DependentUpon>201808141100119_AddMatchedBets.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -248,6 +252,7 @@
     <Compile Include="Models\BrokerAccount.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MatchedBet.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\TransactionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -357,6 +362,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808131344187_PopulateTransactionTypesReally.resx">
       <DependentUpon>201808131344187_PopulateTransactionTypesReally.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808141100119_AddMatchedBets.resx">
+      <DependentUpon>201808141100119_AddMatchedBets.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
