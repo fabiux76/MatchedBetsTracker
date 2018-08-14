@@ -25,7 +25,7 @@ namespace MatchedBetsTracker.Controllers
         // GET: BrokerAccount
         public ActionResult Index()
         {
-            var brokerAccounts = _context.BrokerAccounts;
+            var brokerAccounts = _context.BrokerAccounts.ToList();
 
             return View(brokerAccounts);
         }
@@ -34,11 +34,14 @@ namespace MatchedBetsTracker.Controllers
         {
             var brokerAccount = _context.BrokerAccounts.SingleOrDefault(account => account.Id == id);
 
-            if (brokerAccount == null) return HttpNotFound();            
+            if (brokerAccount == null) return HttpNotFound();
+
+            var transactions = _context.Transactions.Where(t => t.BrokerAccountId == id).ToList();
 
             return View(new BrokerAccountDetailsViewModel
             {
-                BrokerAccount = brokerAccount
+                BrokerAccount = brokerAccount,
+                Transactions = transactions
             });
         }
     }
