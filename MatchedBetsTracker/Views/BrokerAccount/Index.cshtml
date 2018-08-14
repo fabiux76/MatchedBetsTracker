@@ -1,0 +1,14 @@
+@model System.Data.Entity.DbSet<MatchedBetsTracker.Models.BrokerAccount>
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h2>Broker Accounts</h2>
+
+<ul>
+    @foreach (var brokerAccount in Model)
+    {
+        <li>@brokerAccount.Name</li>
+    }
+</ul>
