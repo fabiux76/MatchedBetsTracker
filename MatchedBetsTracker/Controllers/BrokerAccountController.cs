@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
+using System.Data.Entity;
 
 namespace MatchedBetsTracker.Controllers
 {
@@ -36,7 +37,7 @@ namespace MatchedBetsTracker.Controllers
 
             if (brokerAccount == null) return HttpNotFound();
 
-            var transactions = _context.Transactions.Where(t => t.BrokerAccountId == id).ToList();
+            var transactions = _context.Transactions.Where(t => t.BrokerAccountId == id).Include(t => t.TransactionType).ToList();
 
             return View(new BrokerAccountDetailsViewModel
             {
