@@ -246,6 +246,10 @@
     <Compile Include="Migrations\201808141100119_AddMatchedBets.Designer.cs">
       <DependentUpon>201808141100119_AddMatchedBets.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808141614323_SetBetIdAsOptional.cs" />
+    <Compile Include="Migrations\201808141614323_SetBetIdAsOptional.Designer.cs">
+      <DependentUpon>201808141614323_SetBetIdAsOptional.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -369,6 +373,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808141100119_AddMatchedBets.resx">
       <DependentUpon>201808141100119_AddMatchedBets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808141614323_SetBetIdAsOptional.resx">
+      <DependentUpon>201808141614323_SetBetIdAsOptional.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
