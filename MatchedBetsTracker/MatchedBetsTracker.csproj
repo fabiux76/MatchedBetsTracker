@@ -250,6 +250,14 @@
     <Compile Include="Migrations\201808141614323_SetBetIdAsOptional.Designer.cs">
       <DependentUpon>201808141614323_SetBetIdAsOptional.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808141931544_RemoveBetReferenceInTransaction.cs" />
+    <Compile Include="Migrations\201808141931544_RemoveBetReferenceInTransaction.Designer.cs">
+      <DependentUpon>201808141931544_RemoveBetReferenceInTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808141932598_RestoreBetReferenceInTransaction.cs" />
+    <Compile Include="Migrations\201808141932598_RestoreBetReferenceInTransaction.Designer.cs">
+      <DependentUpon>201808141932598_RestoreBetReferenceInTransaction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -376,6 +384,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808141614323_SetBetIdAsOptional.resx">
       <DependentUpon>201808141614323_SetBetIdAsOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808141931544_RemoveBetReferenceInTransaction.resx">
+      <DependentUpon>201808141931544_RemoveBetReferenceInTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808141932598_RestoreBetReferenceInTransaction.resx">
+      <DependentUpon>201808141932598_RestoreBetReferenceInTransaction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
