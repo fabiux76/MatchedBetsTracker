@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using MatchedBetsTracker.ViewModels;
 
 namespace MatchedBetsTracker.Controllers
 {
@@ -31,6 +32,17 @@ namespace MatchedBetsTracker.Controllers
                                     .ToList();
 
             return View(transactions);
+        }
+
+        public ActionResult New()
+        {
+            var viewModel = new NewTransactionViewModel
+            {
+                TransactionTypes = _context.TransactionTypes.ToList(),
+                BrokerAccounts = _context.BrokerAccounts.ToList(),
+            };
+
+            return View(viewModel);
         }
     }
 }

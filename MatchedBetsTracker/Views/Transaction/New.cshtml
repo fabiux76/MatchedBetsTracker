@@ -1,0 +1,37 @@
+﻿@model MatchedBetsTracker.ViewModels.NewTransactionViewModel
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>New Transaction</h2>
+
+@using (Html.BeginForm("Create", "Transaction"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Transaction.BrokerAccountId)
+        @Html.DropDownListFor(m => m.Transaction.BrokerAccountId, new SelectList(Model.BrokerAccounts, "Id", "Name"), "Select Brocker", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Transaction.Date)
+        @Html.TextAreaFor(m => m.Transaction.Date, new { @class = "form-control" })
+    </div>
+   
+    <div class="form-group">
+        @Html.LabelFor(m => m.Transaction.TransactionTypeId)
+        @Html.DropDownListFor(m => m.Transaction.TransactionTypeId, new SelectList(Model.TransactionTypes, "Id", "TransactionDescription"), "Select Transaction Type", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Transaction.Amount)
+        @Html.TextAreaFor(m => m.Transaction.Amount, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.Transaction.Validated, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.Transaction.Validated, new { @class = "form-check-label" })
+    </div>
+}
+
+    MANCA ASSOCIAZIONE ALLA BET!
