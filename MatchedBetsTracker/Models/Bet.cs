@@ -22,6 +22,8 @@ namespace MatchedBetsTracker.Models
         public double ProfitLoss { get; set; }
         public MatchedBet MatchedBet { get; set; }
         public int MatchedBetId { get; set; }
+        public BrokerAccount BrokerAccount { get; set; }
+        public int BrokerAccountId { get; set; }
         
     }
 }
