@@ -25,6 +25,7 @@
             <th>Status</th>
             <th>Profit\Loss</th>
             <th>Validated</th>
+            <th>MatchedBet</th>
         </tr>
     </thead>
     <tbody>
@@ -44,6 +45,12 @@
                 <td>@bet.Status.Description</td>
                 <td>@bet.ProfitLoss</td>
                 <td>@bet.Validated</td>
+                <td>
+                    @if (bet.MatchedBetId != null)
+                    {
+                        @Html.ActionLink(bet.MatchedBetId.ToString(), "Edit", "MatchedBet", new { Id = bet.MatchedBetId }, null);
+                    }
+                </td>
             </tr>
         }
     </tbody>

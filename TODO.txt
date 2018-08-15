@@ -1,0 +1,17 @@
+1) In BrokerAccount.Index Mettere anche il calcolo del saldo contabile\disponibile (in altre due colonne)
+
+2) In BrokerAccount model aggiungere la colonna "Note" da fare vedere nella tabella ed editabile
+
+3) In BrokerAccount.Details aggiungere la tabella delle Scommesse
+
+4) In BrokerAccount.Details delle transaction, aggiungere la colonna con il credito
+
+5) In BrokerAccount.Details aggiungere le info su credito
+
+6) In MatchedBets mostrare la lista delle matched bet aperte
+
+7) Fare una nuova vista per una matchedBet ccon due pulsanti che mandano a due nuove action:
+Close (con la possibilità di scegliere da un combobox la soluzione (puntata o bancata vincente)
+Delete
+Oltre a questi due pulsanti ci deve essere la lista delle scommesse e delle transazioni collegate a questa matched bet
+Sarebbe il caso di fare delle partial view!?!

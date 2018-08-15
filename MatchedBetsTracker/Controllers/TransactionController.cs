@@ -29,6 +29,7 @@ namespace MatchedBetsTracker.Controllers
             var transactions = _context.Transactions
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.BrokerAccount)
+                                    .Include(t => t.Bet)
                                     .ToList();
 
             return View(transactions);
@@ -79,6 +80,7 @@ namespace MatchedBetsTracker.Controllers
             var transaction = _context.Transactions
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.BrokerAccount)
+                                    .Include(t => t.Bet)
                                     .SingleOrDefault(t => t.Id == id);
 
             if (transaction == null)

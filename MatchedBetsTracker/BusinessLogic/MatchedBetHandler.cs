@@ -9,6 +9,8 @@ namespace MatchedBetsTracker.BusinessLogic
 {
     public class MatchedBetHandler
     {
+        public static double layBrokerNetGain = 0.95;
+
         public static MatchedBet CreateMatchedBet(SimpleMatchedBetFormViewModel simpleMatchedBet)
         {
             return new MatchedBet
@@ -16,7 +18,6 @@ namespace MatchedBetsTracker.BusinessLogic
                 EventDescription = simpleMatchedBet.EventDescription
             };
         }
-
 
         public static Bet CreateBackBet(SimpleMatchedBetFormViewModel simpleMatchedBet, MatchedBet matchedBet)
         {
@@ -55,6 +56,62 @@ namespace MatchedBetsTracker.BusinessLogic
             };
         }
 
+        public static Transaction CreateCloseBetTransaction(Bet bet)
+        {
+            if (bet.IsWon())
+            {
+                return new Transaction
+                {
+                    Date = bet.EventDate,
+                    Amount = bet.ProfitLoss,
+                    Bet = bet,
+                    BrokerAccountId = bet.BrokerAccountId,
+                    TransactionTypeId = (byte)Constants.TransactionType.CreditBet,
+                    Validated = false
+                };
+            }
+            return null;
+        }
+
+        public static void RecomputeBetResponsabilityAndProfit(Bet bet)
+        {
+            if (bet.IsLay)
+            {
+                bet.Responsability = ComputeLayResponsability(bet.Quote, bet.BetAmount);
+            }
+            else
+            {
+                bet.Responsability = bet.BetAmount;
+            }
+
+            if (bet.IsWon())
+            {
+                if (bet.IsLay)
+                {
+                    bet.ProfitLoss = bet.BetAmount;
+                }
+                else
+                {
+                    bet.ProfitLoss = bet.Responsability * layBrokerNetGain;
+                }
+            }
+            else if (bet.IsLost())
+            {
+                if (bet.IsLay)
+                {
+                    bet.ProfitLoss = -bet.Responsability;
+                }
+                else
+                {
+                    bet.ProfitLoss = -bet.BetAmount;
+                }
+            }
+            else
+            {
+                bet.ProfitLoss = 0;
+            }
+        }
+
         public static double ComputeLayResponsability(double layQuote, double layAmount)
         {
             return (layQuote - 1) * layAmount;
@@ -64,11 +121,11 @@ namespace MatchedBetsTracker.BusinessLogic
         {
             if (bet.IsLay)
             {
-                return bet.Responsability;
+                return -bet.Responsability;
             }
             else
             {
-                return bet.BetAmount;
+                return -bet.BetAmount;
             }
         }
     }
@@ -87,6 +144,26 @@ namespace MatchedBetsTracker.BusinessLogic
             bet.Validated = false;
 
             return bet;
+        }
+
+        public static bool IsWon(this Bet bet)
+        {
+            return bet.BetStatusId == (byte)Constants.BetStatus.Won;
+        }
+
+        public static bool IsLost(this Bet bet)
+        {
+            return bet.BetStatusId == (byte)Constants.BetStatus.Loss;
+        }
+
+        public static bool IsOpen(this Bet bet)
+        {
+            return bet.BetStatusId == (byte)Constants.BetStatus.Open;
+        }
+
+        static Constants.BetStatus GetStatus(this Bet bet)
+        {
+            return (Constants.BetStatus)bet.BetStatusId;
         }
     }
     
