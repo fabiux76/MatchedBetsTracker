@@ -48,16 +48,40 @@ namespace MatchedBetsTracker.Controllers
 
         public ActionResult New()
         {
-            return View();
+            return View("BrokerAccountForm");
         }
 
         [HttpPost]
-        public ActionResult Create(BrokerAccount brokerAccount)
+        public ActionResult Save(BrokerAccount brokerAccount)
         {
-            _context.BrokerAccounts.Add(brokerAccount);
+            if (brokerAccount.Id == 0)
+            {
+                _context.BrokerAccounts.Add(brokerAccount);
+            }
+            else
+            {
+                var brokerAccountInDB = _context.BrokerAccounts.Single(b => b.Id == brokerAccount.Id);
+
+                //Da sostituire con AutoMapper
+                brokerAccountInDB.Id = brokerAccount.Id;
+                brokerAccountInDB.IntialAmount = brokerAccount.Id;
+                brokerAccountInDB.Name = brokerAccount.Name;
+                brokerAccountInDB.Password = brokerAccount.Password;
+                brokerAccountInDB.UserName = brokerAccount.UserName;
+            }
             _context.SaveChanges();
 
             return RedirectToAction("Index", "BrokerAccount");
+        }
+
+        public ActionResult Edit(int id)
+        {
+            var brokerAccount = _context.BrokerAccounts.SingleOrDefault(b => b.Id == id);
+
+            if (brokerAccount == null)
+                return HttpNotFound();
+
+            return View("BrokerAccountForm", brokerAccount);
         }
     }
 }

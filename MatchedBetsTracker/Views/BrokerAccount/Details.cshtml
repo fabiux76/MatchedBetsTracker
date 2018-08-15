@@ -1,6 +1,6 @@
 @model MatchedBetsTracker.ViewModels.BrokerAccountDetailsViewModel
     
-<h1>@Model.BrokerAccount.Name</h1>
+<h1>@Html.ActionLink(Model.BrokerAccount.Name, "Edit", "BrokerAccount", new { Id = Model.BrokerAccount.Id }, null)</h1>
 
 <h2>Transactions</h2>
 <table class="table table-bordered table-hover">
