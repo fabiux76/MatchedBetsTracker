@@ -195,11 +195,14 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="BusinessLogic\Constants.cs" />
+    <Compile Include="BusinessLogic\MatchedBetHandler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BetController.cs" />
     <Compile Include="Controllers\BrokerAccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MatchedBetController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -294,6 +297,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BetFormViewModel.cs" />
     <Compile Include="ViewModels\BrokerAccountDetailsViewModel.cs" />
+    <Compile Include="ViewModels\SimpleMatchedBetFormViewModel.cs" />
     <Compile Include="ViewModels\TransactionFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -365,6 +369,8 @@
     <Content Include="Views\Transaction\TransactionForm.cshtml" />
     <Content Include="Views\Bet\Index.cshtml" />
     <Content Include="Views\Bet\BetForm.cshtml" />
+    <Content Include="Views\MatchedBet\Index.cshtml" />
+    <Content Include="Views\MatchedBet\SimpleMatchedBetForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

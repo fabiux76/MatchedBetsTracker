@@ -1,0 +1,64 @@
+﻿@model MatchedBetsTracker.ViewModels.SimpleMatchedBetFormViewModel
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>New Simple Matched Bet</h2>
+
+@using (Html.BeginForm("AddSimpleMatchedBet", "MatchedBet"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.BetDate)
+        @Html.TextBoxFor(m => m.BetDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.EventDescription)
+        @Html.TextBoxFor(m => m.EventDescription, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BetDescription)
+        @Html.TextBoxFor(m => m.BetDescription, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.EventDate)
+        @Html.TextBoxFor(m => m.EventDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BackBrokerAccountId)
+        @Html.DropDownListFor(m => m.BackBrokerAccountId, new SelectList(Model.BrokerAccounts, "Id", "Name"), "Select Back Broker (Puntata)", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BackQuote)
+        @Html.TextBoxFor(m => m.BackQuote, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BackAmount)
+        @Html.TextBoxFor(m => m.BackAmount, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.LayBrokerAccountId)
+        @Html.DropDownListFor(m => m.LayBrokerAccountId, new SelectList(Model.BrokerAccounts, "Id", "Name"), "Select Lay Broker (Bancata)", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.LayQuote)
+        @Html.TextBoxFor(m => m.LayQuote, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.LayAmount)
+        @Html.TextBoxFor(m => m.LayAmount, new { @class = "form-control" })
+    </div>
+
+    @Html.HiddenFor(m => m.Id)
+
+    <button type="submit" class="btn btn-primary">Save</button>
+}
