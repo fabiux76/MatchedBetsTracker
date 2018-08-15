@@ -50,5 +50,14 @@ namespace MatchedBetsTracker.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult Create(BrokerAccount brokerAccount)
+        {
+            _context.BrokerAccounts.Add(brokerAccount);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "BrokerAccount");
+        }
     }
 }

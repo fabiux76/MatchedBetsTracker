@@ -44,5 +44,13 @@ namespace MatchedBetsTracker.Controllers
 
             return View(viewModel);
         }
+
+        public ActionResult Create(Transaction newTransaction)
+        {
+            _context.Transactions.Add(newTransaction);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Transaction");
+        }
     }
 }
