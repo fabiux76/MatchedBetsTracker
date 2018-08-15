@@ -62,7 +62,6 @@ namespace MatchedBetsTracker.Controllers
 
                 //Da sostituire con AutoMapper
                 transactionInDb.Amount = transaction.Amount;
-                transactionInDb.BetId = transaction.BetId;
                 transactionInDb.BrokerAccountId = transaction.BrokerAccountId;
                 transactionInDb.Date = transaction.Date;
                 transactionInDb.Id = transaction.Id;

@@ -40,6 +40,7 @@ namespace MatchedBetsTracker.Controllers
             var transactions = _context.Transactions.Where(t => t.BrokerAccountId == id)
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.Bet)
+                                    .Include(t => t.BrokerAccount)
                                     .ToList();
 
             return View(new BrokerAccountDetailsViewModel

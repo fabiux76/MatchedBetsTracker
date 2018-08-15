@@ -377,6 +377,8 @@
     <Content Include="Views\MatchedBet\Index.cshtml" />
     <Content Include="Views\MatchedBet\SimpleMatchedBetForm.cshtml" />
     <Content Include="Views\MatchedBet\Details.cshtml" />
+    <Content Include="Views\Shared\_Transactions.cshtml" />
+    <Content Include="Views\Shared\_Bets.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

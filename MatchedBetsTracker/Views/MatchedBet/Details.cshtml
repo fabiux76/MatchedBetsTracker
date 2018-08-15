@@ -10,13 +10,17 @@
 </p>
 
 <p>
-    @Html.ActionLink("Back Won (puntata)", "Close", "MatchedBet", new { status = MatchedBetsTracker.Models.MatchedBetStatus.BackWon}, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back Won (puntata)", "Close", "MatchedBet", new { id = Model.Id, status = MatchedBetsTracker.Models.MatchedBetStatus.BackWon}, new { @class = "btn btn-primary" })
 </p>
 
 <p>
-    @Html.ActionLink("Lay Won (bancata)", "Close", "MatchedBet", new { status = MatchedBetsTracker.Models.MatchedBetStatus.LayWon}, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Lay Won (bancata)", "Close", "MatchedBet", new { id = Model.Id, status = MatchedBetsTracker.Models.MatchedBetStatus.LayWon}, new { @class = "btn btn-primary" })
 </p>
 
-TODO: Bets List
+<h3>Bets</h3>
+@Html.Partial("_Bets", Model.Bets)
 
-TODO: Transactions List
+<h3>Transactions</h3>
+@Html.Partial("_Transactions", Model.Bets.SelectMany(bet => bet.Transactions))
+
+

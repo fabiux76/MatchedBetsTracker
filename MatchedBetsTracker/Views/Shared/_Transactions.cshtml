@@ -1,0 +1,34 @@
+﻿@model IEnumerable<MatchedBetsTracker.Models.Transaction>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Broker</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Bet</th>
+            <th>Validated</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(transaction.Id.ToString(), "Edit", "Transaction", new { Id = transaction.Id }, null)</td>
+                <td>@Html.ActionLink(transaction.BrokerAccount.Name, "Details", "BrokerAccount", new { Id = transaction.BrokerAccount.Id }, null)</td>
+                <td>@transaction.Date</td>
+                <td>@transaction.TransactionType.TransactionDescription</td>
+                <td>@transaction.Amount</td>
+                <td>
+                    @if (transaction.BetId != null)
+                {
+                        @Html.ActionLink(transaction.Bet.EventDescription, "Edit", "Bet", new { Id = transaction.Bet.Id }, null);
+                }
+                </td>
+                <td>@transaction.Validated</td>
+            </tr>
+        }
+    </tbody>
+</table>

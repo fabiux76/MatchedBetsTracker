@@ -162,9 +162,15 @@ namespace MatchedBetsTracker.BusinessLogic
             return bet.BetStatusId == (byte)Constants.BetStatus.Open;
         }
 
-        static Constants.BetStatus GetStatus(this Bet bet)
+        public static Constants.BetStatus GetStatus(this Bet bet)
         {
             return (Constants.BetStatus)bet.BetStatusId;
+        }
+
+        public static bool IsWinning(this Bet bet, MatchedBetStatus status)
+        {
+            return (bet.IsLay && status == MatchedBetStatus.LayWon) ||
+                   (!bet.IsLay && status == MatchedBetStatus.BackWon);
         }
     }
     

@@ -106,10 +106,44 @@ namespace MatchedBetsTracker.Controllers
             return View("Index", matchedBets);
         }
 
-        public ActionResult Close(int id, int status)
+        public ActionResult Close(int id, MatchedBetStatus status)
         {
-            return View();
+            var matchedBet = _context.MatchedBets
+                .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.Status))
+                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Single(mb => mb.Id == id);
+
+            //Devo cambiare il stato del MatchedBet
+            matchedBet.Status = status;
+
+            //Devo cambiare lo stato delle bet e calcolare il profitto\perdita
+            var winningBets = matchedBet.Bets.Where(bet => bet.IsWinning(status)).ToList();
+            winningBets.ForEach(bet =>
+            {
+                bet.BetStatusId = (byte)Constants.BetStatus.Won;                
+            });
+
+            var losingBets = matchedBet.Bets.Where(bet => bet.IsWinning(status)).ToList();
+            winningBets.ForEach(bet =>
+            {
+                bet.BetStatusId = (byte)Constants.BetStatus.Loss;
+            });
+
+            matchedBet.Bets.ForEach(bet => MatchedBetHandler.RecomputeBetResponsabilityAndProfit(bet));            
+
+            //Devo aggiungere la nuova transazione di CreditBet sulla scommessa vincente
+            var winningTransactions = winningBets.Select(bet => MatchedBetHandler.CreateCloseBetTransaction(bet)).ToList();
+
+            _context.Transactions.AddRange(winningTransactions);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", matchedBet);
         }
+
+        
 
         public ActionResult Details(int id)
         {
@@ -145,6 +179,12 @@ namespace MatchedBetsTracker.Controllers
             */
 
             return View(matchedBet);
+        }
+
+        //Da fare mettendo a afattor comune il codice sopra
+        private MatchedBet LoadMatchedBet(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

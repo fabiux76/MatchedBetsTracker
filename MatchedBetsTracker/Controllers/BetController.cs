@@ -66,7 +66,6 @@ namespace MatchedBetsTracker.Controllers
                 betInDb.BetDate = bet.BetDate;
                 betInDb.BetDescription = bet.BetDescription;
                 betInDb.BetStatusId = bet.BetStatusId;
-                betInDb.BrokerAccountId = bet.BrokerAccountId;
                 betInDb.EventDate = bet.EventDate;
                 betInDb.EventDescription = bet.EventDescription;
                 betInDb.Id = bet.Id;
