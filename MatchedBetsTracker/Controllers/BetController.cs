@@ -29,6 +29,7 @@ namespace MatchedBetsTracker.Controllers
         {
             var bets = _context.Bets
                                     .Include(b => b.Status)
+                                    .Include(b => b.BrokerAccount)
                                     .ToList();
 
             return View(bets);

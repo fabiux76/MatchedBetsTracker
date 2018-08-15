@@ -1,8 +1,55 @@
-﻿
+﻿@model IEnumerable<MatchedBetsTracker.Models.Bet>
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Bets</h2>
 
-Work in progress...
+<p>
+    @Html.ActionLink("New Bet", "New", "Bet", null, new { @class = "btn btn-primary" })
+</p>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Broker</th>
+            <th>Bet Date</th>
+            <th>Event Description</th>
+            <th>Bet Description</th>
+            <th>Is Lay</th>
+            <th>Event Date</th>
+            <th>Quote</th>
+            <th>Bet Amount</th>
+            <th>Responsability</th>
+            <th>Status</th>
+            <th>Profit\Loss</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Validated</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bet in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(bet.Id.ToString(), "Edit", "Bet", new { Id = bet.Id }, null)</td>
+                <td>@bet.BrokerAccount.Name</td>
+                <td>@bet.BetDate</td>
+                <td>@bet.EventDescription</td>
+                <td>@bet.BetDescription</td>
+                <td>@bet.IsLay</td>
+                <td>@bet.EventDate</td>
+                <td>@bet.Quote</td>
+                <td>@bet.BetAmount</td>
+                <td>@bet.Responsability</td>
+                <td>@bet.Status.Description</td>
+                <td>@bet.ProfitLoss</td>
+                <td>@bet.Validated</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+Manca riferimento a MatchedBet
