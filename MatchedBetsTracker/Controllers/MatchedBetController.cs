@@ -126,13 +126,30 @@ namespace MatchedBetsTracker.Controllers
                 bet.BetStatusId = (byte)Constants.BetStatus.Won;                
             });
 
-            var losingBets = matchedBet.Bets.Where(bet => bet.IsWinning(status)).ToList();
-            winningBets.ForEach(bet =>
+            var losingBets = matchedBet.Bets.Where(bet => !bet.IsWinning(status)).ToList();
+            losingBets.ForEach(bet =>
             {
                 bet.BetStatusId = (byte)Constants.BetStatus.Loss;
             });
 
-            matchedBet.Bets.ForEach(bet => MatchedBetHandler.RecomputeBetResponsabilityAndProfit(bet));            
+
+            //TUTTO STO GIRO PERCJHE' NON MI AGGIORNA LO Status se aggiorno il BetStatusId...
+            //Ci dev'ssere per forza un altro modo...
+            //////////////
+            _context.SaveChanges();
+            
+            matchedBet = _context.MatchedBets
+                .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.Status))
+                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Single(mb => mb.Id == id);            
+
+            matchedBet.Bets.ForEach(bet => MatchedBetHandler.RecomputeBetResponsabilityAndProfit(bet));
+
+            winningBets = matchedBet.Bets.Where(bet => bet.IsWinning(status)).ToList();
+            //////////////
 
             //Devo aggiungere la nuova transazione di CreditBet sulla scommessa vincente
             var winningTransactions = winningBets.Select(bet => MatchedBetHandler.CreateCloseBetTransaction(bet)).ToList();

@@ -64,7 +64,7 @@ namespace MatchedBetsTracker.BusinessLogic
                 return new Transaction
                 {
                     Date = bet.EventDate,
-                    Amount = bet.ProfitLoss,
+                    Amount = bet.ProfitLoss - GetOpenBetAmount(bet),
                     Bet = bet,
                     BrokerAccountId = bet.BrokerAccountId,
                     TransactionTypeId = (byte)Constants.TransactionType.CreditBet,
@@ -85,31 +85,35 @@ namespace MatchedBetsTracker.BusinessLogic
                 bet.Responsability = bet.BetAmount;
             }
 
-            if (bet.IsWon())
+            if (bet.IsLay)
             {
-                if (bet.IsLay)
+                if (bet.IsWon())
                 {
-                    bet.ProfitLoss = bet.BetAmount;
+                    bet.ProfitLoss = bet.BetAmount * layBrokerNetGain;
                 }
-                else
-                {
-                    bet.ProfitLoss = bet.Responsability * layBrokerNetGain;
-                }
-            }
-            else if (bet.IsLost())
-            {
-                if (bet.IsLay)
+                else if (bet.IsLost())
                 {
                     bet.ProfitLoss = -bet.Responsability;
                 }
                 else
                 {
-                    bet.ProfitLoss = -bet.BetAmount;
+                    bet.ProfitLoss = 0;
                 }
             }
             else
             {
-                bet.ProfitLoss = 0;
+                if (bet.IsWon())
+                {
+                    bet.ProfitLoss = bet.BetAmount * (bet.Quote - 1);
+                }
+                else if (bet.IsLost())
+                {
+                    bet.ProfitLoss = -bet.BetAmount;
+                }
+                else
+                {
+                    bet.ProfitLoss = 0;
+                }
             }
         }
 
