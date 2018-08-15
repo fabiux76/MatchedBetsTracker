@@ -264,6 +264,18 @@
     <Compile Include="Migrations\201808151237587_AddBrokerReferenceInBets.Designer.cs">
       <DependentUpon>201808151237587_AddBrokerReferenceInBets.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808151252439_MakeMatchedBetReferenceOptional-Step1.cs" />
+    <Compile Include="Migrations\201808151252439_MakeMatchedBetReferenceOptional-Step1.Designer.cs">
+      <DependentUpon>201808151252439_MakeMatchedBetReferenceOptional-Step1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808151254035_MakeMatchedBetReferenceOptional-Step2.cs" />
+    <Compile Include="Migrations\201808151254035_MakeMatchedBetReferenceOptional-Step2.Designer.cs">
+      <DependentUpon>201808151254035_MakeMatchedBetReferenceOptional-Step2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808151256105_SeedBetStatusTable.cs" />
+    <Compile Include="Migrations\201808151256105_SeedBetStatusTable.Designer.cs">
+      <DependentUpon>201808151256105_SeedBetStatusTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -404,6 +416,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808151237587_AddBrokerReferenceInBets.resx">
       <DependentUpon>201808151237587_AddBrokerReferenceInBets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808151252439_MakeMatchedBetReferenceOptional-Step1.resx">
+      <DependentUpon>201808151252439_MakeMatchedBetReferenceOptional-Step1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808151254035_MakeMatchedBetReferenceOptional-Step2.resx">
+      <DependentUpon>201808151254035_MakeMatchedBetReferenceOptional-Step2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808151256105_SeedBetStatusTable.resx">
+      <DependentUpon>201808151256105_SeedBetStatusTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
