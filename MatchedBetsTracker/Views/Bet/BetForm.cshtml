@@ -1,0 +1,76 @@
+﻿@model MatchedBetsTracker.ViewModels.BetFormViewModel
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>New Bet</h2>
+
+@using (Html.BeginForm("Save", "Bet"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.BrokerAccountId)
+        @Html.DropDownListFor(m => m.Bet.BrokerAccountId, new SelectList(Model.BrokerAccounts, "Id", "Name"), "Select Brocker", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.BetDate)
+        @Html.TextBoxFor(m => m.Bet.BetDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.EventDescription)
+        @Html.TextBoxFor(m => m.Bet.EventDescription, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.BetDescription)
+        @Html.TextBoxFor(m => m.Bet.BetDescription, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.Bet.IsLay, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.Bet.IsLay, new { @class = "form-check-label" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.EventDate)
+        @Html.TextBoxFor(m => m.Bet.EventDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.Quote)
+        @Html.TextBoxFor(m => m.Bet.Quote, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.BetAmount)
+        @Html.TextBoxFor(m => m.Bet.BetAmount, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.Responsability)
+        @Html.TextBoxFor(m => m.Bet.Responsability, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.BetStatusId)
+        @Html.DropDownListFor(m => m.Bet.BetStatusId, new SelectList(Model.BetStatuses, "Id", "Description"), "Select Status", new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Bet.ProfitLoss)
+        @Html.TextBoxFor(m => m.Bet.ProfitLoss, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.Bet.Validated, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.Bet.Validated, new { @class = "form-check-label" })
+    </div>
+
+    @Html.HiddenFor(m => m.Bet.Id)
+
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+MANCA ASSOCIAZIONE ALLA MATCHED BET!

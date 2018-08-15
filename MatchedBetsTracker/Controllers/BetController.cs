@@ -34,86 +34,72 @@ namespace MatchedBetsTracker.Controllers
 
             return View(bets);
         }
-
-        /*
-
-        public int Id { get; set; }
-        public string EventDescription { get; set; }
-        public string BetDescription { get; set; }
-        public DateTime BetDate { get; set; }
-        public DateTime EventDate { get; set; }
-        public bool Validated { get; set; }
-        public bool IsLay { get; set; } //Lay = bancare
-        public double Quote { get; set; }
-        public double BetAmount { get; set; }
-        public double Responsability { get; set; }
-        public BetStatus Status { get; set; }
-        public byte BetStatusId { get; set; }
-        public double ProfitLoss { get; set; }
-        public MatchedBet MatchedBet { get; set; }
-        public int MatchedBetId { get; set; }
-        */
-
-            /*
         public ActionResult New()
         {
-            var viewModel = new TransactionFormViewModel
+            var viewModel = new BetFormViewModel
             {
-                TransactionTypes = _context.TransactionTypes.ToList(),
+                BetStatuses = _context.BetStatuses.ToList(),
                 BrokerAccounts = _context.BrokerAccounts.ToList(),
-                Transaction = new Transaction
+                Bet = new Bet
                 {
-                    Date = DateTime.Now
+                    BetDate = DateTime.Now,
+                    EventDate = DateTime.Now
                 }
             };
 
-            return View("TransactionForm", viewModel);
+            return View("BetForm", viewModel);
         }
 
-        public ActionResult Save(Transaction transaction)
+        public ActionResult Save(Bet bet)
         {
-            if (transaction.Id == 0)
+            if (bet.Id == 0)
             {
-                _context.Transactions.Add(transaction);
+                _context.Bets.Add(bet);
             }
             else
             {
-                var transactionInDb = _context.Transactions.Single(t => t.Id == transaction.Id);
+                var betInDb = _context.Bets.Single(t => t.Id == bet.Id);
 
                 //Da sostituire con AutoMapper
-                transactionInDb.Amount = transaction.Amount;
-                transactionInDb.BetId = transaction.BetId;
-                transactionInDb.BrokerAccountId = transaction.BrokerAccountId;
-                transactionInDb.Date = transaction.Date;
-                transactionInDb.Id = transaction.Id;
-                transactionInDb.TransactionTypeId = transaction.TransactionTypeId;
-                transactionInDb.Validated = transaction.Validated;
+                betInDb.BetAmount = bet.BetAmount;
+                betInDb.BetDate = bet.BetDate;
+                betInDb.BetDescription = bet.BetDescription;
+                betInDb.BetStatusId = bet.BetStatusId;
+                betInDb.BrokerAccountId = bet.BrokerAccountId;
+                betInDb.EventDate = bet.EventDate;
+                betInDb.EventDescription = bet.EventDescription;
+                betInDb.Id = bet.Id;
+                betInDb.IsLay = bet.IsLay;
+                betInDb.MatchedBetId = bet.MatchedBetId;
+                betInDb.ProfitLoss = bet.ProfitLoss;
+                betInDb.Quote = bet.Quote;
+                betInDb.Responsability = bet.Responsability;
+                betInDb.Validated = bet.Validated;
             }
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Transaction");
+            return RedirectToAction("Index", "Bet");
         }
 
         public ActionResult Edit(int id)
         {
-            var transaction = _context.Transactions
-                                    .Include(t => t.TransactionType)
-                                    .Include(t => t.BrokerAccount)
+            var bet = _context.Bets
+                                    .Include(b => b.Status)
+                                    .Include(b => b.BrokerAccount)
                                     .SingleOrDefault(t => t.Id == id);
 
-            if (transaction == null)
+            if (bet == null)
                 return HttpNotFound();
 
-            var viewModel = new TransactionFormViewModel
+            var viewModel = new BetFormViewModel
             {
-                TransactionTypes = _context.TransactionTypes.ToList(),
+                BetStatuses = _context.BetStatuses.ToList(),
                 BrokerAccounts = _context.BrokerAccounts.ToList(),
-                Transaction = transaction
+                Bet = bet
             };
 
-            return View("TransactionForm", viewModel);
+            return View("BetForm", viewModel);
         }
-        */
     }
 }
