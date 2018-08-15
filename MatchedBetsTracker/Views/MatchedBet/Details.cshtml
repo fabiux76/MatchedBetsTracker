@@ -1,0 +1,22 @@
+﻿@model MatchedBetsTracker.Models.MatchedBet
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Matched Bet</h2>
+
+<p>
+    @Html.ActionLink("Delete Matched Bet (including bets and transactions)", "Delete", "MatchedBet", new { id = Model.Id }, new { @class = "btn btn-primary" })
+</p>
+
+<p>
+    @Html.ActionLink("Back Won (puntata)", "Close", "MatchedBet", new { status = MatchedBetsTracker.Models.MatchedBetStatus.BackWon}, new { @class = "btn btn-primary" })
+</p>
+
+<p>
+    @Html.ActionLink("Lay Won (bancata)", "Close", "MatchedBet", new { status = MatchedBetsTracker.Models.MatchedBetStatus.LayWon}, new { @class = "btn btn-primary" })
+</p>
+
+TODO: Bets List
+
+TODO: Transactions List

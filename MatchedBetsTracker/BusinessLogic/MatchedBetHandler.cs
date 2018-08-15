@@ -15,7 +15,8 @@ namespace MatchedBetsTracker.BusinessLogic
         {
             return new MatchedBet
             {
-                EventDescription = simpleMatchedBet.EventDescription
+                EventDescription = simpleMatchedBet.EventDescription,
+                Status = MatchedBetStatus.Open
             };
         }
 

@@ -196,6 +196,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="BusinessLogic\Constants.cs" />
+    <Compile Include="BusinessLogic\EnumerableExtensions.cs" />
     <Compile Include="BusinessLogic\MatchedBetHandler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BetController.cs" />
@@ -282,6 +283,10 @@
     <Compile Include="Migrations\201808151306344_ChangeBrokerAccountValidation.cs" />
     <Compile Include="Migrations\201808151306344_ChangeBrokerAccountValidation.Designer.cs">
       <DependentUpon>201808151306344_ChangeBrokerAccountValidation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808151909299_AddMatchedBestStatus.cs" />
+    <Compile Include="Migrations\201808151909299_AddMatchedBestStatus.Designer.cs">
+      <DependentUpon>201808151909299_AddMatchedBestStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -371,6 +376,7 @@
     <Content Include="Views\Bet\BetForm.cshtml" />
     <Content Include="Views\MatchedBet\Index.cshtml" />
     <Content Include="Views\MatchedBet\SimpleMatchedBetForm.cshtml" />
+    <Content Include="Views\MatchedBet\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -440,6 +446,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808151306344_ChangeBrokerAccountValidation.resx">
       <DependentUpon>201808151306344_ChangeBrokerAccountValidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808151909299_AddMatchedBestStatus.resx">
+      <DependentUpon>201808151909299_AddMatchedBestStatus.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

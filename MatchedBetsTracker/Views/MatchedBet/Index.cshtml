@@ -1,12 +1,31 @@
-﻿
+﻿@model IEnumerable<MatchedBetsTracker.Models.MatchedBet>
+
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Matched Bets</h2>
 
 <p>
     @Html.ActionLink("New Simple Matched Bet", "NewSimple", "MatchedBet", null, new { @class = "btn btn-primary" })
 </p>
 
+<h2>Matched Bets</h2>
 
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Event Description</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var matchedBet in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(matchedBet.Id.ToString(), "Details", "MatchedBet", new { Id = matchedBet.Id }, null)</td>
+                <td>@Html.ActionLink(matchedBet.EventDescription.ToString(), "Details", "MatchedBet", new { Id = matchedBet.Id }, null)</td>
+                <td>@matchedBet.Status.ToString()</td>                
+            </tr>
+        }
+    </tbody>
+</table>
