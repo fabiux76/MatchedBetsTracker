@@ -276,6 +276,10 @@
     <Compile Include="Migrations\201808151256105_SeedBetStatusTable.Designer.cs">
       <DependentUpon>201808151256105_SeedBetStatusTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808151306344_ChangeBrokerAccountValidation.cs" />
+    <Compile Include="Migrations\201808151306344_ChangeBrokerAccountValidation.Designer.cs">
+      <DependentUpon>201808151306344_ChangeBrokerAccountValidation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -425,6 +429,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808151256105_SeedBetStatusTable.resx">
       <DependentUpon>201808151256105_SeedBetStatusTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808151306344_ChangeBrokerAccountValidation.resx">
+      <DependentUpon>201808151306344_ChangeBrokerAccountValidation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
