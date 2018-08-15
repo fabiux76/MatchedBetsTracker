@@ -8,6 +8,7 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
+            <th>ID</th>
             <th>Broker</th>
             <th>Date</th>
             <th>Type</th>
@@ -18,7 +19,8 @@
     <tbody>
         @foreach (var transaction in Model)
         {
-            <tr>
+            <tr>        
+                <td>@Html.ActionLink(transaction.Id.ToString(), "Edit", "Transaction", new { Id = transaction.Id }, null)</td>       
                 <td>@transaction.BrokerAccount.Name</td>
                 <td>@transaction.Date</td>
                 <td>@transaction.TransactionType.TransactionDescription</td>

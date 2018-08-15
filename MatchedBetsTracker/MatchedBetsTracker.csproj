@@ -272,7 +272,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BrokerAccountDetailsViewModel.cs" />
-    <Compile Include="ViewModels\NewTransactionViewModel.cs" />
+    <Compile Include="ViewModels\TransactionFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-lumen.css" />
@@ -340,7 +340,7 @@
     <Content Include="Views\BrokerAccount\Details.cshtml" />
     <Content Include="Views\BrokerAccount\New.cshtml" />
     <Content Include="Views\Transaction\Index.cshtml" />
-    <Content Include="Views\Transaction\New.cshtml" />
+    <Content Include="Views\Transaction\TransactionForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

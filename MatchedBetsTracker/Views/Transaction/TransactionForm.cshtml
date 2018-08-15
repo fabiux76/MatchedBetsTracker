@@ -1,4 +1,4 @@
-﻿@model MatchedBetsTracker.ViewModels.NewTransactionViewModel
+﻿@model MatchedBetsTracker.ViewModels.TransactionFormViewModel
 
 @{
     ViewBag.Title = "New";
@@ -6,7 +6,7 @@
 
 <h2>New Transaction</h2>
 
-@using (Html.BeginForm("Create", "Transaction"))
+@using (Html.BeginForm("Save", "Transaction"))
 {
     <div class="form-group">
         @Html.LabelFor(m => m.Transaction.BrokerAccountId)
@@ -15,7 +15,7 @@
 
     <div class="form-group">
         @Html.LabelFor(m => m.Transaction.Date)
-        @Html.TextBoxFor(m => m.Transaction.Date, new { @class = "form-control", type = "date" })
+        @Html.TextBoxFor(m => m.Transaction.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
     </div>
    
     <div class="form-group">
@@ -32,6 +32,8 @@
         @Html.CheckBoxFor(m => m.Transaction.Validated, new { @class = "form-check-input" })
         @Html.LabelFor(m => m.Transaction.Validated, new { @class = "form-check-label" })
     </div>
+
+    @Html.HiddenFor(m => m.Transaction.Id)
 
     <button type="submit" class="btn btn-primary">Save</button>
 }

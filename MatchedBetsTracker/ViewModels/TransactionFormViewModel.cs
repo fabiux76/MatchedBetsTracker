@@ -6,7 +6,7 @@ using System.Web;
 
 namespace MatchedBetsTracker.ViewModels
 {
-    public class NewTransactionViewModel
+    public class TransactionFormViewModel
     {
         public IEnumerable<TransactionType> TransactionTypes { get; set; }
         public IEnumerable<BrokerAccount> BrokerAccounts { get; set; }
