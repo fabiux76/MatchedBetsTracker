@@ -40,14 +40,15 @@ namespace MatchedBetsTracker.Controllers
             {
                 TransactionTypes = _context.TransactionTypes.ToList(),
                 BrokerAccounts = _context.BrokerAccounts.ToList(),
+                Transaction = new Transaction()
             };
 
             return View(viewModel);
         }
 
-        public ActionResult Create(Transaction newTransaction)
+        public ActionResult Create(Transaction transaction)
         {
-            _context.Transactions.Add(newTransaction);
+            _context.Transactions.Add(transaction);
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Transaction");
