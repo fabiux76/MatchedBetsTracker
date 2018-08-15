@@ -40,7 +40,10 @@ namespace MatchedBetsTracker.Controllers
             {
                 TransactionTypes = _context.TransactionTypes.ToList(),
                 BrokerAccounts = _context.BrokerAccounts.ToList(),
-                Transaction = new Transaction()
+                Transaction = new Transaction
+                {
+                    Date = DateTime.Now
+                }
             };
 
             return View("TransactionForm", viewModel);

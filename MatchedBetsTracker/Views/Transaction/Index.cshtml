@@ -3,7 +3,11 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Transactions</h2>
+
+<p>
+    @Html.ActionLink("New Transactions", "New", "Transaction", null, new { @class = "btn btn-primary" })
+</p>
 
 <table class="table table-bordered table-hover">
     <thead>
