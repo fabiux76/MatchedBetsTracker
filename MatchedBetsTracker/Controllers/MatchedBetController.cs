@@ -1,4 +1,4 @@
-﻿using MatchedBetsTracker.BusinessLogic;
+using MatchedBetsTracker.BusinessLogic;
 using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
 using System;
@@ -160,7 +160,48 @@ namespace MatchedBetsTracker.Controllers
             return RedirectToAction("Details", matchedBet);
         }
 
-        
+        public ActionResult ReOpen(int id)
+        {
+            var matchedBet = _context.MatchedBets
+                .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.Status))
+                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Single(mb => mb.Id == id);
+
+            //Devo cambiare il stato del MatchedBet
+            matchedBet.Status = MatchedBetStatus.Open;
+
+            //Devo cambiare lo stato delle bet e calcolare il profitto\perdita
+            matchedBet.Bets.ForEach(bet => bet.BetStatusId = (byte)Constants.BetStatus.Open) ;
+            
+            //TUTTO STO GIRO PERCJHE' NON MI AGGIORNA LO Status se aggiorno il BetStatusId...
+            //Ci dev'ssere per forza un altro modo...
+            //////////////
+            _context.SaveChanges();
+
+            matchedBet = _context.MatchedBets
+                .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.Status))
+                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Single(mb => mb.Id == id);
+            //////////////
+
+            matchedBet.Bets.ForEach(MatchedBetHandler.RecomputeBetResponsabilityAndProfit);
+
+            //Devo eliminare la transazione di CreditBet sulla scommessa vincente
+            var creditBetTransactions = matchedBet.Bets.SelectMany(bet => bet.Transactions)
+                .Where(t => t.TransactionTypeId == (byte) Constants.TransactionType.CreditBet).ToList();
+
+            
+            _context.Transactions.RemoveRange(creditBetTransactions);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", matchedBet);
+        }
 
         public ActionResult Details(int id)
         {

@@ -1,4 +1,5 @@
-﻿@model MatchedBetsTracker.Models.MatchedBet
+@using MatchedBetsTracker.Models
+@model MatchedBetsTracker.Models.MatchedBet
 @{
     ViewBag.Title = "Details";
 }
@@ -9,13 +10,22 @@
     @Html.ActionLink("Delete Matched Bet (including bets and transactions)", "Delete", "MatchedBet", new { id = Model.Id }, new { @class = "btn btn-primary" })
 </p>
 
-<p>
-    @Html.ActionLink("Back Won (puntata)", "Close", "MatchedBet", new { id = Model.Id, status = MatchedBetsTracker.Models.MatchedBetStatus.BackWon}, new { @class = "btn btn-primary" })
-</p>
+@if (Model.Status == MatchedBetStatus.Open)
+{
+    <p>
+        @Html.ActionLink("Back Won (puntata)", "Close", "MatchedBet", new {id = Model.Id, status = MatchedBetsTracker.Models.MatchedBetStatus.BackWon}, new {@class = "btn btn-primary"})
+    </p>
 
-<p>
-    @Html.ActionLink("Lay Won (bancata)", "Close", "MatchedBet", new { id = Model.Id, status = MatchedBetsTracker.Models.MatchedBetStatus.LayWon}, new { @class = "btn btn-primary" })
-</p>
+    <p>
+        @Html.ActionLink("Lay Won (bancata)", "Close", "MatchedBet", new {id = Model.Id, status = MatchedBetsTracker.Models.MatchedBetStatus.LayWon}, new {@class = "btn btn-primary"})
+    </p>
+}
+else
+{
+    <p>
+        @Html.ActionLink("Lay Won (bancata)", "ReOpen", "MatchedBet", new { id = Model.Id}, new { @class = "btn btn-primary" })
+    </p>
+}
 
 <h3>Bets</h3>
 @Html.Partial("_Bets", Model.Bets)
