@@ -87,9 +87,9 @@ namespace MatchedBetsTracker.Controllers.Api
             _context.SaveChanges();
         }
 
-        /*
+        //http://localhost:49804/api/transactions/UpdateTransactionValidationStatus?id=9&isValid=true
         [HttpPut]
-        public void UpdateTransactionValidationStatus(int id, bool isValid)
+        public string UpdateTransactionValidationStatus(int id, bool isValid)
         {
             if (!ModelState.IsValid)
             {
@@ -103,8 +103,19 @@ namespace MatchedBetsTracker.Controllers.Api
 
             transactionInDb.Validated = isValid;
 
-            _context.SaveChanges();
+            //TODO: sistemare...
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+
+            return "ciao";
         }
-        */
     }
 }
