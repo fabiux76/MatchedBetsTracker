@@ -10,7 +10,6 @@ namespace MatchedBetsTracker.Models
     {
         public int Id { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime Date { get; set; }
 
         public TransactionType TransactionType { get; set; }
