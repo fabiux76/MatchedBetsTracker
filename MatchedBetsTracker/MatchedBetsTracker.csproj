@@ -301,6 +301,14 @@
     <Compile Include="Migrations\201808151909299_AddMatchedBestStatus.Designer.cs">
       <DependentUpon>201808151909299_AddMatchedBestStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808161940361_RemoveValidatedFromBets.cs" />
+    <Compile Include="Migrations\201808161940361_RemoveValidatedFromBets.Designer.cs">
+      <DependentUpon>201808161940361_RemoveValidatedFromBets.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808161954035_RemoveMoneyTransferTransactionType.cs" />
+    <Compile Include="Migrations\201808161954035_RemoveMoneyTransferTransactionType.Designer.cs">
+      <DependentUpon>201808161954035_RemoveMoneyTransferTransactionType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -467,6 +475,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808151909299_AddMatchedBestStatus.resx">
       <DependentUpon>201808151909299_AddMatchedBestStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808161940361_RemoveValidatedFromBets.resx">
+      <DependentUpon>201808161940361_RemoveValidatedFromBets.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808161954035_RemoveMoneyTransferTransactionType.resx">
+      <DependentUpon>201808161954035_RemoveMoneyTransferTransactionType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -67,6 +67,12 @@ namespace MatchedBetsTracker.Controllers
             //4. Creazione della Transazione di Bancata
             var layTransaction = MatchedBetHandler.CreateOpenBetTransaction(layBet);
 
+            if (matchedBetViewModel.ValidateTransactions)
+            {
+                backTransaction.Validated = true;
+                layTransaction.Validated = true;
+            }
+
             _context.MatchedBets.Add(matchedBet);
             _context.Bets.Add(backBet);
             _context.Bets.Add(layBet);

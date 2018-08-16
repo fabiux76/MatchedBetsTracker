@@ -68,12 +68,26 @@
         @Html.ValidationMessageFor(m => m.LayQuote)
     </div>
 
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.ValidateTransactions, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.ValidateTransactions, new { @class = "form-check-label" })
+        @Html.ValidationMessageFor(m => m.ValidateTransactions)
+    </div>
+
     @Html.HiddenFor(m => m.Id)
 
     <button type="submit" class="btn btn-primary">Save</button>
 
+    //Disable jquery validation
+    //https://stackoverflow.com/questions/48066208/mvc-jquery-validation-does-not-accept-comma-as-decimal-separator
+    //https://weblogs.asp.net/jdanforth/jquery-validate-and-the-comma-decimal-separator
     @section scripts
     {
         @Scripts.Render("~/bundles/jqueryval") 
+        <script>
+        $.validator.methods.number = function (value, element) {
+            return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+        }
+        </script>
     }
 }

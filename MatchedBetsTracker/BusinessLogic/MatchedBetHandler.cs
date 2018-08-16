@@ -146,7 +146,6 @@ namespace MatchedBetsTracker.BusinessLogic
             bet.EventDescription = simpleMatchedBet.EventDescription;
             bet.MatchedBet = matchedBet;
             bet.ProfitLoss = 0;
-            bet.Validated = false;
 
             return bet;
         }

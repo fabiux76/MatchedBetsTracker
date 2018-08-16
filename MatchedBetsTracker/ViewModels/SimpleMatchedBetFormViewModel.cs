@@ -18,18 +18,16 @@ namespace MatchedBetsTracker.ViewModels
         public DateTime BetDate { get; set; }
         [Required]
         public DateTime EventDate { get; set; }     
-        [Range(1, 10)]
         public double BackQuote { get; set; }
-        [Range(1, 1000)]
         public double BackAmount { get; set; }
         public BrokerAccount BackBrokerAccount { get; set; }
         public int BackBrokerAccountId { get; set; }
-        [Range(1, 10)]
         public double LayQuote { get; set; }
-        [Range(1, 1000)]
         public double LayAmount { get; set; }
         public BrokerAccount LayBrokerAccount { get; set; }
         public int LayBrokerAccountId { get; set; }
+
+        public bool ValidateTransactions { get; set; }
 
         public IEnumerable<BrokerAccount> BrokerAccounts { get; set; }
     }

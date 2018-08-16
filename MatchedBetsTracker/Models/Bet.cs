@@ -11,8 +11,7 @@ namespace MatchedBetsTracker.Models
         public string EventDescription { get; set; }
         public string BetDescription { get; set; }
         public DateTime BetDate { get; set; }
-        public DateTime EventDate { get; set; }
-        public bool Validated { get; set; }        
+        public DateTime EventDate { get; set; }   
         public bool IsLay { get; set; } //Lay = bancare
         public double Quote { get; set; }
         public double BetAmount { get; set; }
