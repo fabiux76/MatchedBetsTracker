@@ -1,4 +1,4 @@
-﻿using MatchedBetsTracker.Models;
+using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -52,7 +52,7 @@ namespace MatchedBetsTracker.BusinessLogic
                 Amount = GetOpenBetAmount(bet),
                 Bet = bet,
                 BrokerAccountId = bet.BrokerAccountId,
-                TransactionTypeId =  (byte)Constants.TransactionType.OpenBet,
+                TransactionTypeId =  TransactionType.OpenBet,
                 Validated = false
             };
         }
@@ -67,7 +67,7 @@ namespace MatchedBetsTracker.BusinessLogic
                     Amount = bet.ProfitLoss - GetOpenBetAmount(bet),
                     Bet = bet,
                     BrokerAccountId = bet.BrokerAccountId,
-                    TransactionTypeId = (byte)Constants.TransactionType.CreditBet,
+                    TransactionTypeId = TransactionType.CreditBet,
                     Validated = false
                 };
             }
@@ -139,7 +139,7 @@ namespace MatchedBetsTracker.BusinessLogic
     {
         public static Bet Initialize(this Bet bet, SimpleMatchedBetFormViewModel simpleMatchedBet, MatchedBet matchedBet)
         {
-            bet.BetStatusId = (byte)Constants.BetStatus.Open;
+            bet.BetStatusId = BetStatus.Open;
             bet.BetDate = simpleMatchedBet.BetDate;
             bet.BetDescription = simpleMatchedBet.BetDescription;
             bet.EventDate = simpleMatchedBet.EventDate;
@@ -153,22 +153,17 @@ namespace MatchedBetsTracker.BusinessLogic
 
         public static bool IsWon(this Bet bet)
         {
-            return bet.BetStatusId == (byte)Constants.BetStatus.Won;
+            return bet.BetStatusId == BetStatus.Won;
         }
 
         public static bool IsLost(this Bet bet)
         {
-            return bet.BetStatusId == (byte)Constants.BetStatus.Loss;
+            return bet.BetStatusId == BetStatus.Loss;
         }
 
         public static bool IsOpen(this Bet bet)
         {
-            return bet.BetStatusId == (byte)Constants.BetStatus.Open;
-        }
-
-        public static Constants.BetStatus GetStatus(this Bet bet)
-        {
-            return (Constants.BetStatus)bet.BetStatusId;
+            return bet.BetStatusId == BetStatus.Open;
         }
 
         public static bool IsWinning(this Bet bet, MatchedBetStatus status)

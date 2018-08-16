@@ -2,9 +2,7 @@ using MatchedBetsTracker.BusinessLogic;
 using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 
@@ -129,13 +127,13 @@ namespace MatchedBetsTracker.Controllers
             var winningBets = matchedBet.Bets.Where(bet => bet.IsWinning(status)).ToList();
             winningBets.ForEach(bet =>
             {
-                bet.BetStatusId = (byte)Constants.BetStatus.Won;                
+                bet.BetStatusId = BetStatus.Won;                
             });
 
             var losingBets = matchedBet.Bets.Where(bet => !bet.IsWinning(status)).ToList();
             losingBets.ForEach(bet =>
             {
-                bet.BetStatusId = (byte)Constants.BetStatus.Loss;
+                bet.BetStatusId = BetStatus.Loss;
             });
 
 
@@ -180,7 +178,7 @@ namespace MatchedBetsTracker.Controllers
             matchedBet.Status = MatchedBetStatus.Open;
 
             //Devo cambiare lo stato delle bet e calcolare il profitto\perdita
-            matchedBet.Bets.ForEach(bet => bet.BetStatusId = (byte)Constants.BetStatus.Open) ;
+            matchedBet.Bets.ForEach(bet => bet.BetStatusId = BetStatus.Open) ;
             
             //TUTTO STO GIRO PERCJHE' NON MI AGGIORNA LO Status se aggiorno il BetStatusId...
             //Ci dev'ssere per forza un altro modo...
@@ -200,7 +198,7 @@ namespace MatchedBetsTracker.Controllers
 
             //Devo eliminare la transazione di CreditBet sulla scommessa vincente
             var creditBetTransactions = matchedBet.Bets.SelectMany(bet => bet.Transactions)
-                .Where(t => t.TransactionTypeId == (byte) Constants.TransactionType.CreditBet).ToList();
+                .Where(t => t.TransactionTypeId == TransactionType.CreditBet).ToList();
 
             
             _context.Transactions.RemoveRange(creditBetTransactions);

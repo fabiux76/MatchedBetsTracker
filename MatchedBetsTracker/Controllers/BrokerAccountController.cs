@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
@@ -65,14 +62,14 @@ namespace MatchedBetsTracker.Controllers
             }
             else
             {
-                var brokerAccountInDB = _context.BrokerAccounts.Single(b => b.Id == brokerAccount.Id);
+                var brokerAccountInDb = _context.BrokerAccounts.Single(b => b.Id == brokerAccount.Id);
 
                 //Da sostituire con AutoMapper
-                brokerAccountInDB.Id = brokerAccount.Id;
-                brokerAccountInDB.IntialAmount = brokerAccount.Id;
-                brokerAccountInDB.Name = brokerAccount.Name;
-                brokerAccountInDB.Password = brokerAccount.Password;
-                brokerAccountInDB.UserName = brokerAccount.UserName;
+                brokerAccountInDb.Id = brokerAccount.Id;
+                brokerAccountInDb.IntialAmount = brokerAccount.Id;
+                brokerAccountInDb.Name = brokerAccount.Name;
+                brokerAccountInDb.Password = brokerAccount.Password;
+                brokerAccountInDb.UserName = brokerAccount.UserName;
             }
             _context.SaveChanges();
 

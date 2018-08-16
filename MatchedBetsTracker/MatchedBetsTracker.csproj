@@ -195,7 +195,6 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="BusinessLogic\Constants.cs" />
     <Compile Include="BusinessLogic\EnumerableExtensions.cs" />
     <Compile Include="BusinessLogic\MatchedBetHandler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -297,6 +296,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MatchedBet.cs" />
     <Compile Include="Models\Transaction.cs" />
+    <Compile Include="Models\TransactionSign.cs" />
     <Compile Include="Models\TransactionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

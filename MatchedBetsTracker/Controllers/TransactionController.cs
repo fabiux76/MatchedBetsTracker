@@ -1,8 +1,6 @@
-﻿using MatchedBetsTracker.Models;
+using MatchedBetsTracker.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using MatchedBetsTracker.ViewModels;
@@ -52,6 +50,18 @@ namespace MatchedBetsTracker.Controllers
 
         public ActionResult Save(Transaction transaction)
         {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new TransactionFormViewModel
+                {
+                    TransactionTypes = _context.TransactionTypes.ToList(),
+                    BrokerAccounts = _context.BrokerAccounts.ToList(),
+                    Transaction = transaction
+                };
+
+                return View("TransactionForm", viewModel);
+            }
+
             if (transaction.Id == 0)
             {
                 _context.Transactions.Add(transaction);

@@ -17,6 +17,7 @@ namespace MatchedBetsTracker.Models
         [Display(Name = "Transaction Type")]
         public byte TransactionTypeId { get; set; }
 
+        [TransactionSign]
         public double Amount { get; set; }
 
         public bool Validated { get; set; }
