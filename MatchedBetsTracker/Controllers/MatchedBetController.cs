@@ -47,6 +47,12 @@ namespace MatchedBetsTracker.Controllers
 
         public ActionResult AddSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                matchedBetViewModel.BrokerAccounts = _context.BrokerAccounts.ToList();
+                return View("SimpleMatchedBetForm", matchedBetViewModel);
+            }
+
             //Devo fare diverse attività:
             //0. Devo creare la matchedBet
             var matchedBet = MatchedBetHandler.CreateMatchedBet(matchedBetViewModel);

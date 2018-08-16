@@ -41,6 +41,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.Bet)
                                     .Include(t => t.BrokerAccount)
+                                    .OrderBy(t => t.Date)
                                     .ToList();
 
             return View(new BrokerAccountDetailsViewModel

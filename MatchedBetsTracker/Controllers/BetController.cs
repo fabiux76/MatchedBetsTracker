@@ -1,4 +1,4 @@
-﻿using MatchedBetsTracker.Models;
+using MatchedBetsTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +31,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(b => b.Status)
                                     .Include(b => b.BrokerAccount)
                                     .Include(b => b.MatchedBet)
+                                    .OrderBy(b => b.BetDate)
                                     .ToList();
 
             return View(bets);
@@ -87,6 +88,7 @@ namespace MatchedBetsTracker.Controllers
             var bet = _context.Bets
                                     .Include(b => b.Status)
                                     .Include(b => b.BrokerAccount)
+                                    .OrderBy(b => b.BetDate)
                                     .SingleOrDefault(t => t.Id == id);
 
             if (bet == null)

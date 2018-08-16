@@ -28,9 +28,9 @@ else
 }
 
 <h3>Bets</h3>
-@Html.Partial("_Bets", Model.Bets)
+@Html.Partial("_Bets", Model.Bets.OrderBy(b => b.BetDate))
 
 <h3>Transactions</h3>
-@Html.Partial("_Transactions", Model.Bets.SelectMany(bet => bet.Transactions))
+@Html.Partial("_Transactions", Model.Bets.SelectMany(bet => bet.Transactions.OrderBy(t => t.Date)))
 
 
