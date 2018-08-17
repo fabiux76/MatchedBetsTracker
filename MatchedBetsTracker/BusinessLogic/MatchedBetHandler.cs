@@ -139,15 +139,22 @@ namespace MatchedBetsTracker.BusinessLogic
             return new BrokerAccountWithSummariesViewModel
             {
                 BrokerAccount = brokerAccount,
-                ValidatedAmount = ComputeAvailableAmount(brokerAccount, false),
-                TheoreticalAmount = ComputeAvailableAmount(brokerAccount, true)
+                AmountValidated = ComputeAvailableAmount(brokerAccount, false),
+                AmountTotal = ComputeAvailableAmount(brokerAccount, true),
+                OpenBetsResponsabilityValidated = ComputeOpenResponsabilities(brokerAccount, false),
+                OpenBetsResponsabilityTotal = ComputeOpenResponsabilities(brokerAccount, true),
             };
+        }
+
+        public static double ComputeOpenResponsabilities(BrokerAccount brokerAccount,
+            bool includeNotValidatedTransactions)
+        {
+            return brokerAccount.Bets.Where(b => b.BetStatusId == BetStatus.Open)
+                .Sum(b => b.Responsability);
         }
 
         public static double ComputeAvailableAmount(BrokerAccount brokerAccount, bool includeNotValidatedTransactions)
         {
-            double sum = brokerAccount.IntialAmount;
-
             return brokerAccount.IntialAmount +
                    brokerAccount.Transactions.Where(t => includeNotValidatedTransactions || t.Validated)
                     .Sum(t => t.Amount);

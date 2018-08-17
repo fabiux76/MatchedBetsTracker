@@ -11,8 +11,12 @@ namespace MatchedBetsTracker.ViewModels
     {
         public BrokerAccount BrokerAccount { get; set; }
 
-        public double ValidatedAmount { get; set; }
+        public double AmountValidated { get; set; }
 
-        public double TheoreticalAmount { get; set; }
+        public double AmountTotal { get; set; }
+
+        public double OpenBetsResponsabilityValidated { get; set; }
+
+        public double OpenBetsResponsabilityTotal { get; set; }
     }
 }

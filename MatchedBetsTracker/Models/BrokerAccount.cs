@@ -23,5 +23,7 @@ namespace MatchedBetsTracker.Models
         public string Notes { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; }
+
+        public ICollection<Bet> Bets { get; set; }
     }
 }
