@@ -20,6 +20,8 @@ namespace MatchedBetsTracker.Models
         [Display(Name = "Initial Amount")]
         public double IntialAmount { get; set; }
 
+        public string Notes { get; set; }
+
         public ICollection<Transaction> Transactions { get; set; }
     }
 }

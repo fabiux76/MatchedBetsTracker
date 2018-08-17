@@ -1,4 +1,4 @@
-﻿@model MatchedBetsTracker.Models.BrokerAccount
+@model MatchedBetsTracker.Models.BrokerAccount
 @{
     ViewBag.Title = "New";
 }
@@ -27,7 +27,11 @@
         @Html.TextBoxFor(m => m.IntialAmount, new { @class = "form-control" })
     </div>
 
+    <div class="form-group">
+        @Html.LabelFor(m => m.Notes)
+        @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", rows = "6", cols = "50" })
+    </div>
+
     @Html.HiddenFor(m => m.Id)
     <button type="submit" class="btn btn-primary">Save</button>
 }
-

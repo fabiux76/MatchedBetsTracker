@@ -315,6 +315,10 @@
     <Compile Include="Migrations\201808161954035_RemoveMoneyTransferTransactionType.Designer.cs">
       <DependentUpon>201808161954035_RemoveMoneyTransferTransactionType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808171441509_AddNotesToBroker.cs" />
+    <Compile Include="Migrations\201808171441509_AddNotesToBroker.Designer.cs">
+      <DependentUpon>201808171441509_AddNotesToBroker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -664,6 +668,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808161954035_RemoveMoneyTransferTransactionType.resx">
       <DependentUpon>201808161954035_RemoveMoneyTransferTransactionType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808171441509_AddNotesToBroker.resx">
+      <DependentUpon>201808171441509_AddNotesToBroker.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
