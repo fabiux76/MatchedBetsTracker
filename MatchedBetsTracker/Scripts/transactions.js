@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    $("#transactions").DataTable();
+
     $("#transactions").on("click", ".js-change-status",
         function () {
             var button = $(this);
