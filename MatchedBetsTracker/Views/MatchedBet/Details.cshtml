@@ -33,4 +33,7 @@ else
 <h3>Transactions</h3>
 @Html.Partial("_Transactions", Model.Bets.SelectMany(bet => bet.Transactions.OrderBy(t => t.Date)))
 
-
+@section scripts
+{
+    @Scripts.Render("~/bundles/mycode")
+}
