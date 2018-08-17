@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
 using System.Data.Entity;
+using MatchedBetsTracker.BusinessLogic;
 
 namespace MatchedBetsTracker.Controllers
 {
@@ -23,9 +24,12 @@ namespace MatchedBetsTracker.Controllers
         // GET: BrokerAccount
         public ActionResult Index()
         {
-            var brokerAccounts = _context.BrokerAccounts.ToList();
+            var brokerAccounts = _context.BrokerAccounts
+                                         .Include(b => b.Transactions)
+                                         .ToList();
 
-            return View(brokerAccounts);
+            var accountsWithSummary = brokerAccounts.Select(b => MatchedBetHandler.CreateAccountWithSummeries(b)).ToList();
+            return View(accountsWithSummary);
         }
 
         public ActionResult Details(int id)

@@ -133,6 +133,25 @@ namespace MatchedBetsTracker.BusinessLogic
                 return -bet.BetAmount;
             }
         }
+
+        public static BrokerAccountWithSummariesViewModel CreateAccountWithSummeries(BrokerAccount brokerAccount)
+        {
+            return new BrokerAccountWithSummariesViewModel
+            {
+                BrokerAccount = brokerAccount,
+                ValidatedAmount = ComputeAvailableAmount(brokerAccount, false),
+                TheoreticalAmount = ComputeAvailableAmount(brokerAccount, true)
+            };
+        }
+
+        public static double ComputeAvailableAmount(BrokerAccount brokerAccount, bool includeNotValidatedTransactions)
+        {
+            double sum = brokerAccount.IntialAmount;
+
+            return brokerAccount.IntialAmount +
+                   brokerAccount.Transactions.Where(t => includeNotValidatedTransactions || t.Validated)
+                    .Sum(t => t.Amount);
+        }
     }
 
     public static class InizializationHelper

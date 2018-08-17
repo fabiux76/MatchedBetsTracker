@@ -1,4 +1,4 @@
-@model IEnumerable<MatchedBetsTracker.Models.BrokerAccount>
+@model IEnumerable<MatchedBetsTracker.ViewModels.BrokerAccountWithSummariesViewModel>
 
 @{
     ViewBag.Title = "title";
@@ -14,15 +14,17 @@
     <thead>
     <tr>
         <th>Broker Account</th>
-        <th>Additional Column</th>
+        <th>Available (Validated)</th>
+        <th>Available (Theroretical)</th>
     </tr>
     </thead>
     <tbody>
         @foreach (var brokerAccount in Model)
         {
             <tr>
-                <td>@Html.ActionLink(brokerAccount.Name, "Details", "BrokerAccount", new {Id = brokerAccount.Id}, null)</td> 
-                <td>Available</td>
+                <td>@Html.ActionLink(brokerAccount.BrokerAccount.Name, "Details", "BrokerAccount", new {Id = brokerAccount.BrokerAccount.Id}, null)</td> 
+                <td>@brokerAccount.ValidatedAmount</td>
+                <td>@brokerAccount.TheoreticalAmount</td>
             </tr>
         }
     </tbody>
