@@ -10,7 +10,6 @@
         <th>Amount</th>
         <th>Bet</th>
         <th>Validated</th>
-        <th>Change Validation</th>
     </tr>
     </thead>
     <tbody>
@@ -28,10 +27,16 @@
                     @Html.ActionLink(transaction.Bet.EventDescription, "Edit", "Bet", new { Id = transaction.Bet.Id }, null);
                 }
             </td>
-            <td>@transaction.Validated</td>
-            <td>
-                <button data-transaction-id="@transaction.Id" class="btn-link js-change-status">Change</button>
-            </td>
+            @if (transaction.Validated)
+            {
+                <td>@transaction.Validated</td>
+            }
+            else
+            {
+                <td>
+                    <button data-transaction-id="@transaction.Id" class="btn-link js-change-status">@transaction.Validated</button>
+                </td>
+            }            
         </tr>
     }
     </tbody>
