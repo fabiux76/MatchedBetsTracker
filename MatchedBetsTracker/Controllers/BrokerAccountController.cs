@@ -29,7 +29,9 @@ namespace MatchedBetsTracker.Controllers
                                          .Include(b => b.Bets)
                                          .ToList();
 
-            var accountsWithSummary = brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries).ToList();
+            var accountsWithSummary = MatchedBetHandler.CreateAccountsSummary(
+                brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries).ToList());
+
             return View(accountsWithSummary);
         }
 

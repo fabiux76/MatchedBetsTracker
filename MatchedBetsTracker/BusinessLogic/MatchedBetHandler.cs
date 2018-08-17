@@ -146,10 +146,12 @@ namespace MatchedBetsTracker.BusinessLogic
             };
         }
 
+        //C'E' QUALCOSA CE NON VA. NON CONTROLLO Validated della bet corrispondente
         public static double ComputeOpenResponsabilities(BrokerAccount brokerAccount,
             bool includeNotValidatedTransactions)
         {
-            return brokerAccount.Bets.Where(b => b.BetStatusId == BetStatus.Open)
+            return brokerAccount.Bets
+                .Where(b => b.BetStatusId == BetStatus.Open)
                 .Sum(b => b.Responsability);
         }
 
@@ -158,6 +160,68 @@ namespace MatchedBetsTracker.BusinessLogic
             return brokerAccount.IntialAmount +
                    brokerAccount.Transactions.Where(t => includeNotValidatedTransactions || t.Validated)
                     .Sum(t => t.Amount);
+        }
+
+        public static BrokerAccountsSummaryViewModel CreateAccountsSummary(IEnumerable<BrokerAccountWithSummariesViewModel> brokers)
+        {
+            BrokerAccountsSummaryViewModel res = new BrokerAccountsSummaryViewModel
+            {
+                BrokerAccounts = brokers,
+                TotalDeposit = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyCredit, true),
+                TotalDepositValidated = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyCredit, false),
+                TotalWithdrawn = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyDebit, true),
+                TotalWithdrawnValidated = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyDebit, false),
+                TotalBonusCredit = ComputeTotalTransactionAmount(brokers, TransactionType.CreditBonus, true),
+                TotalBonusCreditValidated = ComputeTotalTransactionAmount(brokers, TransactionType.CreditBonus, false),
+                TotalOpenResponsabilities = ComputeTotalOpenResponsabilities(brokers, true),
+                TotalOpenResponsabilitiesValidated = ComputeTotalOpenResponsabilities(brokers, false),
+                TotalAvailability = ComputeTotalAvailability(brokers, true),
+                TotalAvailabilityValidated = ComputeTotalAvailability(brokers, false),
+            };
+            ComputeNetProfit(res);
+            return res;
+        }
+
+        private static void ComputeNetProfit(BrokerAccountsSummaryViewModel summary)
+        {
+            double totalInitialAmounts = ComputeTotalInitialAmounts(summary.BrokerAccounts);
+
+            summary.NetProfit = -summary.TotalWithdrawn
+                                + summary.TotalAvailability
+                                + summary.TotalOpenResponsabilities
+                                - summary.TotalDeposit
+                                - totalInitialAmounts;
+
+            summary.NetProfitValidated = -summary.TotalWithdrawnValidated
+                                + summary.TotalAvailabilityValidated
+                                + summary.TotalOpenResponsabilitiesValidated
+                                - summary.TotalDepositValidated
+                                - totalInitialAmounts;
+        }
+
+        private static double ComputeTotalInitialAmounts(IEnumerable<BrokerAccountWithSummariesViewModel> brokers)
+        {
+            return brokers.Select(b => b.BrokerAccount)
+                          .Sum(b => b.IntialAmount);
+        }
+
+        private static double ComputeTotalTransactionAmount(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, byte transactionType, bool includeNotValidatedTransactions)
+        {
+            return brokers.Select(b => b.BrokerAccount)
+                          .SelectMany(b => b.Transactions)
+                          .Where(t => t.TransactionTypeId == transactionType)
+                          .Where(t => includeNotValidatedTransactions || t.Validated)
+                          .Sum(t => t.Amount);
+        }
+
+        private static double ComputeTotalAvailability(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, bool includeNotValidatedTransactions)
+        {
+            return includeNotValidatedTransactions ? brokers.Sum(b => b.AmountTotal) : brokers.Sum(b => b.AmountValidated);
+        }
+
+        private static double ComputeTotalOpenResponsabilities(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, bool includeNotValidatedTransactions)
+        {
+            return includeNotValidatedTransactions ? brokers.Sum(b => b.OpenBetsResponsabilityTotal) : brokers.Sum(b => b.OpenBetsResponsabilityValidated);
         }
     }
 

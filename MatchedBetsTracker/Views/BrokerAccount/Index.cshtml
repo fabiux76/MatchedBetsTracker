@@ -1,4 +1,4 @@
-@model IEnumerable<MatchedBetsTracker.ViewModels.BrokerAccountWithSummariesViewModel>
+@model MatchedBetsTracker.ViewModels.BrokerAccountsSummaryViewModel
 
 @{
     ViewBag.Title = "title";
@@ -20,7 +20,7 @@
     </tr>
     </thead>
     <tbody>
-        @foreach (var brokerAccount in Model)
+        @foreach (var brokerAccount in Model.BrokerAccounts)
         {
             var brokerAccountAmount = brokerAccount.AmountValidated.ToString("F2");
             if (Math.Abs(brokerAccount.AmountTotal - brokerAccount.AmountValidated) > 0.01)
@@ -41,5 +41,29 @@
                 <td>@brokerAccount.BrokerAccount.Notes</td>
             </tr>
         }
+    </tbody>
+</table>
+
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Total Deposit</th>
+            <th>Total Withdrawn</th>
+            <th>Total Bonus</th>
+            <th>Total Availability</th>
+            <th>Total Open Responsabilities</th>
+            <th>Net Profit</th>
+        </tr>        
+    </thead>
+    <tbody>
+        <tr>
+            <th>@Model.TotalDeposit</th>
+            <th>@Model.TotalWithdrawn</th>
+            <th>@Model.TotalBonusCredit</th>
+            <th>@Model.TotalAvailability</th>
+            <th>@Model.TotalOpenResponsabilities</th>
+            <th>@Model.NetProfit</th>
+        </tr>
     </tbody>
 </table>

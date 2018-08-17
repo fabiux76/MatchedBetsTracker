@@ -334,6 +334,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BetFormViewModel.cs" />
     <Compile Include="ViewModels\BrokerAccountDetailsViewModel.cs" />
+    <Compile Include="ViewModels\BrokerAccountsSummaryViewModel.cs" />
     <Compile Include="ViewModels\BrokerAccountWithSummariesViewModel.cs" />
     <Compile Include="ViewModels\SimpleMatchedBetFormViewModel.cs" />
     <Compile Include="ViewModels\TransactionFormViewModel.cs" />
