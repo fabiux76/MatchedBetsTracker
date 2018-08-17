@@ -16,6 +16,7 @@
         <th>Broker Account</th>
         <th>Available</th>
         <th>Open Bet Responsability</th>
+        <th>Notes</th>
     </tr>
     </thead>
     <tbody>
@@ -37,6 +38,7 @@
                 <td>@Html.ActionLink(brokerAccount.BrokerAccount.Name, "Details", "BrokerAccount", new {Id = brokerAccount.BrokerAccount.Id}, null)</td> 
                 <td>@brokerAccountAmount</td>
                 <td>@brokerAccount.OpenBetsResponsabilityValidated</td>
+                <td>@brokerAccount.BrokerAccount.Notes</td>
             </tr>
         }
     </tbody>
