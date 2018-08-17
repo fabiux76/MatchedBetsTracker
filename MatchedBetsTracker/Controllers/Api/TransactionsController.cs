@@ -37,11 +37,13 @@ namespace MatchedBetsTracker.Controllers.Api
         }
 
         [HttpPost]
-        public TransactionDto CreateTransaction(TransactionDto transactionDto)
+        public IHttpActionResult CreateTransaction(TransactionDto transactionDto)
         {
+            //Questo darà eccezione perchè nel validation c'è casting a Transaction, mentre questo è un TransactionDto
+
             if (!ModelState.IsValid)
             {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
 
             var transaction = Mapper.Map<TransactionDto, Transaction>(transactionDto);
@@ -49,7 +51,7 @@ namespace MatchedBetsTracker.Controllers.Api
             _context.SaveChanges();
 
             transactionDto.Id = transaction.Id;
-            return transactionDto;
+            return Created(new Uri(Request.RequestUri + "/" + transactionDto.Id),  transactionDto);
         }
 
         [HttpPut]

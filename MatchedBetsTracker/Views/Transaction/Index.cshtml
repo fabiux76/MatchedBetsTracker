@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MatchedBetsTracker.Models.Transaction>
+@model IEnumerable<MatchedBetsTracker.Models.Transaction>
 @{
     ViewBag.Title = "Index";
 }
@@ -10,3 +10,23 @@
 </p>
 
 @Html.Partial("_Transactions")
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#transactions .js-change-status").on("click",
+                function() {
+                    if (confirm("Are you sure you want to change status?")) {
+                        $.ajax({
+                            url: "/api/transactions/UpdateTransactionValidationStatus?id=" + $(this).attr("data-transaction-id") + "&isValid=true",
+                            method: "PUT",
+                            success: function() {
+                                console.log("Changed status");
+                            }
+                        });
+                    }
+                });
+        });
+    </script>
+}
