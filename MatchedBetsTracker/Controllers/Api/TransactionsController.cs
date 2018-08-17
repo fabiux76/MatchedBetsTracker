@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using AutoMapper;
+using MatchedBetsTracker.Dtos;
 using MatchedBetsTracker.Models;
 
 namespace MatchedBetsTracker.Controllers.Api
@@ -20,34 +22,38 @@ namespace MatchedBetsTracker.Controllers.Api
         //Ed il dispose?
 
         //GET /api/customers
-        public IEnumerable<Transaction> GeTransactions()
+        public IEnumerable<TransactionDto> GeTransactions()
         {
-            return _context.Transactions.ToList();
+            return _context.Transactions.ToList().Select(Mapper.Map<Transaction, TransactionDto>);
         }
 
         //GET /api/customers/1
-        public Transaction GetTransaction(int id)
+        public TransactionDto GetTransaction(int id)
         {
             var transaction = _context.Transactions.SingleOrDefault(t => t.Id == id);
 
             if (transaction == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-            return transaction;
+            return Mapper.Map<Transaction, TransactionDto>(transaction);
         }
 
         [HttpPost]
-        public Transaction CreateTransaction(Transaction transaction)
+        public TransactionDto CreateTransaction(TransactionDto transactionDto)
         {
             if (!ModelState.IsValid)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
+            var transaction = Mapper.Map<TransactionDto, Transaction>(transactionDto);
             _context.Transactions.Add(transaction);
-            return transaction;
+            _context.SaveChanges();
+
+            transactionDto.Id = transaction.Id;
+            return transactionDto;
         }
 
         [HttpPut]
-        public void UpdateTransaction(int id, Transaction transaction)
+        public void UpdateTransaction(int id, TransactionDto transactionDto)
         {
             if (!ModelState.IsValid)
             {
@@ -59,13 +65,7 @@ namespace MatchedBetsTracker.Controllers.Api
             if (transactionInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            //TODO: passare ad AutoMapper
-            transactionInDb.Amount = transaction.Amount;
-            transactionInDb.BrokerAccountId = transaction.BrokerAccountId;
-            transactionInDb.Date = transaction.Date;
-            transactionInDb.Id = transaction.Id;
-            transactionInDb.TransactionTypeId = transaction.TransactionTypeId;
-            transactionInDb.Validated = transaction.Validated;
+            Mapper.Map(transactionDto, transactionInDb);
 
             _context.SaveChanges();
         }
@@ -89,7 +89,7 @@ namespace MatchedBetsTracker.Controllers.Api
 
         //http://localhost:49804/api/transactions/UpdateTransactionValidationStatus?id=9&isValid=true
         [HttpPut]
-        public string UpdateTransactionValidationStatus(int id, bool isValid)
+        public void UpdateTransactionValidationStatus(int id, bool isValid)
         {
             if (!ModelState.IsValid)
             {
@@ -113,9 +113,6 @@ namespace MatchedBetsTracker.Controllers.Api
                 Console.WriteLine(e);
                 throw;
             }
-
-
-            return "ciao";
         }
     }
 }
