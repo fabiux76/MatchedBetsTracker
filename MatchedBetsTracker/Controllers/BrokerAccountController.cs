@@ -71,10 +71,11 @@ namespace MatchedBetsTracker.Controllers
 
                 //Da sostituire con AutoMapper
                 brokerAccountInDb.Id = brokerAccount.Id;
-                brokerAccountInDb.IntialAmount = brokerAccount.Id;
+                brokerAccountInDb.IntialAmount = brokerAccount.IntialAmount;
                 brokerAccountInDb.Name = brokerAccount.Name;
                 brokerAccountInDb.Password = brokerAccount.Password;
                 brokerAccountInDb.UserName = brokerAccount.UserName;
+                brokerAccountInDb.Notes = brokerAccount.Notes;
             }
             _context.SaveChanges();
 

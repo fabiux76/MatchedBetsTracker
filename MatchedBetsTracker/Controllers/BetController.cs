@@ -73,6 +73,7 @@ namespace MatchedBetsTracker.Controllers
                 betInDb.ProfitLoss = bet.ProfitLoss;
                 betInDb.Quote = bet.Quote;
                 betInDb.Responsability = bet.Responsability;
+                betInDb.BrokerAccountId = bet.BrokerAccountId;
             }
 
             _context.SaveChanges();
