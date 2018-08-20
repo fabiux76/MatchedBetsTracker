@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -25,5 +26,8 @@ namespace MatchedBetsTracker.Models
         public ICollection<Transaction> Transactions { get; set; }
 
         public ICollection<Bet> Bets { get; set; }
+
+        [DefaultValue(true)]
+        public bool Active { get; set; }
     }
 }

@@ -69,7 +69,7 @@ namespace MatchedBetsTracker.Controllers
                 betInDb.EventDescription = bet.EventDescription;
                 betInDb.Id = bet.Id;
                 betInDb.IsLay = bet.IsLay;
-                betInDb.MatchedBetId = bet.MatchedBetId;
+                //betInDb.MatchedBetId = bet.MatchedBetId;
                 betInDb.ProfitLoss = bet.ProfitLoss;
                 betInDb.Quote = bet.Quote;
                 betInDb.Responsability = bet.Responsability;

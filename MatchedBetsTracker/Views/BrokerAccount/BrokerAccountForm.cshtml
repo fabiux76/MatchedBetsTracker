@@ -32,6 +32,11 @@
         @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", rows = "6", cols = "50" })
     </div>
 
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.Active, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.Active, new { @class = "form-check-label" })
+    </div>
+
     @Html.HiddenFor(m => m.Id)
     <button type="submit" class="btn btn-primary">Save</button>
 }

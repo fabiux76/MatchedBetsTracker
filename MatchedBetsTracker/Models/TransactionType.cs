@@ -16,5 +16,6 @@ namespace MatchedBetsTracker.Models
         public static readonly byte ExpireBonus = 5;
         public static readonly byte MoneyCredit = 6;
         public static readonly byte MoneyDebit = 7;
+        public static readonly byte Correction = 8;
     }
 }

@@ -86,6 +86,7 @@ namespace MatchedBetsTracker.Controllers
                 brokerAccountInDb.Password = brokerAccount.Password;
                 brokerAccountInDb.UserName = brokerAccount.UserName;
                 brokerAccountInDb.Notes = brokerAccount.Notes;
+                brokerAccountInDb.Active = brokerAccount.Active;
             }
             _context.SaveChanges();
 
