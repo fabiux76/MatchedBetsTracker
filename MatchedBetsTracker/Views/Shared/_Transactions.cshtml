@@ -31,7 +31,7 @@
         <tr>
             <td>@Html.ActionLink(transaction.Id.ToString(), "Edit", "Transaction", new { Id = transaction.Id }, null)</td>
             <td>@Html.ActionLink(transaction.BrokerAccount.Name, "Details", "BrokerAccount", new { Id = transaction.BrokerAccount.Id }, null)</td>
-            <td>@transaction.Date</td>
+            <td>@transaction.Date.ToString("s")</td>
             <td>@transaction.TransactionType.TransactionDescription</td>
             <td>@transactionAmount</td>
             <td>

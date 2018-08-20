@@ -25,8 +25,11 @@ namespace MatchedBetsTracker
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/mycode").Include(
+            bundles.Add(new ScriptBundle("~/bundles/mycode_transactions").Include(
                 "~/Scripts/transactions.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/mycode_bets").Include(
+                "~/Scripts/bets.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

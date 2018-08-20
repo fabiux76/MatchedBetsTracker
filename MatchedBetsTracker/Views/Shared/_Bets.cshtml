@@ -1,6 +1,6 @@
-﻿@model IEnumerable<MatchedBetsTracker.Models.Bet>
+@model IEnumerable<MatchedBetsTracker.Models.Bet>
 
-<table class="table table-bordered table-hover">
+<table id="bets" class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>ID</th>
@@ -24,11 +24,11 @@
             <tr>
                 <td>@Html.ActionLink(bet.Id.ToString(), "Edit", "Bet", new { Id = bet.Id }, null)</td>
                 <td>@bet.BrokerAccount.Name</td>
-                <td>@bet.BetDate</td>
+                <td>@bet.BetDate.ToString()</td>
                 <td>@bet.EventDescription</td>
                 <td>@bet.BetDescription</td>
                 <td>@bet.IsLay</td>
-                <td>@bet.EventDate</td>
+                <td>@bet.EventDate.ToString("s")</td>
                 <td>@bet.Quote</td>
                 <td>@bet.BetAmount</td>
                 <td>@bet.Responsability</td>

@@ -48,10 +48,18 @@ namespace MatchedBetsTracker.Controllers
                                     .OrderBy(t => t.Date)
                                     .ToList();
 
+            var bets = _context.Bets.Where(b => b.BrokerAccountId == id)
+                .Include(b => b.Status)
+                .Include(b => b.BrokerAccount)
+                .Include(b => b.MatchedBet)
+                .OrderBy(b => b.BetDate)
+                .ToList();
+
             return View(new BrokerAccountDetailsViewModel
             {
                 BrokerAccount = brokerAccount,
-                Transactions = transactions
+                Transactions = transactions,
+                Bets = bets
             });
         }
 

@@ -2,10 +2,14 @@
     
 <h1>@Html.ActionLink(Model.BrokerAccount.Name, "Edit", "BrokerAccount", new { Id = Model.BrokerAccount.Id }, null)</h1>
 
+<h3>Bets</h3>
+@Html.Partial("_Bets", Model.Bets.OrderBy(b => b.BetDate))
+
 <h2>Transactions</h2>
 @Html.Partial("_Transactions", Model.Transactions)
 
 @section scripts
 {
-    @Scripts.Render("~/bundles/mycode")
+    @Scripts.Render("~/bundles/mycode_transactions")
+    @Scripts.Render("~/bundles/mycode_bets")
 }

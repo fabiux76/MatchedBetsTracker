@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MatchedBetsTracker.Models.Bet>
+@model IEnumerable<MatchedBetsTracker.Models.Bet>
 @{
     ViewBag.Title = "Index";
 }
@@ -10,3 +10,8 @@
 </p>
 
 @Html.Partial("_Bets")
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/mycode_bets")
+}

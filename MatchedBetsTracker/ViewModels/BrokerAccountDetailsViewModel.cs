@@ -9,6 +9,7 @@ namespace MatchedBetsTracker.ViewModels
     public class BrokerAccountDetailsViewModel
     {
         public BrokerAccount BrokerAccount { get; set; }
-        public IEnumerable<Transaction> Transactions { get; set; }
+        public IEnumerable<Transaction> Transactions { get; set; }    
+        public IEnumerable<Bet> Bets { get; set; }
     }
 }
