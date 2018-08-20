@@ -323,6 +323,10 @@
     <Compile Include="Migrations\201808201358456_AdActiveAttributeOnBrokerAccount.Designer.cs">
       <DependentUpon>201808201358456_AdActiveAttributeOnBrokerAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808201430056_AddCorrectionTransactionType.cs" />
+    <Compile Include="Migrations\201808201430056_AddCorrectionTransactionType.Designer.cs">
+      <DependentUpon>201808201430056_AddCorrectionTransactionType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -680,6 +684,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808201358456_AdActiveAttributeOnBrokerAccount.resx">
       <DependentUpon>201808201358456_AdActiveAttributeOnBrokerAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808201430056_AddCorrectionTransactionType.resx">
+      <DependentUpon>201808201430056_AddCorrectionTransactionType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
