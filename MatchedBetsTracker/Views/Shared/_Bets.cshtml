@@ -24,7 +24,7 @@
             <tr>
                 <td>@Html.ActionLink(bet.Id.ToString(), "Edit", "Bet", new { Id = bet.Id }, null)</td>
                 <td>@bet.BrokerAccount.Name</td>
-                <td>@bet.BetDate.ToString()</td>
+                <td>@bet.BetDate.ToString("s")</td>
                 <td>@bet.EventDescription</td>
                 <td>@bet.BetDescription</td>
                 <td>@bet.IsLay</td>

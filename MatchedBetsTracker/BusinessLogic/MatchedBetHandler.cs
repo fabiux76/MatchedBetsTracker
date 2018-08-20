@@ -185,18 +185,20 @@ namespace MatchedBetsTracker.BusinessLogic
         private static void ComputeNetProfit(BrokerAccountsSummaryViewModel summary)
         {
             double totalInitialAmounts = ComputeTotalInitialAmounts(summary.BrokerAccounts);
-
+            double totalCorrections = ComputeTotalTransactionAmount(summary.BrokerAccounts, TransactionType.Correction, true);
             summary.NetProfit = -summary.TotalWithdrawn
                                 + summary.TotalAvailability
                                 + summary.TotalOpenResponsabilities
                                 - summary.TotalDeposit
-                                - totalInitialAmounts;
+                                - totalInitialAmounts
+                                - totalCorrections;
 
             summary.NetProfitValidated = -summary.TotalWithdrawnValidated
                                 + summary.TotalAvailabilityValidated
                                 + summary.TotalOpenResponsabilitiesValidated
                                 - summary.TotalDepositValidated
-                                - totalInitialAmounts;
+                                - totalInitialAmounts
+                                - totalCorrections;
         }
 
         private static double ComputeTotalInitialAmounts(IEnumerable<BrokerAccountWithSummariesViewModel> brokers)
