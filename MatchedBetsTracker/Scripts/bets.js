@@ -1,1 +1,5 @@
-$("#bets").DataTable();
+$(document).ready(function() {
+    var table = $("#transactions").DataTable();
+});
+
+
