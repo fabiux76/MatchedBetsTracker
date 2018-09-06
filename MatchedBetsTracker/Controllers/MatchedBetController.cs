@@ -37,7 +37,9 @@ namespace MatchedBetsTracker.Controllers
             {
                 BetDate = DateTime.Now,
                 EventDate = DateTime.Now,            
-                BrokerAccounts = _context.BrokerAccounts.ToList()
+                BrokerAccounts = _context.BrokerAccounts
+                                         .Where(broker => broker.Active)
+                                         .ToList()
             };
 
             return View("SimpleMatchedBetForm", viewModel);
