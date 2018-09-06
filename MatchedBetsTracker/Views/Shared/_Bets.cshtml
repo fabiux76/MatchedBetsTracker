@@ -37,7 +37,7 @@
                 <td>
                     @if (bet.MatchedBetId != null)
                     {
-                        @Html.ActionLink(bet.MatchedBetId.ToString(), "Edit", "MatchedBet", new { Id = bet.MatchedBetId }, null);
+                        @Html.ActionLink(bet.MatchedBetId.ToString(), "Details", "MatchedBet", new { Id = bet.MatchedBetId }, null);
                     }
                 </td>
             </tr>

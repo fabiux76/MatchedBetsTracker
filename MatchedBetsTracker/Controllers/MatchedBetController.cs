@@ -58,8 +58,10 @@ namespace MatchedBetsTracker.Controllers
             //1. Creazione della scommessa di Puntata
             var backBet = MatchedBetHandler.CreateBackBet(matchedBetViewModel, matchedBet);
 
-            //2. Creazione della scommessa di Bancata
-            var layBet = MatchedBetHandler.CreateLayBet(matchedBetViewModel, matchedBet);
+            //2. Creazione della scommessa di Bancata (può essere anche un'altra puntata - dutcher)
+            var layBet = matchedBetViewModel.IsBackBack 
+                ? MatchedBetHandler.CreateSecondBackBet(matchedBetViewModel, matchedBet)
+                : MatchedBetHandler.CreateLayBet(matchedBetViewModel, matchedBet);
 
             //3. Creazione della Transazione di Puntata
             var backTransaction = MatchedBetHandler.CreateOpenBetTransaction(backBet);

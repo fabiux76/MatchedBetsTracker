@@ -44,6 +44,18 @@ namespace MatchedBetsTracker.BusinessLogic
             }.Initialize(simpleMatchedBet, matchedBet);
         }
 
+        public static Bet CreateSecondBackBet(SimpleMatchedBetFormViewModel simpleMatchedBet, MatchedBet matchedBet)
+        {
+            return new Bet
+            {
+                BrokerAccountId = simpleMatchedBet.LayBrokerAccountId,
+                BetAmount = simpleMatchedBet.LayAmount,
+                Quote = simpleMatchedBet.LayQuote,
+                Responsability = simpleMatchedBet.LayAmount,
+                IsLay = false,
+            }.Initialize(simpleMatchedBet, matchedBet);
+        }
+
         public static Transaction CreateOpenBetTransaction(Bet bet)
         {
             return new Transaction

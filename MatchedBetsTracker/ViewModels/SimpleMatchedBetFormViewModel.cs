@@ -29,6 +29,8 @@ namespace MatchedBetsTracker.ViewModels
 
         public bool ValidateTransactions { get; set; }
 
+        public bool IsBackBack { get; set; }
+
         public IEnumerable<BrokerAccount> BrokerAccounts { get; set; }
     }
 }

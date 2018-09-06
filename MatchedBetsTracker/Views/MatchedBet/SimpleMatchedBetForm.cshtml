@@ -74,6 +74,12 @@
         @Html.ValidationMessageFor(m => m.ValidateTransactions)
     </div>
 
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.IsBackBack, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.IsBackBack, new { @class = "form-check-label" })
+        @Html.ValidationMessageFor(m => m.IsBackBack)
+    </div>
+
     @Html.HiddenFor(m => m.Id)
 
     <button type="submit" class="btn btn-primary">Save</button>
