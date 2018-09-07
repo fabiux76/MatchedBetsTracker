@@ -32,7 +32,9 @@
                 <td>@bet.Quote</td>
                 <td>@bet.BetAmount</td>
                 <td>@bet.Responsability</td>
-                <td>@bet.Status.Description</td>
+                <td>
+                    <button data-bet-id="@bet.Id" class="btn-link js-change-status">@bet.Status.Description</button>
+                </td>  
                 <td>@bet.ProfitLoss</td>
                 <td>
                     @if (bet.MatchedBetId != null)
