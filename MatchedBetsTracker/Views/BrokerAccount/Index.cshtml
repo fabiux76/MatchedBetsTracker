@@ -10,6 +10,19 @@
     @Html.ActionLink("New Broker Account", "New", "BrokerAccount", null, new { @class = "btn btn-primary" })
 </p>
 
+@if (Model.ShowInactiveAccounts)
+{
+    <p>
+        @Html.ActionLink("Hide Inactive Account", "Index", "BrokerAccount", new { showInactive = false }, new { @class = "btn btn-primary" })
+    </p>
+}
+else
+{
+    <p>
+        @Html.ActionLink("Show Inactive Account", "Index", "BrokerAccount", new { showInactive = true }, new { @class = "btn btn-primary" })
+    </p>
+}
+
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
@@ -23,25 +36,28 @@
     <tbody>
         @foreach (var brokerAccount in Model.BrokerAccounts)
         {
-            var brokerAccountAmount = brokerAccount.AmountValidated.ToString("F2");
-            if (Math.Abs(brokerAccount.AmountTotal - brokerAccount.AmountValidated) > 0.01)
+            if (brokerAccount.BrokerAccount.Active || Model.ShowInactiveAccounts)
             {
-                brokerAccountAmount += " (" + brokerAccount.AmountTotal.ToString("F2") + ")";
-            }
+                var brokerAccountAmount = brokerAccount.AmountValidated.ToString("F2");
+                if (Math.Abs(brokerAccount.AmountTotal - brokerAccount.AmountValidated) > 0.01)
+                {
+                    brokerAccountAmount += " (" + brokerAccount.AmountTotal.ToString("F2") + ")";
+                }
 
-            var brokerAccountOpenResponsability = brokerAccount.OpenBetsResponsabilityValidated.ToString("F2");
-            if (Math.Abs(brokerAccount.OpenBetsResponsabilityTotal - brokerAccount.OpenBetsResponsabilityValidated) > 0.01)
-            {
-                brokerAccountOpenResponsability += " (" + brokerAccount.OpenBetsResponsabilityTotal.ToString("F2") + ")";
-            }
+                var brokerAccountOpenResponsability = brokerAccount.OpenBetsResponsabilityValidated.ToString("F2");
+                if (Math.Abs(brokerAccount.OpenBetsResponsabilityTotal - brokerAccount.OpenBetsResponsabilityValidated) > 0.01)
+                {
+                    brokerAccountOpenResponsability += " (" + brokerAccount.OpenBetsResponsabilityTotal.ToString("F2") + ")";
+                }
 
-            <tr>
-                <td>@Html.ActionLink(brokerAccount.BrokerAccount.Name, "Details", "BrokerAccount", new {Id = brokerAccount.BrokerAccount.Id}, null)</td> 
-                <td>@brokerAccountAmount</td>
-                <td>@brokerAccountOpenResponsability</td>
-                <td>@brokerAccount.BrokerAccount.Notes</td>
-                <td>@brokerAccount.BrokerAccount.Active</td>
-            </tr>
+                <tr>
+                    <td>@Html.ActionLink(brokerAccount.BrokerAccount.Name, "Details", "BrokerAccount", new { Id = brokerAccount.BrokerAccount.Id }, null)</td>
+                    <td>@brokerAccountAmount</td>
+                    <td>@brokerAccountOpenResponsability</td>
+                    <td>@brokerAccount.BrokerAccount.Notes</td>
+                    <td>@brokerAccount.BrokerAccount.Active</td>
+                </tr>
+            }
         }
     </tbody>
 </table>

@@ -38,7 +38,9 @@ namespace MatchedBetsTracker.Controllers
             var viewModel = new TransactionFormViewModel
             {
                 TransactionTypes = _context.TransactionTypes.ToList(),
-                BrokerAccounts = _context.BrokerAccounts.ToList(),
+                BrokerAccounts = _context.BrokerAccounts
+                                         .Where(b => b.Active)
+                                         .ToList(),
                 Transaction = new Transaction
                 {
                     Date = DateTime.Now

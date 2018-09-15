@@ -174,7 +174,7 @@ namespace MatchedBetsTracker.BusinessLogic
                     .Sum(t => t.Amount);
         }
 
-        public static BrokerAccountsSummaryViewModel CreateAccountsSummary(IEnumerable<BrokerAccountWithSummariesViewModel> brokers)
+        public static BrokerAccountsSummaryViewModel CreateAccountsSummary(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, bool showInactiveAccounts)
         {
             BrokerAccountsSummaryViewModel res = new BrokerAccountsSummaryViewModel
             {
@@ -189,6 +189,7 @@ namespace MatchedBetsTracker.BusinessLogic
                 TotalOpenResponsabilitiesValidated = ComputeTotalOpenResponsabilities(brokers, false),
                 TotalAvailability = ComputeTotalAvailability(brokers, true),
                 TotalAvailabilityValidated = ComputeTotalAvailability(brokers, false),
+                ShowInactiveAccounts = showInactiveAccounts
             };
             ComputeNetProfit(res);
             return res;

@@ -32,5 +32,7 @@ namespace MatchedBetsTracker.ViewModels
         public double NetProfitValidated { get; set; }
 
         public double NetProfit { get; set; }
+
+        public bool ShowInactiveAccounts { get; set; }
     }
 }

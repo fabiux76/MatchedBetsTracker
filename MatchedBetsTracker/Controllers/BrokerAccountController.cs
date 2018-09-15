@@ -22,7 +22,7 @@ namespace MatchedBetsTracker.Controllers
         }
 
         // GET: BrokerAccount
-        public ActionResult Index()
+        public ActionResult Index(bool showInactive = false)
         {
             var brokerAccounts = _context.BrokerAccounts
                                          .Include(b => b.Transactions)
@@ -30,7 +30,8 @@ namespace MatchedBetsTracker.Controllers
                                          .ToList();
 
             var accountsWithSummary = MatchedBetHandler.CreateAccountsSummary(
-                brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries).ToList());
+                brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries)
+                              .ToList(), showInactive);
 
             return View(accountsWithSummary);
         }
