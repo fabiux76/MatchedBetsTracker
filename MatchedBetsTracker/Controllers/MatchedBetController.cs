@@ -23,10 +23,11 @@ namespace MatchedBetsTracker.Controllers
         }
 
         // GET: MatchedBet
-        public ActionResult Index()
+        public ActionResult Index(bool showClosed = false)
         {
             var matchedBets = _context.MatchedBets
-                        .ToList();
+                                      .Where(matchedBet => showClosed || matchedBet.Status == MatchedBetStatus.Open)
+                                      .ToList();
 
             return View(matchedBets);
         }

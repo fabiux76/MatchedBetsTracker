@@ -10,6 +10,10 @@
     @Html.ActionLink("New Simple Matched Bet", "NewSimple", "MatchedBet", null, new { @class = "btn btn-primary" })
 </p>
 
+<p>
+    @Html.ActionLink("Show Closed Bets", "Index", "MatchedBet", new { showClosed = true }, new { @class = "btn btn-primary" })
+</p>
+
 <table class="table table-bordered table-hover">
     <thead>
         <tr>

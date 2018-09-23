@@ -9,6 +9,7 @@ using AutoMapper;
 using MatchedBetsTracker.Dtos;
 using MatchedBetsTracker.Models;
 using MatchedBetsTracker.BusinessLogic;
+using System.Data.Entity;
 
 namespace MatchedBetsTracker.Controllers.Api
 {
@@ -30,7 +31,8 @@ namespace MatchedBetsTracker.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var betInDb = _context.Bets.SingleOrDefault(b => b.Id == id);
+            var betInDb = _context.Bets.Include(bet => bet.MatchedBet)
+                                       .SingleOrDefault(b => b.Id == id);
             if (betInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
@@ -51,6 +53,22 @@ namespace MatchedBetsTracker.Controllers.Api
                 {
                     var winningTransaction = MatchedBetHandler.CreateCloseBetTransaction(betInDb);
                     _context.Transactions.Add(winningTransaction);
+                }
+
+                //Update also MAtchedetStatus if all set
+                if (status == BetStatus.Open)
+                {
+                    betInDb.MatchedBet.Status = MatchedBetStatus.Open;
+                }
+                else
+                {
+                    //Get all other bets of matchedBet
+                    var allBetsOfMatchedBet = _context.Bets.Where(bet => bet.MatchedBetId == betInDb.MatchedBetId);
+                    if (!allBetsOfMatchedBet.Any(bet => bet.BetStatusId == BetStatus.Open))
+                    {
+                        //Per convenzione anche se non avrebbe molto senso in questo caso...
+                        betInDb.MatchedBet.Status = MatchedBetStatus.BackWon;
+                    }
                 }
 
                 _context.SaveChanges();
