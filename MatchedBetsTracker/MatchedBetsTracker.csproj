@@ -336,6 +336,10 @@
     <Compile Include="Migrations\201809271408563_CreateDefautUserAccount.Designer.cs">
       <DependentUpon>201809271408563_CreateDefautUserAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809271416583_UserAccountMandatory.cs" />
+    <Compile Include="Migrations\201809271416583_UserAccountMandatory.Designer.cs">
+      <DependentUpon>201809271416583_UserAccountMandatory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -707,6 +711,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809271408563_CreateDefautUserAccount.resx">
       <DependentUpon>201809271408563_CreateDefautUserAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271416583_UserAccountMandatory.resx">
+      <DependentUpon>201809271416583_UserAccountMandatory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

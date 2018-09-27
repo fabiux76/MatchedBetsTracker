@@ -31,6 +31,6 @@ namespace MatchedBetsTracker.Models
         public bool Active { get; set; }
 
         public UserAccount Owner { get; set; }
-        public int? OwnerId { get; set; }
+        public int OwnerId { get; set; }
     }
 }
