@@ -328,6 +328,14 @@
     <Compile Include="Migrations\201808201430056_AddCorrectionTransactionType.Designer.cs">
       <DependentUpon>201808201430056_AddCorrectionTransactionType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809271408109_AddUserAccount.cs" />
+    <Compile Include="Migrations\201809271408109_AddUserAccount.Designer.cs">
+      <DependentUpon>201809271408109_AddUserAccount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809271408563_CreateDefautUserAccount.cs" />
+    <Compile Include="Migrations\201809271408563_CreateDefautUserAccount.Designer.cs">
+      <DependentUpon>201809271408563_CreateDefautUserAccount.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -339,6 +347,7 @@
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\TransactionSign.cs" />
     <Compile Include="Models\TransactionType.cs" />
+    <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BetFormViewModel.cs" />
@@ -692,6 +701,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808201430056_AddCorrectionTransactionType.resx">
       <DependentUpon>201808201430056_AddCorrectionTransactionType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271408109_AddUserAccount.resx">
+      <DependentUpon>201809271408109_AddUserAccount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271408563_CreateDefautUserAccount.resx">
+      <DependentUpon>201809271408563_CreateDefautUserAccount.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

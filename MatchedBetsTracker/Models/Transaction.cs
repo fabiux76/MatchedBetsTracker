@@ -30,6 +30,9 @@ namespace MatchedBetsTracker.Models
         public Bet Bet { get; set; }
 
         [Display(Name = "Bet")]
-        public int? BetId { get; set; }        
+        public int? BetId { get; set; }
+
+        public UserAccount UserAccount { get; set; }
+        public int? UserAccountId { get; set; }
     }
 }
