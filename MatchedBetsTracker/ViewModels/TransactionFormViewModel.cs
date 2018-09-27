@@ -1,4 +1,4 @@
-﻿using MatchedBetsTracker.Models;
+using MatchedBetsTracker.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,7 @@ namespace MatchedBetsTracker.ViewModels
     {
         public IEnumerable<TransactionType> TransactionTypes { get; set; }
         public IEnumerable<BrokerAccount> BrokerAccounts { get; set; }
+        public IEnumerable<UserAccount> UserAccounts { get; set; }
         public Transaction Transaction { get; set; }
     }
 }

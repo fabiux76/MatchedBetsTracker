@@ -16,7 +16,8 @@ namespace MatchedBetsTracker.BusinessLogic
             return new MatchedBet
             {
                 EventDescription = simpleMatchedBet.EventDescription,
-                Status = MatchedBetStatus.Open
+                Status = MatchedBetStatus.Open,
+                UserAccountId = simpleMatchedBet.BackBrokerAccountId
             };
         }
 
@@ -28,7 +29,7 @@ namespace MatchedBetsTracker.BusinessLogic
                 BetAmount = simpleMatchedBet.BackAmount,                                                           
                 Quote = simpleMatchedBet.BackQuote,
                 Responsability = simpleMatchedBet.BackAmount,
-                IsLay = false,
+                IsLay = false,                
             }.Initialize(simpleMatchedBet, matchedBet);
         }
 
@@ -65,7 +66,8 @@ namespace MatchedBetsTracker.BusinessLogic
                 Bet = bet,
                 BrokerAccountId = bet.BrokerAccountId,
                 TransactionTypeId =  TransactionType.OpenBet,
-                Validated = false
+                Validated = false,
+                UserAccountId = bet.UserAccountId
             };
         }
 
@@ -80,7 +82,8 @@ namespace MatchedBetsTracker.BusinessLogic
                     Bet = bet,
                     BrokerAccountId = bet.BrokerAccountId,
                     TransactionTypeId = TransactionType.CreditBet,
-                    Validated = false
+                    Validated = false,
+                    UserAccountId = bet.UserAccountId
                 };
             }
             return null;
@@ -251,7 +254,7 @@ namespace MatchedBetsTracker.BusinessLogic
             bet.EventDescription = simpleMatchedBet.EventDescription;
             bet.MatchedBet = matchedBet;
             bet.ProfitLoss = 0;
-
+            bet.UserAccountId = matchedBet.UserAccountId;
             return bet;
         }
 

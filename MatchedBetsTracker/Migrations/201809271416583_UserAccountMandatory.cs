@@ -20,7 +20,7 @@ namespace MatchedBetsTracker.Migrations
             CreateIndex("dbo.BrokerAccounts", "OwnerId");
             CreateIndex("dbo.Transactions", "UserAccountId");
             AddForeignKey("dbo.Bets", "UserAccountId", "dbo.UserAccounts", "Id", cascadeDelete: true);
-            AddForeignKey("dbo.BrokerAccounts", "OwnerId", "dbo.UserAccounts", "Id", cascadeDelete: true);
+            AddForeignKey("dbo.BrokerAccounts", "OwnerId", "dbo.UserAccounts", "Id", cascadeDelete: false);
             AddForeignKey("dbo.Transactions", "UserAccountId", "dbo.UserAccounts", "Id", cascadeDelete: true);
         }
         

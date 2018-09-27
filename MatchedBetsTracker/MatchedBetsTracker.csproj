@@ -340,6 +340,22 @@
     <Compile Include="Migrations\201809271416583_UserAccountMandatory.Designer.cs">
       <DependentUpon>201809271416583_UserAccountMandatory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809271531028_AddMatchedBetOwner.cs" />
+    <Compile Include="Migrations\201809271531028_AddMatchedBetOwner.Designer.cs">
+      <DependentUpon>201809271531028_AddMatchedBetOwner.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809271536369_AddMatchedBetOwner-v2.cs" />
+    <Compile Include="Migrations\201809271536369_AddMatchedBetOwner-v2.Designer.cs">
+      <DependentUpon>201809271536369_AddMatchedBetOwner-v2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809271540051_AddMatchedBetOwner-v2-Populate.cs" />
+    <Compile Include="Migrations\201809271540051_AddMatchedBetOwner-v2-Populate.Designer.cs">
+      <DependentUpon>201809271540051_AddMatchedBetOwner-v2-Populate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809271541130_AddMatchedBetOwner-v2-Mandatory.cs" />
+    <Compile Include="Migrations\201809271541130_AddMatchedBetOwner-v2-Mandatory.Designer.cs">
+      <DependentUpon>201809271541130_AddMatchedBetOwner-v2-Mandatory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -348,6 +364,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MatchedBet.cs" />
+    <Compile Include="Models\OwnerTransactions.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\TransactionSign.cs" />
     <Compile Include="Models\TransactionType.cs" />
@@ -714,6 +731,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809271416583_UserAccountMandatory.resx">
       <DependentUpon>201809271416583_UserAccountMandatory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271531028_AddMatchedBetOwner.resx">
+      <DependentUpon>201809271531028_AddMatchedBetOwner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271536369_AddMatchedBetOwner-v2.resx">
+      <DependentUpon>201809271536369_AddMatchedBetOwner-v2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271540051_AddMatchedBetOwner-v2-Populate.resx">
+      <DependentUpon>201809271540051_AddMatchedBetOwner-v2-Populate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809271541130_AddMatchedBetOwner-v2-Mandatory.resx">
+      <DependentUpon>201809271541130_AddMatchedBetOwner-v2-Mandatory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

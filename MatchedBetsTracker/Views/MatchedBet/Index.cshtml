@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MatchedBetsTracker.Models.MatchedBet>
+@model IEnumerable<MatchedBetsTracker.Models.MatchedBet>
 
 @{
     ViewBag.Title = "Index";
@@ -18,6 +18,7 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>User</th>
             <th>Event Description</th>
             <th>Status</th>
         </tr>
@@ -27,6 +28,7 @@
         {
             <tr>
                 <td>@Html.ActionLink(matchedBet.Id.ToString(), "Details", "MatchedBet", new { Id = matchedBet.Id }, null)</td>
+                <td>@matchedBet.UserAccount.Name</td>
                 <td>@Html.ActionLink(matchedBet.EventDescription.ToString(), "Details", "MatchedBet", new { Id = matchedBet.Id }, null)</td>
                 <td>@matchedBet.Status.ToString()</td>                
             </tr>
