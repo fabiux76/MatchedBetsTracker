@@ -68,8 +68,8 @@ else
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
-        <th>Total Deposit</th>
-        <th>Total Withdrawn</th>
+        <th>Total Deposits</th>
+        <th>Total Withdrawals</th>
         <th>Total Bonus</th>
         <th>Total Availability</th>
         <th>Total Open Responsabilities</th>
@@ -92,11 +92,12 @@ else
     <thead>
     <tr>
         <th>User</th>
-        <th>Total Deposit</th>
-        <th>Total Withdrawn</th>
-        <th>Total Bonus</th>
-        <th>Net Profit</th>
-        <th>Exposition</th>
+        <th>Deposits</th>
+        <th>Withdrawals</th>
+        <th>Exposure</th>
+        <th>Bonus</th>
+        <th>Open Responsabilities</th>
+        <th>Net Profit</th>   
     </tr>        
     </thead>
     <tbody>
@@ -107,9 +108,10 @@ else
                 <th>@userAccountKey</th>
                 <th>@userAccount.TotalDeposit</th>
                 <th>@userAccount.TotalWithdrawn</th>
-                <th>@(userAccount.TotalBonusCredit-userAccount.TotalBonusExpired)</th>
-                <th>@userAccount.NetProfit</th>
-                <th>@userAccount.NetExposition</th>
+                <th>@userAccount.Exposure</th>
+                <th>@userAccount.TotalBonus</th>
+                <th>@userAccount.TotalOpenResponsabilities</th>
+                <th>@userAccount.NetProfit</th>                
             </tr>
         }          
     </tbody>

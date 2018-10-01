@@ -11,13 +11,13 @@ namespace MatchedBetsTracker.BusinessLogic
     {
         public static double layBrokerNetGain = 0.95;
 
-        public static MatchedBet CreateMatchedBet(SimpleMatchedBetFormViewModel simpleMatchedBet)
+        public static MatchedBet CreateMatchedBet(SimpleMatchedBetFormViewModel simpleMatchedBet, int userId)
         {
             return new MatchedBet
             {
                 EventDescription = simpleMatchedBet.EventDescription,
                 Status = MatchedBetStatus.Open,
-                UserAccountId = simpleMatchedBet.BackBrokerAccountId
+                UserAccountId = userId
             };
         }
 
@@ -187,8 +187,10 @@ namespace MatchedBetsTracker.BusinessLogic
                 TotalDepositValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyCredit, false),
                 TotalWithdrawn = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, true),
                 TotalWithdrawnValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, false),
-                TotalBonusCredit = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, true),
-                TotalBonusCreditValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, false),
+                TotalBonusCredit = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, true) +
+                                   ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, true),
+                TotalBonusCreditValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, false) +
+                                            ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, false),
                 TotalOpenResponsabilities = ComputeTotalOpenResponsabilities(brokerAccountWithSummariesViewModels, true),
                 TotalOpenResponsabilitiesValidated = ComputeTotalOpenResponsabilities(brokerAccountWithSummariesViewModels, false),
                 TotalAvailability = ComputeTotalAvailability(brokerAccountWithSummariesViewModels, true),
@@ -202,14 +204,10 @@ namespace MatchedBetsTracker.BusinessLogic
                             TotalDepositValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyCredit, false, user),
                             TotalWithdrawn = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, true, user),
                             TotalWithdrawnValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, false, user),
-                            TotalBonusCredit = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, true, user),
-                            TotalBonusCreditValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, false, user),
-                            TotalBonusExpired = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, true, user),
-                            TotalBonusExpiredValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, false, user),
-                            TotalCreditBetAmountOnClosedBets = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, true, user),
-                            TotalCreditBetAmountOnClosedBetsValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, false, user),
-                            TotalOpenBetAmountOnClosedBets = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, true, user, t => t.Bet != null && t.Bet.BetStatusId != BetStatus.Open),
-                            TotalOpenBetAmountOnOpenBets = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, true, user, t => t.Bet != null && t.Bet.BetStatusId == BetStatus.Open),
+                            TotalBonus = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, true, user) +
+                                         ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, true, user),
+                            TotalBetGain = ComputeTotalGainOnClosedBets(user),
+                            TotalOpenResponsabilities = ComputeOpenResponsabilities(user)
                         })
             };
             ComputeNetProfits(res);
@@ -237,6 +235,13 @@ namespace MatchedBetsTracker.BusinessLogic
 
             summary.UserAccountSummaries.Values.ForEach(userAccountSummary =>
             {
+                userAccountSummary.NetProfit = userAccountSummary.TotalBonus + userAccountSummary.TotalBetGain;
+                userAccountSummary.Exposure = userAccountSummary.TotalDeposit + userAccountSummary.TotalWithdrawn;
+            });
+
+            /*
+            summary.UserAccountSummaries.Values.ForEach(userAccountSummary =>
+            {
                 userAccountSummary.NetExposition = userAccountSummary.TotalDeposit + userAccountSummary.TotalWithdrawn;
 
                 userAccountSummary.NetProfit = userAccountSummary.TotalBonusCredit
@@ -252,7 +257,7 @@ namespace MatchedBetsTracker.BusinessLogic
                                                + userAccountSummary.TotalOpenBetAmountOnClosedBetsValidated;
 
             });
-
+            */
         }
 
         private static double ComputeTotalInitialAmounts(IEnumerable<BrokerAccountWithSummariesViewModel> brokers)
@@ -280,6 +285,31 @@ namespace MatchedBetsTracker.BusinessLogic
         private static double ComputeTotalOpenResponsabilities(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, bool includeNotValidatedTransactions)
         {
             return includeNotValidatedTransactions ? brokers.Sum(b => b.OpenBetsResponsabilityTotal) : brokers.Sum(b => b.OpenBetsResponsabilityValidated);
+        }
+
+        private static double ComputeTotalGainOnClosedBets(UserAccount userAccount)
+        {
+            return userAccount.BrokerAccounts.SelectMany(ba => ba.Bets)
+                                              .Where(bet => bet.UserAccount == userAccount)
+                                              .Where(bet => bet.BetStatusId != BetStatus.Open)
+                                              .Sum(bet => bet.ProfitLoss);
+        }
+
+        private static double ComputeTotalGainOnClosedBetsv2(UserAccount userAccount)
+        {
+            return userAccount.BrokerAccounts.SelectMany(ba => ba.Transactions)
+                                              .Where(t => t.UserAccount == userAccount)
+                                              .Where(t => t.Bet != null)
+                                              .Where(t => t.Bet.BetStatusId != BetStatus.Open)
+                                              .Sum(t => t.Amount);
+        }
+
+        private static double ComputeOpenResponsabilities(UserAccount userAccount)
+        {
+            return userAccount.BrokerAccounts.SelectMany(ba => ba.Bets)
+                                              .Where(bet => bet.UserAccount == userAccount)
+                                              .Where(bet => bet.BetStatusId == BetStatus.Open)
+                                              .Sum(bet => bet.Responsability);
         }
     }
 

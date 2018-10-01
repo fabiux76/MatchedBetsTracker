@@ -45,32 +45,24 @@ namespace MatchedBetsTracker.ViewModels
 
         public double TotalWithdrawn { get; set; }
 
-        public double TotalBonusCreditValidated { get; set; }
+        public double TotalBonusValidated { get; set; }
 
-        public double TotalBonusCredit { get; set; }
+        public double TotalBonus { get; set; }
 
-        public double TotalBonusExpiredValidated { get; set; }
+        public double TotalBetGainValidated { get; set; }
 
-        public double TotalBonusExpired { get; set; }
+        public double TotalBetGain { get; set; }
 
-        public double TotalOpenBetAmountOnClosedBets { get; set; }
+        public double TotalOpenResponsabilitiesValidated { get; set; }
 
-        public double TotalOpenBetAmountOnClosedBetsValidated { get; set; }
-
-        public double TotalCreditBetAmountOnClosedBets { get; set; }
-
-        public double TotalCreditBetAmountOnClosedBetsValidated { get; set; }
-
-        public double TotalOpenBetAmountOnOpenBets { get; set; }
-
-        public double TotalOpenBetAmountOnOpenBetsValidated { get; set; }
+        public double TotalOpenResponsabilities { get; set; }
 
         public double NetProfitValidated { get; set; }
 
         public double NetProfit { get; set; }
 
-        public double NetExpositionValidated { get; set; }
+        public double ExposureValidated { get; set; }
 
-        public double NetExposition { get; set; }
+        public double Exposure { get; set; }
     }
 }

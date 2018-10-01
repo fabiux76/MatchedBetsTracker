@@ -57,7 +57,10 @@ namespace MatchedBetsTracker.Controllers
 
             //Devo fare diverse attività:
             //0. Devo creare la matchedBet
-            var matchedBet = MatchedBetHandler.CreateMatchedBet(matchedBetViewModel);
+            var brockerAccout = _context.BrokerAccounts
+                                .Where(ba => ba.Id == matchedBetViewModel.LayBrokerAccountId)
+                                .SingleOrDefault();
+            var matchedBet = MatchedBetHandler.CreateMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);
 
             //1. Creazione della scommessa di Puntata
             var backBet = MatchedBetHandler.CreateBackBet(matchedBetViewModel, matchedBet);
