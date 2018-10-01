@@ -177,28 +177,47 @@ namespace MatchedBetsTracker.BusinessLogic
                     .Sum(t => t.Amount);
         }
 
-        public static BrokerAccountsSummaryViewModel CreateAccountsSummary(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, bool showInactiveAccounts)
+        public static BrokerAccountsSummaryViewModel CreateAccountsSummary(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, IEnumerable<UserAccount> userAccounts, bool showInactiveAccounts)
         {
-            BrokerAccountsSummaryViewModel res = new BrokerAccountsSummaryViewModel
+            var brokerAccountWithSummariesViewModels = brokers as IList<BrokerAccountWithSummariesViewModel> ?? brokers.ToList();
+            var res = new BrokerAccountsSummaryViewModel
             {
-                BrokerAccounts = brokers,
-                TotalDeposit = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyCredit, true),
-                TotalDepositValidated = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyCredit, false),
-                TotalWithdrawn = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyDebit, true),
-                TotalWithdrawnValidated = ComputeTotalTransactionAmount(brokers, TransactionType.MoneyDebit, false),
-                TotalBonusCredit = ComputeTotalTransactionAmount(brokers, TransactionType.CreditBonus, true),
-                TotalBonusCreditValidated = ComputeTotalTransactionAmount(brokers, TransactionType.CreditBonus, false),
-                TotalOpenResponsabilities = ComputeTotalOpenResponsabilities(brokers, true),
-                TotalOpenResponsabilitiesValidated = ComputeTotalOpenResponsabilities(brokers, false),
-                TotalAvailability = ComputeTotalAvailability(brokers, true),
-                TotalAvailabilityValidated = ComputeTotalAvailability(brokers, false),
-                ShowInactiveAccounts = showInactiveAccounts
+                BrokerAccounts = brokerAccountWithSummariesViewModels,
+                TotalDeposit = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyCredit, true),
+                TotalDepositValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyCredit, false),
+                TotalWithdrawn = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, true),
+                TotalWithdrawnValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, false),
+                TotalBonusCredit = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, true),
+                TotalBonusCreditValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, false),
+                TotalOpenResponsabilities = ComputeTotalOpenResponsabilities(brokerAccountWithSummariesViewModels, true),
+                TotalOpenResponsabilitiesValidated = ComputeTotalOpenResponsabilities(brokerAccountWithSummariesViewModels, false),
+                TotalAvailability = ComputeTotalAvailability(brokerAccountWithSummariesViewModels, true),
+                TotalAvailabilityValidated = ComputeTotalAvailability(brokerAccountWithSummariesViewModels, false),
+                ShowInactiveAccounts = showInactiveAccounts,
+                UserAccountSummaries = userAccounts
+                    .ToDictionary(user => user.Name,
+                        user => new UserAccountSummary
+                        {
+                            TotalDeposit = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyCredit, true, user),
+                            TotalDepositValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyCredit, false, user),
+                            TotalWithdrawn = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, true, user),
+                            TotalWithdrawnValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, false, user),
+                            TotalBonusCredit = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, true, user),
+                            TotalBonusCreditValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, false, user),
+                            TotalBonusExpired = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, true, user),
+                            TotalBonusExpiredValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, false, user),
+                            TotalCreditBetAmountOnClosedBets = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, true, user),
+                            TotalCreditBetAmountOnClosedBetsValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, false, user),
+                            TotalOpenBetAmountOnClosedBets = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, true, user, t => t.Bet != null && t.Bet.BetStatusId != BetStatus.Open),
+                            TotalOpenBetAmountOnOpenBets = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBet, true, user, t => t.Bet != null && t.Bet.BetStatusId == BetStatus.Open),
+                        })
             };
-            ComputeNetProfit(res);
+            ComputeNetProfits(res);
+
             return res;
         }
 
-        private static void ComputeNetProfit(BrokerAccountsSummaryViewModel summary)
+        private static void ComputeNetProfits(BrokerAccountsSummaryViewModel summary)
         {
             double totalInitialAmounts = ComputeTotalInitialAmounts(summary.BrokerAccounts);
             double totalCorrections = ComputeTotalTransactionAmount(summary.BrokerAccounts, TransactionType.Correction, true);
@@ -215,6 +234,25 @@ namespace MatchedBetsTracker.BusinessLogic
                                 - summary.TotalDepositValidated
                                 - totalInitialAmounts
                                 - totalCorrections;
+
+            summary.UserAccountSummaries.Values.ForEach(userAccountSummary =>
+            {
+                userAccountSummary.NetExposition = userAccountSummary.TotalDeposit + userAccountSummary.TotalWithdrawn;
+
+                userAccountSummary.NetProfit = userAccountSummary.TotalBonusCredit
+                                               + userAccountSummary.TotalBonusExpired
+                                               + userAccountSummary.TotalCreditBetAmountOnClosedBets
+                                               + userAccountSummary.TotalOpenBetAmountOnClosedBets;
+
+                userAccountSummary.NetExpositionValidated = userAccountSummary.TotalDepositValidated + userAccountSummary.TotalWithdrawnValidated;
+
+                userAccountSummary.NetProfit = userAccountSummary.TotalBonusCreditValidated
+                                               + userAccountSummary.TotalBonusExpiredValidated
+                                               + userAccountSummary.TotalCreditBetAmountOnClosedBetsValidated
+                                               + userAccountSummary.TotalOpenBetAmountOnClosedBetsValidated;
+
+            });
+
         }
 
         private static double ComputeTotalInitialAmounts(IEnumerable<BrokerAccountWithSummariesViewModel> brokers)
@@ -223,10 +261,12 @@ namespace MatchedBetsTracker.BusinessLogic
                           .Sum(b => b.IntialAmount);
         }
 
-        private static double ComputeTotalTransactionAmount(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, byte transactionType, bool includeNotValidatedTransactions)
+        private static double ComputeTotalTransactionAmount(IEnumerable<BrokerAccountWithSummariesViewModel> brokers, byte transactionType, bool includeNotValidatedTransactions, UserAccount userAccount = null, Func<Transaction, bool> condition = null)
         {
             return brokers.Select(b => b.BrokerAccount)
                           .SelectMany(b => b.Transactions)
+                          .Where(t => userAccount == null || t.UserAccountId == userAccount.Id)
+                          .Where(t => condition == null || condition(t))
                           .Where(t => t.TransactionTypeId == transactionType)
                           .Where(t => includeNotValidatedTransactions || t.Validated)
                           .Sum(t => t.Amount);

@@ -67,23 +67,50 @@ else
 
 <table class="table table-bordered table-hover">
     <thead>
-        <tr>
-            <th>Total Deposit</th>
-            <th>Total Withdrawn</th>
-            <th>Total Bonus</th>
-            <th>Total Availability</th>
-            <th>Total Open Responsabilities</th>
-            <th>Net Profit</th>
-        </tr>        
+    <tr>
+        <th>Total Deposit</th>
+        <th>Total Withdrawn</th>
+        <th>Total Bonus</th>
+        <th>Total Availability</th>
+        <th>Total Open Responsabilities</th>
+        <th>Net Profit</th>
+    </tr>        
     </thead>
     <tbody>
-        <tr>
-            <th>@Model.TotalDeposit</th>
-            <th>@Model.TotalWithdrawn</th>
-            <th>@Model.TotalBonusCredit</th>
-            <th>@Model.TotalAvailability</th>
-            <th>@Model.TotalOpenResponsabilities</th>
-            <th>@Model.NetProfit</th>
-        </tr>
+    <tr>
+        <th>@Model.TotalDeposit</th>
+        <th>@Model.TotalWithdrawn</th>
+        <th>@Model.TotalBonusCredit</th>
+        <th>@Model.TotalAvailability</th>
+        <th>@Model.TotalOpenResponsabilities</th>
+        <th>@Model.NetProfit</th>
+    </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>User</th>
+        <th>Total Deposit</th>
+        <th>Total Withdrawn</th>
+        <th>Total Bonus</th>
+        <th>Net Profit</th>
+        <th>Exposition</th>
+    </tr>        
+    </thead>
+    <tbody>
+        @foreach (var userAccountKey in Model.UserAccountSummaries.Keys)
+        {
+            var userAccount = Model.UserAccountSummaries[userAccountKey];
+            <tr>
+                <th>@userAccountKey</th>
+                <th>@userAccount.TotalDeposit</th>
+                <th>@userAccount.TotalWithdrawn</th>
+                <th>@(userAccount.TotalBonusCredit-userAccount.TotalBonusExpired)</th>
+                <th>@userAccount.NetProfit</th>
+                <th>@userAccount.NetExposition</th>
+            </tr>
+        }          
     </tbody>
 </table>

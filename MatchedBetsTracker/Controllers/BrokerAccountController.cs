@@ -30,9 +30,12 @@ namespace MatchedBetsTracker.Controllers
                                          .Include(b => b.Owner)
                                          .ToList();
 
+            var userAccounts = _context.UserAccounts
+                                        .Include(u => u.BrokerAccounts);
+
             var accountsWithSummary = MatchedBetHandler.CreateAccountsSummary(
                 brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries)
-                              .ToList(), showInactive);
+                              .ToList(), userAccounts.ToList(), showInactive);
 
             return View(accountsWithSummary);
         }

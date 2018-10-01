@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace MatchedBetsTracker.ViewModels
 {
@@ -34,5 +31,46 @@ namespace MatchedBetsTracker.ViewModels
         public double NetProfit { get; set; }
 
         public bool ShowInactiveAccounts { get; set; }
+
+        public IDictionary<string, UserAccountSummary> UserAccountSummaries;
+    }
+
+    public class UserAccountSummary
+    {
+        public double TotalDepositValidated { get; set; }
+
+        public double TotalDeposit { get; set; }
+
+        public double TotalWithdrawnValidated { get; set; }
+
+        public double TotalWithdrawn { get; set; }
+
+        public double TotalBonusCreditValidated { get; set; }
+
+        public double TotalBonusCredit { get; set; }
+
+        public double TotalBonusExpiredValidated { get; set; }
+
+        public double TotalBonusExpired { get; set; }
+
+        public double TotalOpenBetAmountOnClosedBets { get; set; }
+
+        public double TotalOpenBetAmountOnClosedBetsValidated { get; set; }
+
+        public double TotalCreditBetAmountOnClosedBets { get; set; }
+
+        public double TotalCreditBetAmountOnClosedBetsValidated { get; set; }
+
+        public double TotalOpenBetAmountOnOpenBets { get; set; }
+
+        public double TotalOpenBetAmountOnOpenBetsValidated { get; set; }
+
+        public double NetProfitValidated { get; set; }
+
+        public double NetProfit { get; set; }
+
+        public double NetExpositionValidated { get; set; }
+
+        public double NetExposition { get; set; }
     }
 }
