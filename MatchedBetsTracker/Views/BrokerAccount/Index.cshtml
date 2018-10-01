@@ -27,6 +27,7 @@ else
     <thead>
     <tr>
         <th>Broker Account</th>
+        <th>Owner</th>
         <th>Available</th>
         <th>Open Bet Responsability</th>
         <th>Notes</th>
@@ -52,6 +53,7 @@ else
 
                 <tr>
                     <td>@Html.ActionLink(brokerAccount.BrokerAccount.Name, "Details", "BrokerAccount", new { Id = brokerAccount.BrokerAccount.Id }, null)</td>
+                    <td>@brokerAccount.BrokerAccount.Owner.Name</td>
                     <td>@brokerAccountAmount</td>
                     <td>@brokerAccountOpenResponsability</td>
                     <td>@brokerAccount.BrokerAccount.Notes</td>
@@ -65,23 +67,52 @@ else
 
 <table class="table table-bordered table-hover">
     <thead>
-        <tr>
-            <th>Total Deposit</th>
-            <th>Total Withdrawn</th>
-            <th>Total Bonus</th>
-            <th>Total Availability</th>
-            <th>Total Open Responsabilities</th>
-            <th>Net Profit</th>
-        </tr>        
+    <tr>
+        <th>Total Deposits</th>
+        <th>Total Withdrawals</th>
+        <th>Total Bonus</th>
+        <th>Total Availability</th>
+        <th>Total Open Responsabilities</th>
+        <th>Net Profit</th>
+    </tr>        
     </thead>
     <tbody>
-        <tr>
-            <th>@Model.TotalDeposit</th>
-            <th>@Model.TotalWithdrawn</th>
-            <th>@Model.TotalBonusCredit</th>
-            <th>@Model.TotalAvailability</th>
-            <th>@Model.TotalOpenResponsabilities</th>
-            <th>@Model.NetProfit</th>
-        </tr>
+    <tr>
+        <th>@Model.TotalDeposit</th>
+        <th>@Model.TotalWithdrawn</th>
+        <th>@Model.TotalBonusCredit</th>
+        <th>@Model.TotalAvailability</th>
+        <th>@Model.TotalOpenResponsabilities</th>
+        <th>@Model.NetProfit</th>
+    </tr>
+    </tbody>
+</table>
+
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>User</th>
+        <th>Deposits</th>
+        <th>Withdrawals</th>
+        <th>Exposure</th>
+        <th>Bonus</th>
+        <th>Open Responsabilities</th>
+        <th>Net Profit</th>   
+    </tr>        
+    </thead>
+    <tbody>
+        @foreach (var userAccountKey in Model.UserAccountSummaries.Keys)
+        {
+            var userAccount = Model.UserAccountSummaries[userAccountKey];
+            <tr>
+                <th>@userAccountKey</th>
+                <th>@userAccount.TotalDeposit</th>
+                <th>@userAccount.TotalWithdrawn</th>
+                <th>@userAccount.Exposure</th>
+                <th>@userAccount.TotalBonus</th>
+                <th>@userAccount.TotalOpenResponsabilities</th>
+                <th>@userAccount.NetProfit</th>                
+            </tr>
+        }          
     </tbody>
 </table>

@@ -9,6 +9,12 @@
 @using (Html.BeginForm("Save", "Transaction"))
 {
     <div class="form-group">
+        @Html.LabelFor(m => m.Transaction.UserAccountId)
+        @Html.DropDownListFor(m => m.Transaction.UserAccountId, new SelectList(Model.UserAccounts, "Id", "Name"), "Select User", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Transaction.UserAccountId)
+    </div>
+
+    <div class="form-group">
         @Html.LabelFor(m => m.Transaction.BrokerAccountId)
         @Html.DropDownListFor(m => m.Transaction.BrokerAccountId, new SelectList(Model.BrokerAccounts, "Id", "Name"), "Select Brocker", new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.Transaction.BrokerAccountId)

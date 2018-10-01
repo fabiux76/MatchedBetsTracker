@@ -27,6 +27,7 @@ namespace MatchedBetsTracker.Controllers
         {
             var matchedBets = _context.MatchedBets
                                       .Where(matchedBet => showClosed || matchedBet.Status == MatchedBetStatus.Open)
+                                      .Include(matchedBet => matchedBet.UserAccount)
                                       .ToList();
 
             return View(matchedBets);
@@ -56,7 +57,10 @@ namespace MatchedBetsTracker.Controllers
 
             //Devo fare diverse attività:
             //0. Devo creare la matchedBet
-            var matchedBet = MatchedBetHandler.CreateMatchedBet(matchedBetViewModel);
+            var brockerAccout = _context.BrokerAccounts
+                                .Where(ba => ba.Id == matchedBetViewModel.LayBrokerAccountId)
+                                .SingleOrDefault();
+            var matchedBet = MatchedBetHandler.CreateMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);
 
             //1. Creazione della scommessa di Puntata
             var backBet = MatchedBetHandler.CreateBackBet(matchedBetViewModel, matchedBet);
@@ -95,8 +99,10 @@ namespace MatchedBetsTracker.Controllers
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
                 .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
                 .Single(mb => mb.Id == id);
 
             //Devo cancellare in cascata 
@@ -128,7 +134,9 @@ namespace MatchedBetsTracker.Controllers
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
                 .Single(mb => mb.Id == id);
 
             //Devo cambiare il stato del MatchedBet
@@ -157,8 +165,10 @@ namespace MatchedBetsTracker.Controllers
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
                 .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
                 .Single(mb => mb.Id == id);            
 
             matchedBet.Bets.ForEach(bet => MatchedBetHandler.RecomputeBetResponsabilityAndProfit(bet));
@@ -181,8 +191,10 @@ namespace MatchedBetsTracker.Controllers
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
                 .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
                 .Single(mb => mb.Id == id);
 
             //Devo cambiare il stato del MatchedBet
@@ -200,8 +212,10 @@ namespace MatchedBetsTracker.Controllers
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
                 .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
                 .Single(mb => mb.Id == id);
             //////////////
 
@@ -224,8 +238,10 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(mb => mb.Bets)
                                     .Include(mb => mb.Bets.Select(b => b.Status))
                                     .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                                    .Include(mb => mb.Bets.Select(b => b.UserAccount))
                                     .Include(mb => mb.Bets.Select(b => b.Transactions))
                                     .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                                    .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
                                     .SingleOrDefault(mb => mb.Id == id);
 
             if (matchedBet == null) return HttpNotFound();

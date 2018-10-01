@@ -18,5 +18,7 @@ namespace MatchedBetsTracker.Models
         public string EventDescription { get; set; }
         public MatchedBetStatus Status { get; set; }
         public ICollection<Bet> Bets { get; set; }
+        public int UserAccountId { get; set; }
+        public UserAccount UserAccount { get; set; }
     }
 }

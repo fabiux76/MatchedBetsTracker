@@ -11,10 +11,10 @@ namespace MatchedBetsTracker.Models
         public int Id { get; set; }
 
         public DateTime Date { get; set; }
-
+        
         public TransactionType TransactionType { get; set; }
 
-        [Display(Name = "Transaction Type")]
+        [Display(Name = "Transaction Type")]        
         public byte TransactionTypeId { get; set; }
 
         [TransactionSign]
@@ -30,6 +30,11 @@ namespace MatchedBetsTracker.Models
         public Bet Bet { get; set; }
 
         [Display(Name = "Bet")]
-        public int? BetId { get; set; }        
+        public int? BetId { get; set; }
+
+        public UserAccount UserAccount { get; set; }
+
+        [OwnerTransactions]
+        public int UserAccountId { get; set; }
     }
 }

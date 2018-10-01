@@ -24,6 +24,7 @@ namespace MatchedBetsTracker.Models
         public BrokerAccount BrokerAccount { get; set; }
         public int BrokerAccountId { get; set; }
         public ICollection<Transaction> Transactions { get; set; }
-
+        public UserAccount UserAccount { get; set; }
+        public int UserAccountId { get; set; }
     }
 }

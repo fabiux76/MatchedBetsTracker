@@ -27,11 +27,15 @@ namespace MatchedBetsTracker.Controllers
             var brokerAccounts = _context.BrokerAccounts
                                          .Include(b => b.Transactions)
                                          .Include(b => b.Bets)
+                                         .Include(b => b.Owner)
                                          .ToList();
+
+            var userAccounts = _context.UserAccounts
+                                        .Include(u => u.BrokerAccounts);
 
             var accountsWithSummary = MatchedBetHandler.CreateAccountsSummary(
                 brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries)
-                              .ToList(), showInactive);
+                              .ToList(), userAccounts.ToList(), showInactive);
 
             return View(accountsWithSummary);
         }
@@ -46,6 +50,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.Bet)
                                     .Include(t => t.BrokerAccount)
+                                    .Include(t => t.UserAccount)
                                     .OrderBy(t => t.Date)
                                     .ToList();
 
@@ -53,6 +58,7 @@ namespace MatchedBetsTracker.Controllers
                 .Include(b => b.Status)
                 .Include(b => b.BrokerAccount)
                 .Include(b => b.MatchedBet)
+                .Include(b => b.UserAccount)
                 .OrderBy(b => b.BetDate)
                 .ToList();
 
@@ -60,13 +66,19 @@ namespace MatchedBetsTracker.Controllers
             {
                 BrokerAccount = brokerAccount,
                 Transactions = transactions,
-                Bets = bets
+                Bets = bets               
             });
         }
 
         public ActionResult New()
         {
-            return View("BrokerAccountForm");
+            var viewModel = new BrokerAccountFormViewModel
+            {
+                BrokerAccount = new BrokerAccount(),
+                UserAccounts = _context.UserAccounts.ToList()
+            };
+
+            return View("BrokerAccountForm", viewModel);
         }
 
         [HttpPost]
@@ -96,12 +108,19 @@ namespace MatchedBetsTracker.Controllers
 
         public ActionResult Edit(int id)
         {
+
             var brokerAccount = _context.BrokerAccounts.SingleOrDefault(b => b.Id == id);
 
             if (brokerAccount == null)
                 return HttpNotFound();
 
-            return View("BrokerAccountForm", brokerAccount);
+            var viewModel = new BrokerAccountFormViewModel
+            {
+                BrokerAccount = brokerAccount,
+                UserAccounts = _context.UserAccounts.ToList()
+            };
+
+            return View("BrokerAccountForm", viewModel);
         }
     }
 }

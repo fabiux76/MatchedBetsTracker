@@ -27,6 +27,7 @@ namespace MatchedBetsTracker.Controllers
             var transactions = _context.Transactions
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.BrokerAccount)
+                                    .Include(t => t.UserAccount)
                                     .Include(t => t.Bet)
                                     .ToList();
 
@@ -41,6 +42,7 @@ namespace MatchedBetsTracker.Controllers
                 BrokerAccounts = _context.BrokerAccounts
                                          .Where(b => b.Active)
                                          .ToList(),
+                UserAccounts = _context.UserAccounts.ToList(),                                      
                 Transaction = new Transaction
                 {
                     Date = DateTime.Now
@@ -58,6 +60,7 @@ namespace MatchedBetsTracker.Controllers
                 {
                     TransactionTypes = _context.TransactionTypes.ToList(),
                     BrokerAccounts = _context.BrokerAccounts.ToList(),
+                    UserAccounts = _context.UserAccounts.ToList(),
                     Transaction = transaction
                 };
 
@@ -78,6 +81,7 @@ namespace MatchedBetsTracker.Controllers
                 transactionInDb.Date = transaction.Date;
                 transactionInDb.Id = transaction.Id;
                 transactionInDb.TransactionTypeId = transaction.TransactionTypeId;
+                transactionInDb.UserAccountId = transaction.UserAccountId;
                 transactionInDb.Validated = transaction.Validated;
             }
             
@@ -91,6 +95,7 @@ namespace MatchedBetsTracker.Controllers
             var transaction = _context.Transactions
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.BrokerAccount)
+                                    .Include(t => t.UserAccount)
                                     .Include(t => t.Bet)
                                     .SingleOrDefault(t => t.Id == id);
 
@@ -101,6 +106,7 @@ namespace MatchedBetsTracker.Controllers
             {
                 TransactionTypes = _context.TransactionTypes.ToList(),
                 BrokerAccounts = _context.BrokerAccounts.ToList(),
+                UserAccounts = _context.UserAccounts.ToList(),
                 Transaction = transaction
             };
 
