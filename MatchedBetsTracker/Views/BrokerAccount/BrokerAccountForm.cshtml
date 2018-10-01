@@ -1,4 +1,6 @@
-@model MatchedBetsTracker.Models.BrokerAccount
+
+
+@model MatchedBetsTracker.ViewModels.BrokerAccountFormViewModel
 @{
     ViewBag.Title = "New";
 }
@@ -8,35 +10,48 @@
 @using (Html.BeginForm("Save", "BrokerAccount"))
 {
     <div class="form-group">
-        @Html.LabelFor(m => m.Name)
-        @Html.TextBoxFor(m => m.Name, new { @class = "form-control"})
+        @Html.LabelFor(m => m.BrokerAccount.Name)
+        @Html.TextBoxFor(m => m.BrokerAccount.Name, new { @class = "form-control"})
+    </div>
+   
+    <div class="form-group">
+        @Html.LabelFor(m => m.BrokerAccount.OwnerId)
+        @if (Model.BrokerAccount.Id > 0)
+        {
+            @Html.DropDownListFor(m => m.BrokerAccount.OwnerId, new SelectList(Model.UserAccounts, "Id", "Name"), "Select User", new {@class = "form-control", @disabled = "disabled"})
+        }
+        else
+        {
+            @Html.DropDownListFor(m => m.BrokerAccount.OwnerId, new SelectList(Model.UserAccounts, "Id", "Name"), "Select User", new { @class = "form-control" })
+        }
+        @Html.ValidationMessageFor(m => m.BrokerAccount.OwnerId)
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.UserName)
-        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+        @Html.LabelFor(m => m.BrokerAccount.UserName)
+        @Html.TextBoxFor(m => m.BrokerAccount.UserName, new { @class = "form-control" })
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.Password)
-        @Html.TextBoxFor(m => m.Password, new { @class = "form-control" })
+        @Html.LabelFor(m => m.BrokerAccount.Password)
+        @Html.TextBoxFor(m => m.BrokerAccount.Password, new { @class = "form-control" })
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.IntialAmount)
-        @Html.TextBoxFor(m => m.IntialAmount, new { @class = "form-control" })
+        @Html.LabelFor(m => m.BrokerAccount.IntialAmount)
+        @Html.TextBoxFor(m => m.BrokerAccount.IntialAmount, new { @class = "form-control" })
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(m => m.Notes)
-        @Html.TextAreaFor(m => m.Notes, new { @class = "form-control", rows = "6", cols = "50" })
+        @Html.LabelFor(m => m.BrokerAccount.Notes)
+        @Html.TextAreaFor(m => m.BrokerAccount.Notes, new { @class = "form-control", rows = "6", cols = "50" })
     </div>
 
     <div class="form-group form-check">
-        @Html.CheckBoxFor(m => m.Active, new { @class = "form-check-input" })
-        @Html.LabelFor(m => m.Active, new { @class = "form-check-label" })
+        @Html.CheckBoxFor(m => m.BrokerAccount.Active, new { @class = "form-check-input" })
+        @Html.LabelFor(m => m.BrokerAccount.Active, new { @class = "form-check-label" })
     </div>
 
-    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.BrokerAccount.Id)
     <button type="submit" class="btn btn-primary">Save</button>
 }

@@ -27,6 +27,7 @@ else
     <thead>
     <tr>
         <th>Broker Account</th>
+        <th>Owner</th>
         <th>Available</th>
         <th>Open Bet Responsability</th>
         <th>Notes</th>
@@ -52,6 +53,7 @@ else
 
                 <tr>
                     <td>@Html.ActionLink(brokerAccount.BrokerAccount.Name, "Details", "BrokerAccount", new { Id = brokerAccount.BrokerAccount.Id }, null)</td>
+                    <td>@brokerAccount.BrokerAccount.Owner.Name</td>
                     <td>@brokerAccountAmount</td>
                     <td>@brokerAccountOpenResponsability</td>
                     <td>@brokerAccount.BrokerAccount.Notes</td>
