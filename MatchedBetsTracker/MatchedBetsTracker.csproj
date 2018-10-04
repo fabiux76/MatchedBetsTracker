@@ -376,6 +376,7 @@
     <Compile Include="ViewModels\BrokerAccountFormViewModel.cs" />
     <Compile Include="ViewModels\BrokerAccountsSummaryViewModel.cs" />
     <Compile Include="ViewModels\BrokerAccountWithSummariesViewModel.cs" />
+    <Compile Include="ViewModels\NinjaBetOddsmatcherViewModel.cs" />
     <Compile Include="ViewModels\SimpleMatchedBetFormViewModel.cs" />
     <Compile Include="ViewModels\TransactionFormViewModel.cs" />
   </ItemGroup>
@@ -634,6 +635,7 @@
     <Content Include="Views\MatchedBet\Details.cshtml" />
     <Content Include="Views\Shared\_Transactions.cshtml" />
     <Content Include="Views\Shared\_Bets.cshtml" />
+    <Content Include="Views\MatchedBet\ParseNinjaBetOddsmatcherView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -275,5 +275,27 @@ namespace MatchedBetsTracker.Controllers
         {
             throw new NotImplementedException();
         }
+
+        public ActionResult OpenParseView()
+        {
+            var viewModel = new NinjaBetOddsmatcherViewModel()
+            {
+                Text = ""
+            };
+
+            return View("ParseNinjaBetOddsmatcherView", viewModel);
+        }
+
+        public ActionResult ParseNinjaBet(string Text)
+        {
+            var viewModel = MatchedBetHandler.Parse(Text);
+
+            viewModel.BetDate = DateTime.Now;
+            viewModel.BrokerAccounts = _context.BrokerAccounts
+                .Where(broker => broker.Active)
+                .ToList();
+
+            return View("SimpleMatchedBetForm", viewModel);
+        }
     }
 }

@@ -2,8 +2,12 @@ using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
+using Microsoft.Ajax.Utilities;
+using Microsoft.Owin.Security.Provider;
 
 namespace MatchedBetsTracker.BusinessLogic
 {
@@ -310,6 +314,105 @@ namespace MatchedBetsTracker.BusinessLogic
                                               .Where(bet => bet.UserAccount == userAccount)
                                               .Where(bet => bet.BetStatusId == BetStatus.Open)
                                               .Sum(bet => bet.Responsability);
+        }
+
+        public static SimpleMatchedBetFormViewModel Parse(String text)
+        {
+            var lines = text.Replace("\t", "").Split(new [] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+
+            var isPuntaBanca = !lines.GetValueForHeaderNextLine("PuntaBanca").IsNullOrWhiteSpace();
+
+            var date = lines.GetValueForHeaderNextLine("Ora"); //2018-10-04 15:00:00
+            var match = lines.GetValueForHeaderNextLine("Partita");
+            var evento = isPuntaBanca ? lines.GetValueForHeaderNextLine("PuntaBanca") : lines.GetValueForHeaderNextLineAtOccurence("PuntaPunta", 1, 2, 1);
+            var firstBet = lines.GetValueForHeaderNextLine("VAI SU"); //PUNTA €100 A QUOTA 4.70
+            var secondBet = isPuntaBanca ? lines.GetValueForHeaderNextLineAtOccurence("VAI SU", 2, 1, 3) :
+                                           lines.GetValueForHeaderNextLineAtOccurence("VAI SU", 2, 1, 1); //BANCA copia€ 108.05   A QUOTA 4.40
+
+            var firstBetParsed = ParseQuoteAmount(firstBet, isPuntaBanca);
+            var secondBetParsed = ParseQuoteAmount(secondBet, isPuntaBanca);
+
+            return new SimpleMatchedBetFormViewModel
+            {
+                BetDescription = evento,
+                EventDate = ParseDateFromNinjabet(date),
+                EventDescription = match,
+                BackAmount = firstBetParsed.Amount,
+                BackQuote = firstBetParsed.Quote,
+                LayAmount = secondBetParsed.Amount,
+                LayQuote = secondBetParsed.Quote,
+                IsBackBack = !isPuntaBanca
+            };
+        }
+
+        private static DateTime ParseDateFromNinjabet(string ninjabetDate)
+        {
+            return DateTime.ParseExact(ninjabetDate.Trim(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        private static ParsedQuoteAmount ParseQuoteAmount(string ninjabetQuoteAmount, bool isPuntaBanca)
+        {
+            var rx = new Regex(@"[0-9]+(\.[0-9][0-9]?)?",
+                RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+            // Find matches.
+            var matches = rx.Matches(ninjabetQuoteAmount);
+
+            return new ParsedQuoteAmount
+            {
+                Amount = double.Parse(matches[isPuntaBanca ? 0 : 1].Value),
+                Quote = double.Parse(matches[isPuntaBanca? 1 : 2].Value)
+            };
+        }
+
+    }
+
+    public class ParsedQuoteAmount
+    {
+        public double Quote { get; set; }
+        public double Amount { get; set; }
+    }
+
+    public static class ParserHelper
+    {
+        public static string GetValueForHeaderNextLine(this string[] lines, string headerPart)
+        {
+            return lines.GetValueForHeaderNextLineAtOccurence(headerPart, 1, 1, 1);
+        }
+
+        public static string GetValueForHeaderNextLineAtOccurence(this string[] lines, string headerPart, int occurrence, int skipLines, int numLines)
+        {
+            var numOccurrences = 0;
+            return lines.GetValueForHeader(line =>
+                {
+                    if (line.Contains(headerPart))
+                    {
+                        numOccurrences++;
+                        if (numOccurrences == occurrence) return true;
+                    }
+                    return false;
+                },
+                index =>
+                {
+                    var res = "";
+                    for (var i = 0; i < numLines; i++)
+                        res += lines[index + skipLines + i] + " ";
+                    return res;
+                });
+        } 
+
+        public static string GetValueForHeader(this string[] lines, 
+                                               Func<string, bool> headerMatchingFunc, 
+                                               Func<int, string> extractInfoFunc)
+        {
+            for (var i = 0; i < lines.Count(); i++)
+            {
+                if (headerMatchingFunc(lines[i]))
+                {
+                    return extractInfoFunc(i);
+                }
+            }
+            return string.Empty;            
         }
     }
 

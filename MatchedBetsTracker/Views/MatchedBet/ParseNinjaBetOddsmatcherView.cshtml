@@ -1,0 +1,18 @@
+@model MatchedBetsTracker.ViewModels.NinjaBetOddsmatcherViewModel
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>Parse Matched Bet from Ninjabet</h2>
+
+@using (Html.BeginForm("ParseNinjaBet", "MatchedBet"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Text)
+        @Html.TextAreaFor(m => m.Text, new { @class = "form-control", rows = "10", cols = "80" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Parse</button>
+}
+
