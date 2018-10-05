@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -32,6 +31,7 @@ namespace MatchedBetsTracker.Controllers.Api
             }
 
             var betInDb = _context.Bets.Include(bet => bet.MatchedBet)
+                                       .Include(bet => bet.BetEvents)
                                        .SingleOrDefault(b => b.Id == id);
             if (betInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -39,6 +39,8 @@ namespace MatchedBetsTracker.Controllers.Api
             if (betInDb.BetStatusId != status)
             {
                 betInDb.BetStatusId = status;
+                betInDb.LastBetEvent().BetStatusId = status;
+
                 MatchedBetHandler.RecomputeBetResponsabilityAndProfit(betInDb);
 
                 var creditBetTransactions = _context.Transactions.Where(t => t.BetId == betInDb.Id &&
@@ -64,6 +66,10 @@ namespace MatchedBetsTracker.Controllers.Api
                 {
                     //Get all other bets of matchedBet
                     var allBetsOfMatchedBet = _context.Bets.Where(bet => bet.MatchedBetId == betInDb.MatchedBetId);
+
+                    //Per debug:
+                    var openBets = allBetsOfMatchedBet.Where(bet => bet.BetStatusId == BetStatus.Open).ToList();
+
                     if (!allBetsOfMatchedBet.Any(bet => bet.BetStatusId == BetStatus.Open))
                     {
                         //Per convenzione anche se non avrebbe molto senso in questo caso...

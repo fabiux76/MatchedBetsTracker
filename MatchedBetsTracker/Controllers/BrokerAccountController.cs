@@ -27,6 +27,7 @@ namespace MatchedBetsTracker.Controllers
             var brokerAccounts = _context.BrokerAccounts
                                          .Include(b => b.Transactions)
                                          .Include(b => b.Bets)
+                                         .Include(b => b.Bets.Select(be => be.BetEvents))
                                          .Include(b => b.Owner)
                                          .ToList();
 
@@ -49,6 +50,7 @@ namespace MatchedBetsTracker.Controllers
             var transactions = _context.Transactions.Where(t => t.BrokerAccountId == id)
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.Bet)
+                                    .Include(b => b.Bet.BetEvents)
                                     .Include(t => t.BrokerAccount)
                                     .Include(t => t.UserAccount)
                                     .OrderBy(t => t.Date)
@@ -59,6 +61,7 @@ namespace MatchedBetsTracker.Controllers
                 .Include(b => b.BrokerAccount)
                 .Include(b => b.MatchedBet)
                 .Include(b => b.UserAccount)
+                .Include(b => b.BetEvents)
                 .OrderBy(b => b.BetDate)
                 .ToList();
 

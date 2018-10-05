@@ -60,43 +60,24 @@ namespace MatchedBetsTracker.Controllers
             var brockerAccout = _context.BrokerAccounts
                                 .Where(ba => ba.Id == matchedBetViewModel.LayBrokerAccountId)
                                 .SingleOrDefault();
-            var matchedBet = MatchedBetHandler.CreateMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);
 
-            //1. Creazione della scommessa di Puntata
-            var backBet = MatchedBetHandler.CreateBackBet(matchedBetViewModel, matchedBet);
+            var objects = MatchedBetHandler.CreateObjectsForSimpleMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);            
 
-            //2. Creazione della scommessa di Bancata (può essere anche un'altra puntata - dutcher)
-            var layBet = matchedBetViewModel.IsBackBack 
-                ? MatchedBetHandler.CreateSecondBackBet(matchedBetViewModel, matchedBet)
-                : MatchedBetHandler.CreateLayBet(matchedBetViewModel, matchedBet);
-
-            //3. Creazione della Transazione di Puntata
-            var backTransaction = MatchedBetHandler.CreateOpenBetTransaction(backBet);
-
-            //4. Creazione della Transazione di Bancata
-            var layTransaction = MatchedBetHandler.CreateOpenBetTransaction(layBet);
-
-            if (matchedBetViewModel.ValidateTransactions)
-            {
-                backTransaction.Validated = true;
-                layTransaction.Validated = true;
-            }
-
-            _context.MatchedBets.Add(matchedBet);
-            _context.Bets.Add(backBet);
-            _context.Bets.Add(layBet);
-            _context.Transactions.Add(backTransaction);
-            _context.Transactions.Add(layTransaction);
+            _context.MatchedBets.Add(objects.MatchedBet);
+            _context.Bets.AddRange(objects.Bets);
+            _context.BetEvents.AddRange(objects.BetEvents);
+            _context.Transactions.AddRange(objects.Transactions);
 
             _context.SaveChanges();
 
-            return RedirectToAction("Details", matchedBet);
+            return RedirectToAction("Details", objects.MatchedBet);
         }
 
         public ActionResult Delete(int id)
         {            
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -131,6 +112,7 @@ namespace MatchedBetsTracker.Controllers
         {
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
@@ -163,6 +145,7 @@ namespace MatchedBetsTracker.Controllers
             
             matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -189,6 +172,7 @@ namespace MatchedBetsTracker.Controllers
         {
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -210,6 +194,7 @@ namespace MatchedBetsTracker.Controllers
 
             matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -236,6 +221,7 @@ namespace MatchedBetsTracker.Controllers
         {
             var matchedBet = _context.MatchedBets
                                     .Include(mb => mb.Bets)
+                                    .Include(mb => mb.Bets.Select(b => b.BetEvents))
                                     .Include(mb => mb.Bets.Select(b => b.Status))
                                     .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                                     .Include(mb => mb.Bets.Select(b => b.UserAccount))
