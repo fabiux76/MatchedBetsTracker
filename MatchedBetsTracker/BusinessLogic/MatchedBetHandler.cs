@@ -95,7 +95,7 @@ namespace MatchedBetsTracker.BusinessLogic
                 BetAmount = simpleMatchedBet.LayAmount,
                 Quote = simpleMatchedBet.LayQuote,
                 Responsability = ComputeLayResponsability(simpleMatchedBet.LayQuote, simpleMatchedBet.LayAmount),
-                BetType = BetType.SingleBack
+                BetType = BetType.SingleLay
             }.Initialize(simpleMatchedBet, matchedBet);
             betEvents.ForEach(betEvent => betEvent.Bet = bet);
             return bet;
@@ -264,8 +264,8 @@ namespace MatchedBetsTracker.BusinessLogic
                             TotalWithdrawnValidated = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.MoneyDebit, false, user),
                             TotalBonus = ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.CreditBonus, true, user) +
                                          ComputeTotalTransactionAmount(brokerAccountWithSummariesViewModels, TransactionType.ExpireBonus, true, user),
-                            TotalBetGain = ComputeTotalGainOnClosedBets(user),
-                            TotalOpenResponsabilities = ComputeOpenResponsabilities(user)
+                            TotalBetGain = ComputeTotalGainOnClosedBets(user, brokerAccountWithSummariesViewModels.Select(ba => ba.BrokerAccount)),
+                            TotalOpenResponsabilities = ComputeOpenResponsabilities(user, brokerAccountWithSummariesViewModels.Select(ba => ba.BrokerAccount))
                         })
             };
             ComputeNetProfits(res);
@@ -345,26 +345,17 @@ namespace MatchedBetsTracker.BusinessLogic
             return includeNotValidatedTransactions ? brokers.Sum(b => b.OpenBetsResponsabilityTotal) : brokers.Sum(b => b.OpenBetsResponsabilityValidated);
         }
 
-        private static double ComputeTotalGainOnClosedBets(UserAccount userAccount)
+        private static double ComputeTotalGainOnClosedBets(UserAccount userAccount, IEnumerable<BrokerAccount> brokerAccounts)
         {
-            return userAccount.BrokerAccounts.SelectMany(ba => ba.Bets)
-                                              .Where(bet => bet.UserAccount == userAccount)
-                                              .Where(bet => bet.BetStatusId != BetStatus.Open)
-                                              .Sum(bet => bet.ProfitLoss);
+            return brokerAccounts.SelectMany(ba => ba.Bets)
+                                .Where(bet => bet.UserAccount == userAccount)
+                                .Where(bet => bet.BetStatusId != BetStatus.Open)
+                                .Sum(bet => bet.ProfitLoss);
         }
 
-        private static double ComputeTotalGainOnClosedBetsv2(UserAccount userAccount)
+        private static double ComputeOpenResponsabilities(UserAccount userAccount, IEnumerable<BrokerAccount> brokerAccounts)
         {
-            return userAccount.BrokerAccounts.SelectMany(ba => ba.Transactions)
-                                              .Where(t => t.UserAccount == userAccount)
-                                              .Where(t => t.Bet != null)
-                                              .Where(t => t.Bet.BetStatusId != BetStatus.Open)
-                                              .Sum(t => t.Amount);
-        }
-
-        private static double ComputeOpenResponsabilities(UserAccount userAccount)
-        {
-            return userAccount.BrokerAccounts.SelectMany(ba => ba.Bets)
+            return brokerAccounts.SelectMany(ba => ba.Bets)
                                               .Where(bet => bet.UserAccount == userAccount)
                                               .Where(bet => bet.BetStatusId == BetStatus.Open)
                                               .Sum(bet => bet.Responsability);
@@ -414,8 +405,8 @@ namespace MatchedBetsTracker.BusinessLogic
 
             return new ParsedQuoteAmount
             {
-                Amount = double.Parse(matches[isPuntaBanca ? 0 : 1].Value),
-                Quote = double.Parse(matches[isPuntaBanca? 1 : 2].Value)
+                Amount = double.Parse(matches[isPuntaBanca ? 0 : 1].Value, CultureInfo.InvariantCulture),
+                Quote = double.Parse(matches[isPuntaBanca? 1 : 2].Value, CultureInfo.InvariantCulture)
             };
         }
 

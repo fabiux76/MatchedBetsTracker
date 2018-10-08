@@ -58,7 +58,7 @@ namespace MatchedBetsTracker.Controllers
             //Devo fare diverse attività:
             //0. Devo creare la matchedBet
             var brockerAccout = _context.BrokerAccounts
-                                .Where(ba => ba.Id == matchedBetViewModel.LayBrokerAccountId)
+                                .Where(ba => ba.Id == matchedBetViewModel.BackBrokerAccountId)
                                 .SingleOrDefault();
 
             var objects = MatchedBetHandler.CreateObjectsForSimpleMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);            
