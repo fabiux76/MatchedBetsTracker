@@ -29,6 +29,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(b => b.Status)
                                     .Include(b => b.BrokerAccount)
                                     .Include(b => b.MatchedBet)
+                                    .Include(b => b.BetEvents)
                                     .OrderBy(b => b.BetDate)
                                     .ToList();
 
@@ -36,6 +37,7 @@ namespace MatchedBetsTracker.Controllers
         }
         public ActionResult New()
         {
+            /*
             var viewModel = new BetFormViewModel
             {
                 BetStatuses = _context.BetStatuses.ToList(),
@@ -47,11 +49,14 @@ namespace MatchedBetsTracker.Controllers
                 }
             };
 
-            return View("BetForm", viewModel);
+            return View("BetForm", viewModel);      
+            */
+            throw new NotImplementedException();      
         }
 
         public ActionResult Save(Bet bet)
         {
+            /*
             if (bet.Id == 0)
             {
                 _context.Bets.Add(bet);
@@ -79,6 +84,8 @@ namespace MatchedBetsTracker.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Bet");
+            */
+            throw new NotImplementedException();
         }
 
         public ActionResult Edit(int id)
@@ -86,6 +93,7 @@ namespace MatchedBetsTracker.Controllers
             var bet = _context.Bets
                                     .Include(b => b.Status)
                                     .Include(b => b.BrokerAccount)
+                                    .Include(b => b.BetEvents)
                                     .OrderBy(b => b.BetDate)
                                     .SingleOrDefault(t => t.Id == id);
 

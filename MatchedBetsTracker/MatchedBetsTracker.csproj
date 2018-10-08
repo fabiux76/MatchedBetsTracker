@@ -16,7 +16,7 @@
     <RootNamespace>MatchedBetsTracker</RootNamespace>
     <AssemblyName>MatchedBetsTracker</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -355,6 +355,22 @@
     <Compile Include="Migrations\201809271541130_AddMatchedBetOwner-v2-Mandatory.cs" />
     <Compile Include="Migrations\201809271541130_AddMatchedBetOwner-v2-Mandatory.Designer.cs">
       <DependentUpon>201809271541130_AddMatchedBetOwner-v2-Mandatory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810051212442_AddBetEvents.cs" />
+    <Compile Include="Migrations\201810051212442_AddBetEvents.Designer.cs">
+      <DependentUpon>201810051212442_AddBetEvents.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810051214371_PopulateBetEvents.cs" />
+    <Compile Include="Migrations\201810051214371_PopulateBetEvents.Designer.cs">
+      <DependentUpon>201810051214371_PopulateBetEvents.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810051220079_PopulateBetType.cs" />
+    <Compile Include="Migrations\201810051220079_PopulateBetType.Designer.cs">
+      <DependentUpon>201810051220079_PopulateBetType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810051317468_RemoveOldFields.cs" />
+    <Compile Include="Migrations\201810051317468_RemoveOldFields.Designer.cs">
+      <DependentUpon>201810051317468_RemoveOldFields.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -746,6 +762,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809271541130_AddMatchedBetOwner-v2-Mandatory.resx">
       <DependentUpon>201809271541130_AddMatchedBetOwner-v2-Mandatory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810051212442_AddBetEvents.resx">
+      <DependentUpon>201810051212442_AddBetEvents.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810051214371_PopulateBetEvents.resx">
+      <DependentUpon>201810051214371_PopulateBetEvents.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810051220079_PopulateBetType.resx">
+      <DependentUpon>201810051220079_PopulateBetType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810051317468_RemoveOldFields.resx">
+      <DependentUpon>201810051317468_RemoveOldFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
