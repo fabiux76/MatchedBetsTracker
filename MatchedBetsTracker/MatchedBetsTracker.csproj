@@ -372,6 +372,18 @@
     <Compile Include="Migrations\201810051317468_RemoveOldFields.Designer.cs">
       <DependentUpon>201810051317468_RemoveOldFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810091332347_AddSportEvent.cs" />
+    <Compile Include="Migrations\201810091332347_AddSportEvent.Designer.cs">
+      <DependentUpon>201810091332347_AddSportEvent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810091431091_AddSportEvent-HelperId.cs" />
+    <Compile Include="Migrations\201810091431091_AddSportEvent-HelperId.Designer.cs">
+      <DependentUpon>201810091431091_AddSportEvent-HelperId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810091431507_AddSportEvent-MigrateData.cs" />
+    <Compile Include="Migrations\201810091431507_AddSportEvent-MigrateData.Designer.cs">
+      <DependentUpon>201810091431507_AddSportEvent-MigrateData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -774,6 +786,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810051317468_RemoveOldFields.resx">
       <DependentUpon>201810051317468_RemoveOldFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810091332347_AddSportEvent.resx">
+      <DependentUpon>201810091332347_AddSportEvent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810091431091_AddSportEvent-HelperId.resx">
+      <DependentUpon>201810091431091_AddSportEvent-HelperId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810091431507_AddSportEvent-MigrateData.resx">
+      <DependentUpon>201810091431507_AddSportEvent-MigrateData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

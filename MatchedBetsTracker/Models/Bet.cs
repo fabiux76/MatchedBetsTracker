@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace MatchedBetsTracker.Models
 {
@@ -24,7 +22,7 @@ namespace MatchedBetsTracker.Models
         public UserAccount UserAccount { get; set; }
         public int UserAccountId { get; set; }
         public ICollection<BetEvent> BetEvents { get; set; }
-        public BetType BetType { get; set; }
+        public BetType BetType { get; set; } //Questo deve diventare singola o multipla... Ma in realtà si capisce dalla lista...
     }
 
     public enum BetType
@@ -37,13 +35,28 @@ namespace MatchedBetsTracker.Models
     public class BetEvent
     {
         public int Id { get; set; }
-        public string EventDescription { get; set; }
-        public DateTime EventDate { get; set; }
+        public string EventDescription { get; set; } // da rimuovere
+        public DateTime EventDate { get; set; } //da rimuovere
         public Bet Bet { get; set; }
         public int BetId { get; set; }
-        public BetStatus Status { get; set; }
+        public BetStatus Status { get; set; } //da rimuovere o cmq da far dipendere dallo SportEventCollegato
         public byte BetStatusId { get; set; }
         public double Quote { get; set; }
+
+
+        public bool IsLay { get; set; }
+        public SportEvent SportEvent { get; set; }
+        public int? SportEventId { get; set; } //null solo durante l'inizializzazione, poi diventa  obbligatorio
     }
 
+    public class SportEvent
+    {
+        public int Id { get; set; }
+        public string EventDescription { get; set; }
+        public DateTime EventDate { get; set; }
+        public bool? Happened { get; set; }
+        public ICollection<BetEvent> BetEvents { get; set; }
+
+        public int BetEventIdMigration { get; set; } //da rimuovere dopo la migrazione
+    }
 }
