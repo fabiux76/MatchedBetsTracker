@@ -384,6 +384,10 @@
     <Compile Include="Migrations\201810091431507_AddSportEvent-MigrateData.Designer.cs">
       <DependentUpon>201810091431507_AddSportEvent-MigrateData.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810091546024_AddSportEvent-Clean.cs" />
+    <Compile Include="Migrations\201810091546024_AddSportEvent-Clean.Designer.cs">
+      <DependentUpon>201810091546024_AddSportEvent-Clean.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -795,6 +799,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810091431507_AddSportEvent-MigrateData.resx">
       <DependentUpon>201810091431507_AddSportEvent-MigrateData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810091546024_AddSportEvent-Clean.resx">
+      <DependentUpon>201810091546024_AddSportEvent-Clean.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

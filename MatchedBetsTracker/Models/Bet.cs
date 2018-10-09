@@ -35,18 +35,14 @@ namespace MatchedBetsTracker.Models
     public class BetEvent
     {
         public int Id { get; set; }
-        public string EventDescription { get; set; } // da rimuovere
-        public DateTime EventDate { get; set; } //da rimuovere
         public Bet Bet { get; set; }
         public int BetId { get; set; }
         public BetStatus Status { get; set; } //da rimuovere o cmq da far dipendere dallo SportEventCollegato
         public byte BetStatusId { get; set; }
         public double Quote { get; set; }
-
-
         public bool IsLay { get; set; }
         public SportEvent SportEvent { get; set; }
-        public int? SportEventId { get; set; } //null solo durante l'inizializzazione, poi diventa  obbligatorio
+        public int SportEventId { get; set; }
     }
 
     public class SportEvent
@@ -56,7 +52,5 @@ namespace MatchedBetsTracker.Models
         public DateTime EventDate { get; set; }
         public bool? Happened { get; set; }
         public ICollection<BetEvent> BetEvents { get; set; }
-
-        public int BetEventIdMigration { get; set; } //da rimuovere dopo la migrazione
     }
 }

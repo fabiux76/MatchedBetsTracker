@@ -19,11 +19,13 @@ namespace MatchedBetsTracker.BusinessLogic
         {
             var matchedBet = CreateMatchedBet(matchedBetViewModel, userId);
 
+            var sportEvent = CreateSportEvent(matchedBetViewModel); 
+
             //1. Creazione della scommessa di Puntata
-            var backEvent = CreateBetEvent(matchedBetViewModel);
+            var backEvent = CreateBetEvent(matchedBetViewModel, sportEvent);
             var backBet = CreateBackBet(matchedBetViewModel, matchedBet, new List<BetEvent> { backEvent });
 
-            var layEvent = CreateBetEvent(matchedBetViewModel);
+            var layEvent = CreateBetEvent(matchedBetViewModel, sportEvent);
             //2. Creazione della scommessa di Bancata (può essere anche un'altra puntata - dutcher)
             var layBet = matchedBetViewModel.IsBackBack
                 ? CreateSecondBackBet(matchedBetViewModel, matchedBet, new List<BetEvent> { layEvent })
@@ -50,6 +52,15 @@ namespace MatchedBetsTracker.BusinessLogic
             };
         }
 
+        public static SportEvent CreateSportEvent(SimpleMatchedBetFormViewModel simpleMatchedBet)
+        {
+            return new SportEvent
+            {
+                EventDate = simpleMatchedBet.EventDate,
+                EventDescription = simpleMatchedBet.EventDescription
+            };
+        }    
+
         public static MatchedBet CreateMatchedBet(SimpleMatchedBetFormViewModel simpleMatchedBet, int userId)
         {
             return new MatchedBet
@@ -60,16 +71,15 @@ namespace MatchedBetsTracker.BusinessLogic
             };
         }
 
-        public static BetEvent CreateBetEvent(SimpleMatchedBetFormViewModel simpleMatchedBet)
+        public static BetEvent CreateBetEvent(SimpleMatchedBetFormViewModel simpleMatchedBet, SportEvent sportEvent)
         {
             //MANCA LA QUOTA!!!!
             //IN REALTA! VA TUTTO RIDEFINITO TUTTI QUESTI METODI VANNO RIDISEGNATI
 
             return new BetEvent
             {
-                EventDate = simpleMatchedBet.EventDate,
-                EventDescription = simpleMatchedBet.EventDescription,
-                BetStatusId = BetStatus.Open
+                BetStatusId = BetStatus.Open,
+                SportEvent = sportEvent
             };
         }
 
@@ -135,7 +145,7 @@ namespace MatchedBetsTracker.BusinessLogic
             {
                 return new Transaction
                 {
-                    Date = bet.LastBetEvent().EventDate,
+                    Date = bet.LastBetEvent().SportEvent.EventDate,
                     Amount = bet.ProfitLoss - GetOpenBetAmount(bet),
                     Bet = bet,
                     BrokerAccountId = bet.BrokerAccountId,
@@ -504,7 +514,7 @@ namespace MatchedBetsTracker.BusinessLogic
 
         public static BetEvent LastBetEvent(this Bet bet)
         {
-            return bet.BetEvents.OrderBy(betEvent => betEvent.EventDate).FirstOrDefault();
+            return bet.BetEvents.OrderBy(betEvent => betEvent.SportEvent.EventDate).FirstOrDefault();
         }
     }
     
