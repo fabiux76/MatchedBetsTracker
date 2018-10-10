@@ -47,7 +47,7 @@ namespace MatchedBetsTracker.BusinessLogic
                 .ForMatchedBet(matchedBet);
 
             //Creo la BetEvent per la prima scommessa
-            var firstBetEvent = CreateBetEvent(matchedBetViewModel.BackQuote, false)
+            var firstBetEvent = CreateBetEvent(matchedBetViewModel.BackQuote, BetEventType.BackHappen)
                 .ForSportEvent(sportEvent)
                 .ForBet(firstBet);
 
@@ -67,7 +67,7 @@ namespace MatchedBetsTracker.BusinessLogic
 
             //Creo la BetEvent per la seconda scommessa
 
-            var secondBetEvent = CreateBetEvent(matchedBetViewModel.LayQuote, !matchedBetViewModel.IsBackBack)
+            var secondBetEvent = CreateBetEvent(matchedBetViewModel.LayQuote, matchedBetViewModel.IsBackBack ? BetEventType.BackNotHappen : BetEventType.Lay)
                 .ForSportEvent(sportEvent)
                 .ForBet(secondBet);
 
@@ -171,13 +171,13 @@ namespace MatchedBetsTracker.BusinessLogic
             };
         }
 
-        private static BetEvent CreateBetEvent(double quote, bool isLay)
+        private static BetEvent CreateBetEvent(double quote, BetEventType betEventType)
         {
             return new BetEvent
             {
                 BetStatusId = BetStatus.Open,
                 Quote = quote,
-                IsLay = isLay
+                BetEventType = betEventType
             };
         }
 
@@ -298,9 +298,9 @@ namespace MatchedBetsTracker.BusinessLogic
         public static void UpdateBetStatus(this BetEvent betEvent, bool? happened)
         {
             if (happened == null) betEvent.BetStatusId = BetStatus.Open;
-            betEvent.BetStatusId = (bool)happened
-                ? betEvent.IsLay ? BetStatus.Loss : BetStatus.Won
-                : betEvent.IsLay ? BetStatus.Won : BetStatus.Loss;
+            else betEvent.BetStatusId = (bool)happened
+                    ? betEvent.BetEventType == BetEventType.BackHappen ? BetStatus.Won : BetStatus.Loss
+                    : betEvent.BetEventType == BetEventType.BackHappen ? BetStatus.Loss : BetStatus.Won;
         }
 
         public static void UpdateBetStatusAndAmount(this Bet bet)
@@ -308,7 +308,6 @@ namespace MatchedBetsTracker.BusinessLogic
             if (bet.BetEvents.Any(be => be.BetStatusId == BetStatus.Loss))
             {
                 bet.BetStatusId = BetStatus.Loss;
-                RecomputeBetResponsabilityAndProfit(bet);
             }
             else
             {
@@ -319,9 +318,9 @@ namespace MatchedBetsTracker.BusinessLogic
                 else
                 {
                     bet.BetStatusId = BetStatus.Won;
-                    RecomputeBetResponsabilityAndProfit(bet);
                 }
             }
+            RecomputeBetResponsabilityAndProfit(bet);
         }
 
         public static void UpdateMatchedBetStatus(this MatchedBet matchedBet)

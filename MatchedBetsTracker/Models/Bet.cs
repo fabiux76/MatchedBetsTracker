@@ -37,12 +37,19 @@ namespace MatchedBetsTracker.Models
         public int Id { get; set; }
         public Bet Bet { get; set; }
         public int BetId { get; set; }
-        public BetStatus Status { get; set; } //da rimuovere o cmq da far dipendere dallo SportEventCollegato
+        public BetStatus Status { get; set; }
         public byte BetStatusId { get; set; }
         public double Quote { get; set; }
-        public bool IsLay { get; set; }
         public SportEvent SportEvent { get; set; }
         public int SportEventId { get; set; }
+        public BetEventType BetEventType { get; set; }
+    }
+
+    public enum BetEventType
+    {
+        BackHappen = 1,
+        BackNotHappen = 2,
+        Lay = 3
     }
 
     public class SportEvent

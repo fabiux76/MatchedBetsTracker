@@ -104,7 +104,7 @@ namespace MatchedBetTrackerUnitTests.BusinessLogic
             firstBetEvent.SportEvent.Should().Be(sportEvent);
             firstBetEvent.Bet.Should().Be(firstBet);
             firstBetEvent.BetStatusId.Should().Be(BetStatus.Open);
-            firstBetEvent.IsLay.Should().Be(false);
+            firstBetEvent.BetEventType.Should().Be(BetEventType.BackHappen);
             firstBetEvent.Quote.Should().Be(backQuote);
 
             var betEventsForSecondtBet = result.BetEvents.Where(be => be.Bet == secondBet).ToList();
@@ -114,7 +114,7 @@ namespace MatchedBetTrackerUnitTests.BusinessLogic
             secondBetEvent.SportEvent.Should().Be(sportEvent);
             secondBetEvent.Bet.Should().Be(secondBet);
             secondBetEvent.BetStatusId.Should().Be(BetStatus.Open);
-            secondBetEvent.IsLay.Should().Be(!isBackBack);
+            secondBetEvent.BetEventType.Should().Be(isBackBack ? BetEventType.BackNotHappen : BetEventType.Lay);
             secondBetEvent.Quote.Should().Be(layQuote);
 
             var transactionsForFirstBet = result.Transactions.Where(t => t.Bet == firstBet).ToList();

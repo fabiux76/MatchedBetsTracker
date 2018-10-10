@@ -408,6 +408,18 @@
     <Compile Include="Migrations\201810091546024_AddSportEvent-Clean.Designer.cs">
       <DependentUpon>201810091546024_AddSportEvent-Clean.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810101922392_ExtendBetEventType.cs" />
+    <Compile Include="Migrations\201810101922392_ExtendBetEventType.Designer.cs">
+      <DependentUpon>201810101922392_ExtendBetEventType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810101923377_ExtendBetEventType-MigrateData.cs" />
+    <Compile Include="Migrations\201810101923377_ExtendBetEventType-MigrateData.Designer.cs">
+      <DependentUpon>201810101923377_ExtendBetEventType-MigrateData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810101933249_ExtendBetEventType-DismissOldData.cs" />
+    <Compile Include="Migrations\201810101933249_ExtendBetEventType-DismissOldData.Designer.cs">
+      <DependentUpon>201810101933249_ExtendBetEventType-DismissOldData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bet.cs" />
@@ -823,6 +835,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810091546024_AddSportEvent-Clean.resx">
       <DependentUpon>201810091546024_AddSportEvent-Clean.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810101922392_ExtendBetEventType.resx">
+      <DependentUpon>201810101922392_ExtendBetEventType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810101923377_ExtendBetEventType-MigrateData.resx">
+      <DependentUpon>201810101923377_ExtendBetEventType-MigrateData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810101933249_ExtendBetEventType-DismissOldData.resx">
+      <DependentUpon>201810101933249_ExtendBetEventType-DismissOldData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

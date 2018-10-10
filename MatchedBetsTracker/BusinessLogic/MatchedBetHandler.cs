@@ -14,16 +14,6 @@ namespace MatchedBetsTracker.BusinessLogic
 
     public static class MatchedBetHandler
     {                
-
-
-
-
-
-
-
-
-
-
         //LE logiche sotto spostarle in altre classi!!!
 
         public static BrokerAccountWithSummariesViewModel CreateAccountWithSummeries(BrokerAccount brokerAccount)
