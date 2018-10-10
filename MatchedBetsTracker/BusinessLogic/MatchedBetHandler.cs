@@ -5,125 +5,169 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using Microsoft.Ajax.Utilities;
-using Microsoft.Owin.Security.Provider;
 
 namespace MatchedBetsTracker.BusinessLogic
 {
-    public class MatchedBetHandler
+    public static class MatchedBetHandler
     {
         public static double layBrokerNetGain = 0.95;
 
+        //NEW STUFFF
         public static MatchedBetCreatedObjects CreateObjectsForSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel, int userId)
         {
-            var matchedBet = CreateMatchedBet(matchedBetViewModel, userId);
+            //Creo lo SportEvent (unico)
+            var sportEvent = CreateSportEvent(matchedBetViewModel.EventDate, matchedBetViewModel.EventDescription);
 
-            var sportEvent = CreateSportEvent(matchedBetViewModel); 
+            //Creo la brokerAccount
+            var matchedBet = CreateMatchedBet(matchedBetViewModel.EventDescription, userId);
 
-            //1. Creazione della scommessa di Puntata
-            var backEvent = CreateBetEvent(matchedBetViewModel, sportEvent);
-            var backBet = CreateBackBet(matchedBetViewModel, matchedBet, new List<BetEvent> { backEvent });
+            //Creo la Bet per la prima scommessa
+            var firstBet = CreateBet(matchedBetViewModel.BetDescription, 
+                                     matchedBetViewModel.BetDate,
+                                     matchedBetViewModel.BackQuote, 
+                                     matchedBetViewModel.BackAmount, 
+                                     BetType.SingleBack)
+                           .ForBrokerAccount(matchedBetViewModel.BackBrokerAccountId)
+                           .ForUserAccount(userId)
+                           .ForMatchedBet(matchedBet);
 
-            var layEvent = CreateBetEvent(matchedBetViewModel, sportEvent);
-            //2. Creazione della scommessa di Bancata (può essere anche un'altra puntata - dutcher)
-            var layBet = matchedBetViewModel.IsBackBack
-                ? CreateSecondBackBet(matchedBetViewModel, matchedBet, new List<BetEvent> { layEvent })
-                : CreateLayBet(matchedBetViewModel, matchedBet, new List<BetEvent> { layEvent });
+            //Creo la BetEvent per la prima scommessa
+            var firstBetEvent = CreateBetEvent(matchedBetViewModel.BackQuote, false)
+                .ForSportEvent(sportEvent)
+                .ForBet(firstBet);
 
-            //3. Creazione della Transazione di Puntata
-            var backTransaction = CreateOpenBetTransaction(backBet);
+            //Cre la transaction per la prima scommessa
+            var firstBetTransaction = CreateOpenBetTransaction(firstBet);            
 
-            //4. Creazione della Transazione di Bancata
-            var layTransaction = CreateOpenBetTransaction(layBet);
+            //Creo la Bet per la seconda scommessa
+
+            var secondBet = CreateBet(matchedBetViewModel.BetDescription,
+                    matchedBetViewModel.BetDate,
+                    matchedBetViewModel.LayQuote,
+                    matchedBetViewModel.LayAmount,
+                    matchedBetViewModel.IsBackBack ? BetType.SingleBack : BetType.SingleLay)
+                .ForBrokerAccount(matchedBetViewModel.LayBrokerAccountId)
+                .ForUserAccount(userId)
+                .ForMatchedBet(matchedBet);
+
+            //Creo la BetEvent per la seconda scommessa
+
+            var secondBetEvent = CreateBetEvent(matchedBetViewModel.LayQuote, !matchedBetViewModel.IsBackBack)
+                .ForSportEvent(sportEvent)
+                .ForBet(secondBet);
+
+            //Creo la transaction per la seconda scommessa
+            var secondBetTransaction = CreateOpenBetTransaction(secondBet);
 
             if (matchedBetViewModel.ValidateTransactions)
             {
-                backTransaction.Validated = true;
-                layTransaction.Validated = true;
+                firstBetTransaction.Validated = true;
+                secondBetTransaction.Validated = true;
             }
 
             return new MatchedBetCreatedObjects
             {
                 MatchedBet = matchedBet,
-                Bets = new List<Bet> { backBet, layBet },
-                BetEvents = new List<BetEvent> { backEvent, layEvent },
-                Transactions = new List<Transaction> { backTransaction, layTransaction }
+                Bets = new List<Bet> { firstBet, secondBet },
+                BetEvents = new List<BetEvent> { firstBetEvent, secondBetEvent },
+                Transactions = new List<Transaction> { firstBetTransaction, secondBetTransaction },
+                SportEvents = new List<SportEvent> { sportEvent}
             };
         }
 
-        public static SportEvent CreateSportEvent(SimpleMatchedBetFormViewModel simpleMatchedBet)
-        {
-            return new SportEvent
-            {
-                EventDate = simpleMatchedBet.EventDate,
-                EventDescription = simpleMatchedBet.EventDescription
-            };
-        }    
-
-        public static MatchedBet CreateMatchedBet(SimpleMatchedBetFormViewModel simpleMatchedBet, int userId)
+        private static MatchedBet CreateMatchedBet(string eventDescription, int userId)
         {
             return new MatchedBet
             {
-                EventDescription = simpleMatchedBet.EventDescription,
+                EventDescription = eventDescription,
                 Status = MatchedBetStatus.Open,
                 UserAccountId = userId
             };
         }
 
-        public static BetEvent CreateBetEvent(SimpleMatchedBetFormViewModel simpleMatchedBet, SportEvent sportEvent)
+        private static SportEvent CreateSportEvent(DateTime eventDate, string eventDescription)
         {
-            //MANCA LA QUOTA!!!!
-            //IN REALTA! VA TUTTO RIDEFINITO TUTTI QUESTI METODI VANNO RIDISEGNATI
-
-            return new BetEvent
+            return new SportEvent
             {
-                BetStatusId = BetStatus.Open,
-                SportEvent = sportEvent
+                EventDate = eventDate,
+                EventDescription = eventDescription
             };
         }
 
-        public static Bet CreateBackBet(SimpleMatchedBetFormViewModel simpleMatchedBet, MatchedBet matchedBet, IEnumerable<BetEvent> betEvents)
-        {
-            var bet = new Bet
+        private static BetEvent CreateBetEvent(double quote, bool isLay)
+        { 
+            return new BetEvent
             {
-                BrokerAccountId = simpleMatchedBet.BackBrokerAccountId,
-                BetAmount = simpleMatchedBet.BackAmount,                                                           
-                Quote = simpleMatchedBet.BackQuote,
-                Responsability = simpleMatchedBet.BackAmount,
-                BetType = BetType.SingleBack               
-            }.Initialize(simpleMatchedBet, matchedBet);
-            betEvents.ForEach(betEvent => betEvent.Bet = bet);
+                BetStatusId = BetStatus.Open,
+                Quote = quote,
+                IsLay = isLay
+            };
+        }
+
+        private static BetEvent ForSportEvent(this BetEvent betEvent, SportEvent sportEvent)
+        {
+            betEvent.SportEvent = sportEvent;
+            return betEvent;
+        }
+
+        private static BetEvent ForBet(this BetEvent betEvent, Bet bet)
+        {
+            betEvent.Bet = bet;
+            return betEvent;
+        }
+
+        private static Bet CreateBet(string betDescription, DateTime betDate, double quote, double betAmount, BetType betType)
+        {
+            return new Bet
+            {
+                BetDescription = betDescription,
+                BetDate = betDate,
+                Quote = quote,
+                BetAmount = betAmount,
+                Responsability = ComputeResponsability(betType, betAmount, quote),
+                BetStatusId = BetStatus.Open,
+                ProfitLoss = 0,
+                BetType = betType
+            };
+        }
+
+        private static Bet ForMatchedBet(this Bet bet, MatchedBet matchedBet)
+        {
+            bet.MatchedBet = matchedBet;
             return bet;
         }
 
-        public static Bet CreateLayBet(SimpleMatchedBetFormViewModel simpleMatchedBet, MatchedBet matchedBet, IEnumerable<BetEvent> betEvents)
+        private static Bet ForBrokerAccount(this Bet bet, BrokerAccount brokerAccount)
         {
-            var bet = new Bet
-            {
-                BrokerAccountId = simpleMatchedBet.LayBrokerAccountId,
-                BetAmount = simpleMatchedBet.LayAmount,
-                Quote = simpleMatchedBet.LayQuote,
-                Responsability = ComputeLayResponsability(simpleMatchedBet.LayQuote, simpleMatchedBet.LayAmount),
-                BetType = BetType.SingleLay
-            }.Initialize(simpleMatchedBet, matchedBet);
-            betEvents.ForEach(betEvent => betEvent.Bet = bet);
+            bet.BrokerAccount = brokerAccount;
             return bet;
         }
 
-        public static Bet CreateSecondBackBet(SimpleMatchedBetFormViewModel simpleMatchedBet, MatchedBet matchedBet, IEnumerable<BetEvent> betEvents)
+        private static Bet ForBrokerAccount(this Bet bet, int brokerAccountId)
         {
-            var bet = new Bet
-            {
-                BrokerAccountId = simpleMatchedBet.LayBrokerAccountId,
-                BetAmount = simpleMatchedBet.LayAmount,
-                Quote = simpleMatchedBet.LayQuote,
-                Responsability = simpleMatchedBet.LayAmount,
-                BetType = BetType.SingleBack
-            }.Initialize(simpleMatchedBet, matchedBet);
-            betEvents.ForEach(betEvent => betEvent.Bet = bet);
+            bet.BrokerAccountId = brokerAccountId;
             return bet;
         }
+
+        private static Bet ForUserAccount(this Bet bet, UserAccount userAccount)
+        {
+            bet.UserAccount = userAccount;
+            return bet;
+        }
+
+        private static Bet ForUserAccount(this Bet bet, int userAccountId)
+        {
+            bet.UserAccountId = userAccountId;
+            return bet;
+        }
+
+        private static double ComputeResponsability(BetType betType, double betAmount, double betQuote)
+        {
+            return betType == BetType.SingleLay ? ComputeLayResponsability(betQuote, betAmount) : betAmount;
+        }
+
+        //\NEW STUFF
 
         public static Transaction CreateOpenBetTransaction(Bet bet)
         {
@@ -521,8 +565,9 @@ namespace MatchedBetsTracker.BusinessLogic
 
     public class MatchedBetCreatedObjects {
         public MatchedBet MatchedBet { get; set; }
-        public IEnumerable<Bet> Bets { get; set; }
-        public IEnumerable<BetEvent> BetEvents { get; set; }
-        public IEnumerable<Transaction> Transactions { get; set; }
+        public List<Bet> Bets { get; set; }
+        public List<BetEvent> BetEvents { get; set; }
+        public List<Transaction> Transactions { get; set; }
+        public List<SportEvent> SportEvents { get; set; }
     }
 }

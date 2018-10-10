@@ -30,6 +30,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(b => b.BrokerAccount)
                                     .Include(b => b.MatchedBet)
                                     .Include(b => b.BetEvents)
+                                    .Include(b => b.BetEvents.Select(be => be.SportEvent))
                                     .OrderBy(b => b.BetDate)
                                     .ToList();
 
@@ -94,6 +95,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(b => b.Status)
                                     .Include(b => b.BrokerAccount)
                                     .Include(b => b.BetEvents)
+                                    .Include(b => b.BetEvents.Select(be => be.SportEvent))
                                     .OrderBy(b => b.BetDate)
                                     .SingleOrDefault(t => t.Id == id);
 

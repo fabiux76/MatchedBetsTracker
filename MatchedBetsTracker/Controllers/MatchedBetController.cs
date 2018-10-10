@@ -67,6 +67,7 @@ namespace MatchedBetsTracker.Controllers
             _context.Bets.AddRange(objects.Bets);
             _context.BetEvents.AddRange(objects.BetEvents);
             _context.Transactions.AddRange(objects.Transactions);
+            _context.SportEvents.AddRange(objects.SportEvents);
 
             _context.SaveChanges();
 
@@ -78,6 +79,7 @@ namespace MatchedBetsTracker.Controllers
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -113,6 +115,7 @@ namespace MatchedBetsTracker.Controllers
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
@@ -146,6 +149,7 @@ namespace MatchedBetsTracker.Controllers
             matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -173,6 +177,7 @@ namespace MatchedBetsTracker.Controllers
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -195,6 +200,7 @@ namespace MatchedBetsTracker.Controllers
             matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
                 .Include(mb => mb.Bets.Select(b => b.Status))
                 .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                 .Include(mb => mb.Bets.Select(b => b.UserAccount))
@@ -222,6 +228,7 @@ namespace MatchedBetsTracker.Controllers
             var matchedBet = _context.MatchedBets
                                     .Include(mb => mb.Bets)
                                     .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                                    .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
                                     .Include(mb => mb.Bets.Select(b => b.Status))
                                     .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
                                     .Include(mb => mb.Bets.Select(b => b.UserAccount))
