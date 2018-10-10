@@ -9,10 +9,12 @@ namespace MatchedBetsTracker.Controllers
 {
     public class BrokerAccountController : Controller
     {
+        private readonly ISayHelloService _sayHelloService;
         private ApplicationDbContext _context;
 
-        public BrokerAccountController()
+        public BrokerAccountController(ISayHelloService sayHelloService)
         {
+            _sayHelloService = sayHelloService;
             _context = new ApplicationDbContext();
         }
 
@@ -37,6 +39,8 @@ namespace MatchedBetsTracker.Controllers
             var accountsWithSummary = MatchedBetHandler.CreateAccountsSummary(
                 brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries)
                               .ToList(), userAccounts.ToList(), showInactive);
+
+            _sayHelloService.SayHello();
 
             return View(accountsWithSummary);
         }

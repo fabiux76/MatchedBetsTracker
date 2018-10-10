@@ -13,7 +13,6 @@ namespace MatchedBetsTracker.BusinessLogic
     {
         public static double layBrokerNetGain = 0.95;
 
-        //NEW STUFFF
         public static MatchedBetCreatedObjects CreateObjectsForSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel, int userId)
         {
             //Creo lo SportEvent (unico)
@@ -167,8 +166,6 @@ namespace MatchedBetsTracker.BusinessLogic
             return betType == BetType.SingleLay ? ComputeLayResponsability(betQuote, betAmount) : betAmount;
         }
 
-        //\NEW STUFF
-
         public static Transaction CreateOpenBetTransaction(Bet bet)
         {
             return new Transaction
@@ -260,6 +257,27 @@ namespace MatchedBetsTracker.BusinessLogic
                 return -bet.BetAmount;
             }
         }
+
+        //E' giusto che non venga ritornato nulla?!?! In questo caso dovrebbe essere lui ad occuparsi del salvataggio su DB...
+        public static void SetHappenStatusOnEvent(bool? newHappenStatus)
+        {
+            //Verifico qual'è lo stato precedente
+
+            //Verifico intanto se lo stato esistente è diverso dallo stato attuale. Se no, ritorno senza fare nulla
+
+            //Se è !=null, devo fare undo dei stati e delle transazioni
+
+            //A questo punto aggiorno gli stati ed aggiungo le transazioni
+        }
+
+
+
+
+
+
+
+
+        //LE logiche sotto spostarle in altre classi!!!
 
         public static BrokerAccountWithSummariesViewModel CreateAccountWithSummeries(BrokerAccount brokerAccount)
         {
