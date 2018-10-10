@@ -14,6 +14,14 @@ namespace MatchedBetTrackerUnitTests.BusinessLogic
     [TestFixture]
     public class MatchedBetHandlerUnitTests
     {
+        private IMatchedBetModelController sut;
+
+        [SetUp]
+        public void SetUp()
+        {
+            sut = new MatchedBetModelController();
+        }
+
         [TestCase(true, true)]
         [TestCase(false, true)]
         public void ShouldGenerateTheCorrectClassesForSimpleMatchedBet(bool isBackBack, bool validateTransactions)
@@ -47,7 +55,7 @@ namespace MatchedBetTrackerUnitTests.BusinessLogic
                 IsBackBack = isBackBack
             };
 
-            var result = MatchedBetHandler.CreateObjectsForSimpleMatchedBet(simpleMatchedBetViewModel, 1);
+            var result = sut.CreateObjectsForSimpleMatchedBet(simpleMatchedBetViewModel, 1);
             result.SportEvents.Count().Should().Be(1);
 
             var sportEvent = result.SportEvents[0];

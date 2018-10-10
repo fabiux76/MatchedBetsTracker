@@ -10,10 +10,12 @@ namespace MatchedBetsTracker.Controllers
 {
     public class MatchedBetController : Controller
     {
+        private readonly IMatchedBetModelController _matchedBetModelController;
         private ApplicationDbContext _context;
 
-        public MatchedBetController()
+        public MatchedBetController(IMatchedBetModelController matchedBetModelController)
         {
+            _matchedBetModelController = matchedBetModelController;
             _context = new ApplicationDbContext();
         }
 
@@ -61,7 +63,7 @@ namespace MatchedBetsTracker.Controllers
                                 .Where(ba => ba.Id == matchedBetViewModel.BackBrokerAccountId)
                                 .SingleOrDefault();
 
-            var objects = MatchedBetHandler.CreateObjectsForSimpleMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);            
+            var objects = _matchedBetModelController.CreateObjectsForSimpleMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);            
 
             _context.MatchedBets.Add(objects.MatchedBet);
             _context.Bets.AddRange(objects.Bets);
@@ -110,8 +112,11 @@ namespace MatchedBetsTracker.Controllers
             return View("Index", matchedBets);
         }
 
-        public ActionResult Close(int id, MatchedBetStatus status)
+        public ActionResult CloseOld(int id, MatchedBetStatus status)
         {
+            throw new NotImplementedException();
+
+            /*
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
@@ -131,7 +136,7 @@ namespace MatchedBetsTracker.Controllers
             var winningBets = matchedBet.Bets.Where(bet => bet.IsWinning(status)).ToList();
             winningBets.ForEach(bet =>
             {
-                bet.BetStatusId = BetStatus.Won;                
+                bet.BetStatusId = BetStatus.Won;
             });
 
             var losingBets = matchedBet.Bets.Where(bet => !bet.IsWinning(status)).ToList();
@@ -145,7 +150,7 @@ namespace MatchedBetsTracker.Controllers
             //Ci dev'ssere per forza un altro modo...
             //////////////
             _context.SaveChanges();
-            
+
             matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
@@ -156,24 +161,53 @@ namespace MatchedBetsTracker.Controllers
                 .Include(mb => mb.Bets.Select(b => b.Transactions))
                 .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
                 .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
-                .Single(mb => mb.Id == id);            
+                .Single(mb => mb.Id == id);
 
-            matchedBet.Bets.ForEach(bet => MatchedBetHandler.RecomputeBetResponsabilityAndProfit(bet));
+            matchedBet.Bets.ForEach(bet => _matchedBetModelController.RecomputeBetResponsabilityAndProfit(bet));
 
             winningBets = matchedBet.Bets.Where(bet => bet.IsWinning(status)).ToList();
             //////////////
 
             //Devo aggiungere la nuova transazione di CreditBet sulla scommessa vincente
-            var winningTransactions = winningBets.Select(bet => MatchedBetHandler.CreateCloseBetTransaction(bet)).ToList();
+            var winningTransactions = winningBets.Select(bet => _matchedBetModelController.CreateCloseBetTransaction(bet)).ToList();
 
             _context.Transactions.AddRange(winningTransactions);
             _context.SaveChanges();
 
             return RedirectToAction("Details", matchedBet);
+            */
         }
 
-        public ActionResult ReOpen(int id)
+        public ActionResult Close(int id, MatchedBetStatus status)
         {
+            var bet = _context.Bets.FirstOrDefault(b => b.MatchedBetId == id);
+            var betEvent = _context.BetEvents
+                                   .Include(be => be.SportEvent).FirstOrDefault(be => be.BetId == bet.Id);
+            var sportEvent = betEvent.SportEvent;
+
+            if (status == MatchedBetStatus.BackWon) _matchedBetModelController.SetHappenStatusOnEvent(sportEvent.Id, true);
+            else _matchedBetModelController.SetHappenStatusOnEvent(sportEvent.Id, false);
+
+            var matchedBet = _context.MatchedBets
+                .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(bte => bte.SportEvent)))
+                .Include(mb => mb.Bets.Select(b => b.Status))
+                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
+                .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
+                .Single(mb => mb.Id == id);
+
+            return RedirectToAction("Details", matchedBet);
+        }
+
+        public ActionResult ReOpenOld(int id)
+        {
+            throw new NotImplementedException();
+
+            /*
             var matchedBet = _context.MatchedBets
                 .Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
@@ -210,7 +244,7 @@ namespace MatchedBetsTracker.Controllers
                 .Single(mb => mb.Id == id);
             //////////////
 
-            matchedBet.Bets.ForEach(MatchedBetHandler.RecomputeBetResponsabilityAndProfit);
+            matchedBet.Bets.ForEach(_matchedBetModelController.RecomputeBetResponsabilityAndProfit);
 
             //Devo eliminare la transazione di CreditBet sulla scommessa vincente
             var creditBetTransactions = matchedBet.Bets.SelectMany(bet => bet.Transactions)
@@ -219,6 +253,31 @@ namespace MatchedBetsTracker.Controllers
             
             _context.Transactions.RemoveRange(creditBetTransactions);
             _context.SaveChanges();
+
+            return RedirectToAction("Details", matchedBet);
+            */
+        }
+
+        public ActionResult ReOpen(int id)
+        {
+            var bet = _context.Bets.FirstOrDefault(b => b.MatchedBetId == id);
+            var betEvent = _context.BetEvents
+                .Include(be => be.SportEvent).FirstOrDefault(be => be.BetId == bet.Id);
+            var sportEvent = betEvent.SportEvent;
+
+            _matchedBetModelController.SetHappenStatusOnEvent(sportEvent.Id, null);
+
+            var matchedBet = _context.MatchedBets
+                .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(bte => bte.SportEvent)))
+                .Include(mb => mb.Bets.Select(b => b.Status))
+                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
+                .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
+                .Single(mb => mb.Id == id);
 
             return RedirectToAction("Details", matchedBet);
         }

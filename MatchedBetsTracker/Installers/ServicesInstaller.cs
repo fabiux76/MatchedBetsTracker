@@ -12,6 +12,12 @@ namespace MatchedBetsTracker.Installers
                     .For<ISayHelloService>()
                     .ImplementedBy<SayHelloService>()
                     .LifestyleSingleton());
+
+            container.Register(
+                Component
+                    .For<IMatchedBetModelController>()
+                    .ImplementedBy<MatchedBetModelController>()
+                    .LifestyleSingleton());
         }
     }
 }

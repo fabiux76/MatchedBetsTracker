@@ -229,7 +229,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\WindsorActivator.cs" />
     <Compile Include="BusinessLogic\EnumerableExtensions.cs" />
+    <Compile Include="BusinessLogic\PersistentStorage.cs" />
     <Compile Include="BusinessLogic\MatchedBetHandler.cs" />
+    <Compile Include="BusinessLogic\MatchedBetModelController.cs" />
     <Compile Include="BusinessLogic\SayHelloService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BetsController.cs" />

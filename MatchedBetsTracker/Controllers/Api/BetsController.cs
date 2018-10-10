@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,10 +14,12 @@ namespace MatchedBetsTracker.Controllers.Api
 {
     public class BetsController : ApiController
     {
+        private readonly IMatchedBetModelController _matchedBetModelController;
         private ApplicationDbContext _context;
 
-        public BetsController()
+        public BetsController(IMatchedBetModelController matchedBetModelController)
         {
+            _matchedBetModelController = matchedBetModelController;
             _context = new ApplicationDbContext();
         }
 
@@ -25,6 +27,9 @@ namespace MatchedBetsTracker.Controllers.Api
         [HttpPut]
         public void UpdateBetStatus(int id, byte status)
         {
+            throw new NotImplementedException();
+
+            /*
             if (!ModelState.IsValid)
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
@@ -41,7 +46,7 @@ namespace MatchedBetsTracker.Controllers.Api
                 betInDb.BetStatusId = status;
                 betInDb.LastBetEvent().BetStatusId = status;
 
-                MatchedBetHandler.RecomputeBetResponsabilityAndProfit(betInDb);
+                _matchedBetModelController.RecomputeBetResponsabilityAndProfit(betInDb);
 
                 var creditBetTransactions = _context.Transactions.Where(t => t.BetId == betInDb.Id &&
                     t.TransactionTypeId == TransactionType.CreditBet).ToList();
@@ -53,7 +58,7 @@ namespace MatchedBetsTracker.Controllers.Api
                 
                 if (status == BetStatus.Won)
                 {
-                    var winningTransaction = MatchedBetHandler.CreateCloseBetTransaction(betInDb);
+                    var winningTransaction = _matchedBetModelController.CreateCloseBetTransaction(betInDb);
                     _context.Transactions.Add(winningTransaction);
                 }
 
@@ -79,26 +84,7 @@ namespace MatchedBetsTracker.Controllers.Api
 
                 _context.SaveChanges();
             }
-            
-
-            /*
-            var transactionInDb = _context.Transactions.SingleOrDefault(t => t.Id == id);
-
-            if (transactionInDb == null)
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            transactionInDb.Validated = isValid;
-
-            //TODO: sistemare...
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+                        
             */
         }
     }
