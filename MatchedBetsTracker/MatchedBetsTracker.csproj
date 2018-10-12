@@ -430,6 +430,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MatchedBet.cs" />
     <Compile Include="Models\OwnerTransactions.cs" />
+    <Compile Include="Models\SportEventsViewModel.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\TransactionSign.cs" />
     <Compile Include="Models\TransactionType.cs" />

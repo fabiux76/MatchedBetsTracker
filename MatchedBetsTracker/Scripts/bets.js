@@ -48,3 +48,6 @@ $(document).ready(function() {
 });
 
 
+$(document).ready(function () {
+    var table = $("#sportEvents").DataTable();   
+});

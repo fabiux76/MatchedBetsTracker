@@ -188,7 +188,7 @@ namespace MatchedBetsTracker.BusinessLogic
 
             return new SimpleMatchedBetFormViewModel
             {
-                BetDescription = isPuntaBanca?"PP":"PB" + " " + match + " : " + evento,
+                BetDescription = (isPuntaBanca?"PP":"PB") + " " + match + " : " + evento,
                 EventDate = ParseDateFromNinjabet(date),
                 EventDescription = match + " : " + evento,
                 BackAmount = firstBetParsed.Amount,

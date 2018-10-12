@@ -13,6 +13,8 @@ namespace MatchedBetsTracker.BusinessLogic
         MatchedBetCreatedObjects CreateObjectsForSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel,
             int userId);
 
+        void DeleteMatchedBet(int matchedBetId);
+
         void SetHappenStatusOnEvent(int sportEventId, bool? newHappenStatus);
 
     }
@@ -88,6 +90,35 @@ namespace MatchedBetsTracker.BusinessLogic
                 Transactions = new List<Transaction> { firstBetTransaction, secondBetTransaction },
                 SportEvents = new List<SportEvent> { sportEvent }
             };
+        }
+
+        public void DeleteMatchedBet(int matchedBetId)
+        {
+            var matchedBet = _context.MatchedBets
+                .Include(mb => mb.Bets)
+                .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
+                .Include(mb => mb.Bets.Select(b => b.Status))
+                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
+                .Include(mb => mb.Bets.Select(b => b.UserAccount))
+                .Include(mb => mb.Bets.Select(b => b.Transactions))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
+                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
+                .Single(mb => mb.Id == matchedBetId);
+
+            var transactions = matchedBet.Bets.SelectMany(bet => bet.Transactions).ToList();
+            var bets = matchedBet.Bets.ToList();
+            var betEvents = matchedBet.Bets.SelectMany(b => b.BetEvents);
+            var sportEvents = matchedBet.Bets.SelectMany(b => b.BetEvents)
+                .Select(be => be.SportEvent).ToList();
+
+            transactions.ForEach(transaction => _context.Transactions.Remove(transaction));
+            bets.ForEach(bet => _context.Bets.Remove(bet));
+            _context.SportEvents.RemoveRange(sportEvents);
+            _context.BetEvents.RemoveRange(betEvents);
+            _context.MatchedBets.Remove(matchedBet);
+
+            _context.SaveChanges(); 
         }
 
         //E' giusto che non venga ritornato nulla?!?! In questo caso dovrebbe essere lui ad occuparsi del salvataggio su DB...

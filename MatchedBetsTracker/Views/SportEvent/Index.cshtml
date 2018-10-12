@@ -1,33 +1,104 @@
-﻿@model IEnumerable<MatchedBetsTracker.Models.SportEvent>
+@model MatchedBetsTracker.Models.SportEventsViewModel
 @{
     ViewBag.Title = "Index";
 }
 
-<table class="table table-bordered table-hover">
+@if (Model.ShowClosed)
+{
+    <p>
+        @Html.ActionLink("Hide Closed Events", "Index", "SportEvent", new { showClosed = false }, new { @class = "btn btn-primary" })
+    </p>
+}
+else
+{
+    <p>
+        @Html.ActionLink("Show Closed Events", "Index", "SportEvent", new { showClosed = true }, new { @class = "btn btn-primary" })
+    </p>
+}
+
+<table id="sportEvents" class="table table-bordered table-hover">
     <thead>
-        <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Current State</th>
-            <th>Change State</th>
-        </tr>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Description</th>
+        <th>Bets</th>
+        <th>Current State</th>
+        <th>Change State</th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var sportEvent in Model)
-        {
-            <tr>
-                <td>@sportEvent.Id</td>
-                <td>@sportEvent.EventDate</td>
-                <td>@sportEvent.EventDescription</td>
-                <td>@if (sportEvent.Happened == null) { <b>NA</b> }
-                    else { @sportEvent.Happened }
-                </td>
-                <td>@Html.ActionLink("Unset", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id}, null)
-                    @Html.ActionLink("Happened", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id, newState = true }, null)
-                    @Html.ActionLink("NOT Happened", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id, newState = false }, null)
-                </td>
-            </tr>
-        }
+    @foreach (var sportEvent in Model.SportEvents)
+    {
+        <tr>
+            <td>@sportEvent.Id</td>
+            <td>@sportEvent.EventDate.ToString("s")</td>
+            <td>@sportEvent.EventDescription</td>
+            
+            <td>
+                <table>
+                    <thead>
+                    <th>Broker</th>
+                    <th>Type</th>
+                    <th>Amunt</th>
+                    </thead>  
+                    <tbody>
+                        @foreach (var betEvent in sportEvent.BetEvents)
+                        {
+                            <tr>
+                                <td>@betEvent.Bet.BrokerAccount.Name</td>
+                                <td>@betEvent.Bet.BetType - @betEvent.BetEventType.ToString()</td>
+                                <td>@betEvent.Bet.BetAmount</td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+                
+            </td>
+
+            <td>
+                @if (sportEvent.Happened == null)
+                {
+                    <b>Unknown</b>
+                }
+                else if (sportEvent.Happened.Value)
+                {
+                    <b>Happened</b>
+                }
+                else
+                {
+                    <b>Not Happened</b>
+                }
+            </td>
+
+            <td>
+                <table>
+                    <tbody>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Unknown", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id }, new { onclick = "return confirm('Are you sure you wish to change status to Unknown?');" })
+                        </td>                        
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Happened", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id, newState = true }, new { onclick = "return confirm('Are you sure you wish to change status to Happened?');" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.ActionLink("NOT Happened", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id, newState = false }, new { onclick = "return confirm('Are you sure you wish to change status to NOT Happened?');" })
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>                                              
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/mycode_bets")
+}

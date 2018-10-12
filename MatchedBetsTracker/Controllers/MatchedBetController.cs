@@ -78,37 +78,7 @@ namespace MatchedBetsTracker.Controllers
 
         public ActionResult Delete(int id)
         {            
-            var matchedBet = _context.MatchedBets
-                .Include(mb => mb.Bets)
-                .Include(mb => mb.Bets.Select(b => b.BetEvents))
-                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
-                .Include(mb => mb.Bets.Select(b => b.Status))
-                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
-                .Include(mb => mb.Bets.Select(b => b.UserAccount))
-                .Include(mb => mb.Bets.Select(b => b.Transactions))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
-                .Single(mb => mb.Id == id);
-
-            //Devo cancellare in cascata 
-            /*
-            var matchedBet = _context.MatchedBets
-                .Single(mb => mb.Id == id);
-            */
-
-            //TODO ANCHE QUESTA LOGICA VA TRASFERITA!!!!
-
-            //TODO: BISOGNA CANCELLARE ANCHE SportEvents e BetEvents!!!!!!
-
-            var transactions = matchedBet.Bets.SelectMany(bet => bet.Transactions).ToList();
-            transactions.ForEach(transaction => _context.Transactions.Remove(transaction));
-
-            var bets = matchedBet.Bets.ToList();
-            bets.ForEach(bet => _context.Bets.Remove(bet));
-            
-            _context.MatchedBets.Remove(matchedBet);
-
-            _context.SaveChanges();
+            _matchedBetModelController.DeleteMatchedBet(id);
 
             var matchedBets = _context.MatchedBets
                                       .Where(mb => mb.Status == MatchedBetStatus.Open)
@@ -158,7 +128,7 @@ namespace MatchedBetsTracker.Controllers
             return RedirectToAction("Details", matchedBet);
         }
 
-        private void ResetMatchedBetStatusForLegacyCode(int id, bool? Happened)
+        private void ResetMatchedBetStatusForLegacyCode(int id, bool? happened)
         {
             var sportEvents = _context.Bets.Where(b => b.MatchedBetId == id)
                                     .SelectMany(b => b.BetEvents)
@@ -173,7 +143,7 @@ namespace MatchedBetsTracker.Controllers
             */
             sportEvents.ForEach(sportEvent =>
             {
-                _matchedBetModelController.SetHappenStatusOnEvent(sportEvent.Id, Happened);
+                _matchedBetModelController.SetHappenStatusOnEvent(sportEvent.Id, happened);
             });
         }
 
@@ -191,28 +161,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
                                     .SingleOrDefault(mb => mb.Id == id);
 
-            if (matchedBet == null) return HttpNotFound();
-
-            //Eè possibile fare questo sotto con eager loading
-            /*
-            var bets = _context.Bets.Where(b => b.MatchedBetId == id)
-                                    .Include(b => b.Status)
-                                    .Include(b => b.BrokerAccount)
-                                    .ToList();
-
-            var transactions = _context.Transactions.Where(t => t.Bet.MatchedBetId == id)
-                                    .Include(t => t.TransactionType)
-                                    .Include(t => t.Bet)
-                                    .ToList();
-            */
-
-            /*
-            return View(new BrokerAccountDetailsViewModel
-            {
-                BrokerAccount = brokerAccount,
-                Transactions = transactions
-            });
-            */
+            if (matchedBet == null) return HttpNotFound();           
 
             return View(matchedBet);
         }
