@@ -55,6 +55,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(t => t.TransactionType)
                                     .Include(t => t.Bet)
                                     .Include(b => b.Bet.BetEvents)
+                                    .Include(b => b.Bet.BetEvents.Select(be => be.SportEvent))
                                     .Include(t => t.BrokerAccount)
                                     .Include(t => t.UserAccount)
                                     .OrderBy(t => t.Date)

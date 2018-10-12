@@ -98,6 +98,8 @@ namespace MatchedBetsTracker.Controllers
 
             //TODO ANCHE QUESTA LOGICA VA TRASFERITA!!!!
 
+            //TODO: BISOGNA CANCELLARE ANCHE SportEvents e BetEvents!!!!!!
+
             var transactions = matchedBet.Bets.SelectMany(bet => bet.Transactions).ToList();
             transactions.ForEach(transaction => _context.Transactions.Remove(transaction));
 
@@ -105,7 +107,7 @@ namespace MatchedBetsTracker.Controllers
             bets.ForEach(bet => _context.Bets.Remove(bet));
             
             _context.MatchedBets.Remove(matchedBet);
-            
+
             _context.SaveChanges();
 
             var matchedBets = _context.MatchedBets

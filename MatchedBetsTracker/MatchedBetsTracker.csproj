@@ -241,6 +241,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MatchedBetController.cs" />
+    <Compile Include="Controllers\SportEventController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Dtos\TransactionDto.cs" />
     <Compile Include="Global.asax.cs">
@@ -701,6 +702,7 @@
     <Content Include="Views\Shared\_Transactions.cshtml" />
     <Content Include="Views\Shared\_Bets.cshtml" />
     <Content Include="Views\MatchedBet\ParseNinjaBetOddsmatcherView.cshtml" />
+    <Content Include="Views\SportEvent\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

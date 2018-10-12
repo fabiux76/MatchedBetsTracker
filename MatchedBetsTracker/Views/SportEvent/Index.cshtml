@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MatchedBetsTracker.Models.SportEvent>
+@{
+    ViewBag.Title = "Index";
+}
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Current State</th>
+            <th>Change State</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sportEvent in Model)
+        {
+            <tr>
+                <td>@sportEvent.Id</td>
+                <td>@sportEvent.EventDate</td>
+                <td>@sportEvent.EventDescription</td>
+                <td>@if (sportEvent.Happened == null) { <b>NA</b> }
+                    else { @sportEvent.Happened }
+                </td>
+                <td>@Html.ActionLink("Unset", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id}, null)
+                    @Html.ActionLink("Happened", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id, newState = true }, null)
+                    @Html.ActionLink("NOT Happened", "ChangeStatus", "SportEvent", new { Id = sportEvent.Id, newState = false }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
