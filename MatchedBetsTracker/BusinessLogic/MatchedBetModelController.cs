@@ -131,6 +131,7 @@ namespace MatchedBetsTracker.BusinessLogic
                                 .Include(se => se.BetEvents.Select(be => be.Bet))
                                 .Include(se => se.BetEvents.Select(be => be.Bet.Transactions))
                                 .Include(se => se.BetEvents.Select(be => be.Bet.MatchedBet))
+                                .Include(se => se.BetEvents.Select(be => be.Bet.MatchedBet.Bets))
                                 .SingleOrDefault(sp => sp.Id == sportEventId);
 
             bool? previousState = sportEvent.Happened;
