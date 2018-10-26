@@ -45,6 +45,7 @@ namespace MatchedBetsTracker.Controllers
         {
             var matchedBets = _context.MatchedBets.Include(mb => mb.Bets)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents))
+                .Include(mb => mb.UserAccount)
                 .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(be => be.SportEvent)))
                 .Where(mb => mb.Status == MatchedBetStatus.Open)
                 .ToList();
@@ -54,8 +55,9 @@ namespace MatchedBetsTracker.Controllers
 
         private bool HavePendingLayToDo(List<SportEvent> sportEvnts)
         {
-            return sportEvnts.Any(se => se.Happened == null) && sportEvnts.Where(se => se.BetEvents.Count == 2)
-                       .All(se => se.EventDate < DateTime.Now);
+            return sportEvnts.Any(se => se.Happened == null) && 
+                    sportEvnts.Where(se => se.BetEvents.Count == 2).All(se => se.EventDate < DateTime.Now) && 
+                    sportEvnts.Exists(se => se.BetEvents.Count == 1);
         }
         
     }
