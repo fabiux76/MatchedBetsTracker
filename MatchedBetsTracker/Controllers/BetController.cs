@@ -11,16 +11,10 @@ namespace MatchedBetsTracker.Controllers
     {
         private ApplicationDbContext _context;
 
-        public BetController()
+        public BetController(ApplicationDbContext context)
         {
-            _context = new ApplicationDbContext();
+            _context = context;
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
-        }
-
 
         // GET: Bet
         public ActionResult Index()
@@ -97,7 +91,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(b => b.BetEvents)
                                     .Include(b => b.BetEvents.Select(be => be.SportEvent))
                                     .OrderBy(b => b.BetDate)
-                                    .SingleOrDefault(t => t.Id == id);
+                                    .Single(t => t.Id == id);
 
             if (bet == null)
                 return HttpNotFound();

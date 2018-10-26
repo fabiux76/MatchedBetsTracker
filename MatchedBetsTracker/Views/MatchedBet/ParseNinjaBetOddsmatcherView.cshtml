@@ -6,7 +6,7 @@
 
 <h2>Parse Matched Bet from Ninjabet</h2>
 
-@using (Html.BeginForm("ParseNinjaBet", "MatchedBet"))
+@using (Html.BeginForm(Model.Action, Model.Controller))
 {
     <div class="form-group">
         @Html.LabelFor(m => m.Text)

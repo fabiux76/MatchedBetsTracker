@@ -17,7 +17,7 @@ namespace MatchedBetsTracker.Installers
                 Component
                     .For<IMatchedBetModelController>()
                     .ImplementedBy<MatchedBetModelController>()
-                    .LifestyleSingleton());
+                    .LifestylePerWebRequest());
         }
     }
 }

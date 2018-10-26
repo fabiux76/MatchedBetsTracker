@@ -11,14 +11,9 @@ namespace MatchedBetsTracker.Controllers
     {
         private ApplicationDbContext _context;
 
-        public TransactionController()
+        public TransactionController(ApplicationDbContext context)
         {
-            _context = new ApplicationDbContext();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
+            _context = context;
         }
 
         // GET: Transaction
@@ -101,7 +96,7 @@ namespace MatchedBetsTracker.Controllers
                                     .Include(t => t.Bet)
                                     .Include(t => t.Bet.BetEvents)
                                     .Include(t => t.Bet.BetEvents.Select(be => be.SportEvent))
-                                    .SingleOrDefault(t => t.Id == id);
+                                    .Single(t => t.Id == id);
 
             if (transaction == null)
                 return HttpNotFound();

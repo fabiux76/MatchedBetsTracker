@@ -8,8 +8,7 @@ namespace MatchedBetsTracker.Models
     public enum MatchedBetStatus
     {
         Open,
-        BackWon,
-        LayWon
+        Closed
     }
 
     public class MatchedBet

@@ -4,34 +4,26 @@ using MatchedBetsTracker.ViewModels;
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Data.Entity;
 
 namespace MatchedBetsTracker.Controllers
 {
     public class MatchedBetController : Controller
     {
         private readonly IMatchedBetModelController _matchedBetModelController;
-        private ApplicationDbContext _context;
+        private readonly IMatchedBetsRepository _matchedBetsRepository;
 
-        public MatchedBetController(IMatchedBetModelController matchedBetModelController)
+        public MatchedBetController(IMatchedBetModelController matchedBetModelController, IMatchedBetsRepository matchedBetsRepository)
         {
             _matchedBetModelController = matchedBetModelController;
-            _context = new ApplicationDbContext();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
+            _matchedBetsRepository = matchedBetsRepository;
         }
 
         // GET: MatchedBet
         public ActionResult Index(bool showClosed = false)
         {
-            var matchedBets = _context.MatchedBets
-                                      .Where(matchedBet => showClosed || matchedBet.Status == MatchedBetStatus.Open)
-                                      .Include(matchedBet => matchedBet.UserAccount)
-                                      .ToList();
-
+            var matchedBets = _matchedBetsRepository.LoadAllMatchedBets()
+                                                    .Where(matchedBet => showClosed || matchedBet.Status == MatchedBetStatus.Open)
+                                                    .ToList();
             return View(matchedBets);
         }
 
@@ -41,7 +33,7 @@ namespace MatchedBetsTracker.Controllers
             {
                 BetDate = DateTime.Now,
                 EventDate = DateTime.Now,            
-                BrokerAccounts = _context.BrokerAccounts
+                BrokerAccounts = _matchedBetsRepository.LoadAllBrokerAccounts()
                                          .Where(broker => broker.Active)
                                          .ToList()
             };
@@ -53,130 +45,98 @@ namespace MatchedBetsTracker.Controllers
         {
             if (!ModelState.IsValid)
             {
-                matchedBetViewModel.BrokerAccounts = _context.BrokerAccounts.ToList();
+                matchedBetViewModel.BrokerAccounts = _matchedBetsRepository.LoadAllBrokerAccounts();
                 return View("SimpleMatchedBetForm", matchedBetViewModel);
             }
+            
+            var matchedBet = _matchedBetModelController.CreateNewSimpleMatchedBet(matchedBetViewModel, matchedBetViewModel.BackBrokerAccountId);            
+            return RedirectToAction("Details", matchedBet);
+        }
 
-            //Devo fare diverse attività:
-            //0. Devo creare la matchedBet
-            var brockerAccout = _context.BrokerAccounts
-                                .Where(ba => ba.Id == matchedBetViewModel.BackBrokerAccountId)
-                                .SingleOrDefault();
+        public ActionResult AddMultipleMatchedBet(MultipleMatchedBetFormViewModel matchedBetViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                matchedBetViewModel.BrokerAccounts = _matchedBetsRepository.LoadAllBrokerAccounts();
+                return View("MultipleMatchedBetForm", matchedBetViewModel);
+            }
 
-            var objects = _matchedBetModelController.CreateObjectsForSimpleMatchedBet(matchedBetViewModel, brockerAccout.OwnerId);            
-
-            _context.MatchedBets.Add(objects.MatchedBet);
-            _context.Bets.AddRange(objects.Bets);
-            _context.BetEvents.AddRange(objects.BetEvents);
-            _context.Transactions.AddRange(objects.Transactions);
-            _context.SportEvents.AddRange(objects.SportEvents);
-
-            _context.SaveChanges();
-
-            return RedirectToAction("Details", objects.MatchedBet);
+            var matchedBet = _matchedBetModelController.CreateNewMultipleMatchedBet(matchedBetViewModel, matchedBetViewModel.MultipleBrokerAccountId);
+            return RedirectToAction("Details", matchedBet);
         }
 
         public ActionResult Delete(int id)
         {            
             _matchedBetModelController.DeleteMatchedBet(id);
-
-            var matchedBets = _context.MatchedBets
-                                      .Where(mb => mb.Status == MatchedBetStatus.Open)
-                                      .Include(mb => mb.UserAccount)
-                                      .ToList();
-
-            return View("Index", matchedBets);
+            return RedirectToAction("Index");
         }
 
-        public ActionResult Close(int id, MatchedBetStatus status)
-        {
-            //In realtà in questo caso (che è quello delle scommesse piazzate prima) ho diverse SportEvent, quindi bisogna gestirli tutti
+        public ActionResult NewSingleFormMultiple(int id)
+        {            
+            var sportEvent =  _matchedBetModelController.GetNextUnmatchedEventInMultiple(id);
 
-            ResetMatchedBetStatusForLegacyCode(id, status == MatchedBetStatus.BackWon);
-
-            var matchedBet = _context.MatchedBets
-                .Include(mb => mb.Bets)
-                .Include(mb => mb.Bets.Select(b => b.BetEvents))
-                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(bte => bte.SportEvent)))
-                .Include(mb => mb.Bets.Select(b => b.Status))
-                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
-                .Include(mb => mb.Bets.Select(b => b.UserAccount))
-                .Include(mb => mb.Bets.Select(b => b.Transactions))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
-                .Single(mb => mb.Id == id);
-
-            return RedirectToAction("Details", matchedBet);
-        }
-
-        public ActionResult ReOpen(int id)
-        {
-            ResetMatchedBetStatusForLegacyCode(id, null);
-
-            var matchedBet = _context.MatchedBets
-                .Include(mb => mb.Bets)
-                .Include(mb => mb.Bets.Select(b => b.BetEvents))
-                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(bte => bte.SportEvent)))
-                .Include(mb => mb.Bets.Select(b => b.Status))
-                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
-                .Include(mb => mb.Bets.Select(b => b.UserAccount))
-                .Include(mb => mb.Bets.Select(b => b.Transactions))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
-                .Single(mb => mb.Id == id);
-
-            return RedirectToAction("Details", matchedBet);
-        }
-
-        private void ResetMatchedBetStatusForLegacyCode(int id, bool? happened)
-        {
-            var sportEvents = _context.Bets.Where(b => b.MatchedBetId == id)
-                                    .SelectMany(b => b.BetEvents)
-                                    .Select(be => be.SportEvent);
-
-            /*
-            sportEvents.GroupBy(x => x.Id).Select(g => g.FirstOrDefault()).ToDictionary(x => x.Id).Values
-                .ForEach(sportEvent =>
-                {
-                    _matchedBetModelController.SetHappenStatusOnEvent(sportEvent.Id, Happened);
-                });
-            */
-            sportEvents.ForEach(sportEvent =>
+            var viewModel = new MultipleMatchedBetAddSingleFormViewModel
             {
-                _matchedBetModelController.SetHappenStatusOnEvent(sportEvent.Id, happened);
-            });
+                BetDate = DateTime.Now,
+                MatchedBetId = id,
+                SportEvent = sportEvent,
+                SportEventId = sportEvent.Id,
+                BrokerAccounts = _matchedBetsRepository.LoadAllBrokerAccounts(),
+                IsLay = true
+            };
+
+            return View("AddSingleToMultiple", viewModel);
+        }
+
+        public ActionResult DeleteSingleFromMultiple(int id)
+        {
+            var matchedBet = _matchedBetModelController.DeleteLastMatchedSingleInMultiple(id);
+            return RedirectToAction("Details", matchedBet);
+        }
+
+        public ActionResult AddSingleToMultiple(MultipleMatchedBetAddSingleFormViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.BrokerAccounts = _matchedBetsRepository.LoadAllBrokerAccounts();
+                return View("AddSingleToMultiple", viewModel);
+            }
+            
+            var matchedBet =_matchedBetModelController.AddSingleToMultipleMatchedBet(viewModel);
+            return RedirectToAction("Details", matchedBet);
         }
 
         public ActionResult Details(int id)
         {
-            var matchedBet = _context.MatchedBets
-                                    .Include(mb => mb.Bets)
-                                    .Include(mb => mb.Bets.Select(b => b.BetEvents))
-                                    .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
-                                    .Include(mb => mb.Bets.Select(b => b.Status))
-                                    .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
-                                    .Include(mb => mb.Bets.Select(b => b.UserAccount))
-                                    .Include(mb => mb.Bets.Select(b => b.Transactions))
-                                    .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
-                                    .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
-                                    .SingleOrDefault(mb => mb.Id == id);
+            var matchedBet = _matchedBetsRepository.LoadMatchedBet(id);
 
-            if (matchedBet == null) return HttpNotFound();           
+            if (matchedBet == null) return HttpNotFound();
 
-            return View(matchedBet);
-        }
-
-        //Da fare mettendo a afattor comune il codice sopra
-        private MatchedBet LoadMatchedBet(int id)
-        {
-            throw new NotImplementedException();
+            //Uso questa discriminante per capire di che tipo è la matchedBet... dovrei piuttosto memorizzare l'informazione nel modello
+            return matchedBet.Bets.Any(b => b.BetType == BetType.MultipleBack)
+                ? View("DetailsMultiple", matchedBet)
+                : View(matchedBet);
         }
 
         public ActionResult OpenParseView()
         {
             var viewModel = new NinjaBetOddsmatcherViewModel()
             {
-                Text = ""
+                Text = "",
+                Controller = "MatchedBet",
+                Action = "ParseNinjaBet"
+            };
+
+            return View("ParseNinjaBetOddsmatcherView", viewModel);
+        }
+
+        public ActionResult OpenMultipleParseView()
+        {
+            var viewModel = new NinjaBetOddsmatcherViewModel()
+            {
+                Text = "",
+                Controller = "MatchedBet",
+                Action = "ParseNinjaBetMultiple"
             };
 
             return View("ParseNinjaBetOddsmatcherView", viewModel);
@@ -187,11 +147,24 @@ namespace MatchedBetsTracker.Controllers
             var viewModel = MatchedBetHandler.Parse(Text);
 
             viewModel.BetDate = DateTime.Now;
-            viewModel.BrokerAccounts = _context.BrokerAccounts
+            viewModel.BrokerAccounts = _matchedBetsRepository.LoadAllBrokerAccounts()
                 .Where(broker => broker.Active)
                 .ToList();
 
             return View("SimpleMatchedBetForm", viewModel);
+        }
+
+        public ActionResult ParseNinjaBetMultiple(string Text)
+        {
+            var viewModel = MatchedBetHandler.ParseMultipleMatchedBet(Text);
+
+            viewModel.MultipleBetDate = DateTime.Now;
+            viewModel.BrokerAccounts = _matchedBetsRepository.LoadAllBrokerAccounts()
+                .Where(broker => broker.Active)
+                .ToList();
+
+            return View("MultipleMatchedBetForm", viewModel);
+
         }
     }
 }

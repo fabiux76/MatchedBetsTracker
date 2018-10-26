@@ -12,15 +12,11 @@ namespace MatchedBetsTracker.Controllers
         private ApplicationDbContext _context;
         private IMatchedBetModelController _matchedBetController;
 
-        public SportEventController(IMatchedBetModelController matchedBetController)
+        public SportEventController(IMatchedBetModelController matchedBetController,
+                                    ApplicationDbContext context)
         {
-            _context = new ApplicationDbContext();
+            _context = context;
             this._matchedBetController = matchedBetController;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
         }
 
         // GET: SportEvent
@@ -37,9 +33,10 @@ namespace MatchedBetsTracker.Controllers
             //... però poi prevederei un'ulteriore pagina che fa vedere le cose aperte: sportEvent da assegnare, matchedEvent (multiple) da coprire e transazioni da validare. Tutte in una stessa pagina
 
             //return Content("WILL CHANGE STATUS TO " + newState + " FOR EVENT " + id);
-            _matchedBetController.SetHappenStatusOnEvent(id, newState);
+            var sportEvent = _matchedBetController.SetHappenStatusOnEvent(id, newState);
 
-            return View("Index", PrepareIndexModel());
+            //return View("Index", PrepareIndexModel());
+            return RedirectToAction("Details", "MatchedBet", sportEvent.MatchedBet());
         }
 
         private SportEventsViewModel PrepareIndexModel(bool showClosed = false)

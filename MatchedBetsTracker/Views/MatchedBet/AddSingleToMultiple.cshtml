@@ -1,0 +1,75 @@
+@model MatchedBetsTracker.ViewModels.MultipleMatchedBetAddSingleFormViewModel
+
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>Add Single for Multiple</h2>
+
+<h2>THE USER WILL BE THE OWNER OF THE ASSOCIATED MULTIPLE</h2>
+
+@using (Html.BeginForm("AddSingleToMultiple", "MatchedBet"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.BetDate)
+        @Html.TextBoxFor(m => m.BetDate, "{0:yyyy-MM-ddTHH:mm}", new {@class = "form-control", type = "datetime-local"})
+        @Html.ValidationMessageFor(m => m.BetDate)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.SportEvent.EventDescription)
+        @Html.TextBoxFor(m => m.SportEvent.EventDescription, new {@class = "form-control"})
+        @Html.ValidationMessageFor(m => m.SportEvent.EventDescription)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.SportEvent.EventDate)
+        @Html.TextBoxFor(m => m.SportEvent.EventDate, "{0:yyyy-MM-ddTHH:mm}", new {@class = "form-control", type = "datetime-local"})
+        @Html.ValidationMessageFor(m => m.SportEvent.EventDate)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BrokerAccountId)
+        @Html.DropDownListFor(m => m.BrokerAccountId, new SelectList(Model.BrokerAccounts, "Id", "Name"), "Select Back Broker (Puntata)", new {@class = "form-control"})
+        @Html.ValidationMessageFor(m => m.BrokerAccountId)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Amount)
+        @Html.TextBoxFor(m => m.Amount, new {@class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Amount)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Quote)
+        @Html.TextBoxFor(m => m.Quote, new {@class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Quote)
+    </div>
+
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.ValidateTransactions, new {@class = "form-check-input"})
+        @Html.LabelFor(m => m.ValidateTransactions, new {@class = "form-check-label"})
+        @Html.ValidationMessageFor(m => m.ValidateTransactions)
+    </div>
+
+    <div class="form-group form-check">
+        @Html.CheckBoxFor(m => m.IsLay, new {@class = "form-check-input"})
+        @Html.LabelFor(m => m.IsLay, new {@class = "form-check-label"})
+        @Html.ValidationMessageFor(m => m.IsLay)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+
+    @Html.HiddenFor(m => m.MatchedBetId)
+    @Html.HiddenFor(m => m.SportEventId)
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval") 
+    <script>
+        $.validator.methods.number = function (value, element) {
+            return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+        }
+    </script>
+}

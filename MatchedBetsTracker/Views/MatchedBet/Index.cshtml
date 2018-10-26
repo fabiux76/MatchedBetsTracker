@@ -15,27 +15,11 @@
 </p>
 
 <p>
+    @Html.ActionLink("Parse Multiple Matched Bet", "OpenMultipleParseView", "MatchedBet", null, new { @class = "btn btn-primary" })
+</p>
+
+<p>
     @Html.ActionLink("Show Closed Bets", "Index", "MatchedBet", new { showClosed = true }, new { @class = "btn btn-primary" })
 </p>
 
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>User</th>
-            <th>Event Description</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var matchedBet in Model)
-        {
-            <tr>
-                <td>@Html.ActionLink(matchedBet.Id.ToString(), "Details", "MatchedBet", new { Id = matchedBet.Id }, null)</td>
-                <td>@matchedBet.UserAccount.Name</td>
-                <td>@Html.ActionLink(matchedBet.EventDescription.ToString(), "Details", "MatchedBet", new { Id = matchedBet.Id }, null)</td>
-                <td>@matchedBet.Status.ToString()</td>                
-            </tr>
-        }
-    </tbody>
-</table>
+@Html.Partial("_MatchedBets", Model)

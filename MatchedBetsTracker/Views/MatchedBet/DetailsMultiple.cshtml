@@ -10,6 +10,15 @@
     @Html.ActionLink("Delete Matched Bet (including bets and transactions)", "Delete", "MatchedBet", new { id = Model.Id }, new { @class = "btn btn-primary" })
 </p>
 
+<p>
+    @Html.ActionLink("Add Single", "NewSingleFormMultiple", "MatchedBet", new { id = Model.Id }, new { @class = "btn btn-primary" })
+</p>
+
+
+<p>
+    @Html.ActionLink("Delete Single", "DeleteSingleFromMultiple", "MatchedBet", new { id = Model.Id }, new { @class = "btn btn-primary", onclick = "return confirm('Are you sure you wish to remove single for last event?');" })
+</p>
+
 <h3>Bets</h3>
 @Html.Partial("_Bets", Model.Bets.OrderBy(b => b.BetDate))
 

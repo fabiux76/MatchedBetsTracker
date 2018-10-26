@@ -1,0 +1,21 @@
+@model MatchedBetsTracker.ViewModels.TodoViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>TODO</h2>
+
+<h3>Transactions To Verify</h3>
+@Html.Partial("_Transactions", Model.TransactionsToVerify.OrderBy(t => t.Date));
+
+<h3>Sport Events to check</h3>
+@Html.Partial("_SportEvents", Model.SportEventsToCheck.OrderBy(t => t.EventDate));
+
+<h3>Bets To Lay</h3>
+@Html.Partial("_MatchedBets", Model.MultipleBetsToLay)
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/mycode_transactions")
+    @Scripts.Render("~/bundles/mycode_bets")
+}

@@ -6,10 +6,9 @@
             <th>ID</th>
             <th>Broker</th>
             <th>Bet Date</th>
-            <th>Event Description</th>
             <th>Bet Description</th>
             <th>Is Lay</th>
-            <th>Event Date</th>
+            <th>Events</th>
             <th>Quote</th>
             <th>Bet Amount</th>
             <th>Responsability</th>
@@ -25,10 +24,26 @@
                 <td>@Html.ActionLink(bet.Id.ToString(), "Edit", "Bet", new { Id = bet.Id }, null)</td>
                 <td>@bet.BrokerAccount.Name</td>
                 <td>@bet.BetDate.ToString("s")</td>
-                <td>@bet.LastBetEvent().SportEvent.EventDescription</td>
                 <td>@bet.BetDescription</td>
                 <td>@bet.IsLay()</td>
-                <td>@bet.LastBetEvent().SportEvent.EventDate.ToString("s")</td>
+                <td>
+                    <table>
+                        <thead>
+                        <th>Event Description</th>
+                        <th>Event Date</th>
+                        </thead>  
+                        <tbody>
+                        @foreach (var betEvent in bet.BetEvents)
+                        {
+                            <tr>
+                                <td>@betEvent.SportEvent.EventDescription</td>
+                                <td>@betEvent.SportEvent.EventDate</td>
+                            </tr>
+                        }
+                        </tbody>
+
+                    </table>
+                </td>
                 <td>@bet.Quote</td>
                 <td>@bet.BetAmount</td>
                 <td>@bet.Responsability</td>

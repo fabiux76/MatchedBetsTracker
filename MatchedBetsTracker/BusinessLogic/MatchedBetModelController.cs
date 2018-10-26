@@ -3,35 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using MatchedBetsTracker.Models;
 using MatchedBetsTracker.ViewModels;
-using System.Data.Entity;
-using System.Runtime.InteropServices;
 
 namespace MatchedBetsTracker.BusinessLogic
 {
     public interface IMatchedBetModelController
     {
-        MatchedBetCreatedObjects CreateObjectsForSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel,
-            int userId);
+        MatchedBet CreateNewSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel, int brokerAccountForUsedId);
+
+        MatchedBet CreateNewMultipleMatchedBet(MultipleMatchedBetFormViewModel matchedBetViewModel, int brokerAccountForUsedId);
+
+        MatchedBet AddSingleToMultipleMatchedBet(MultipleMatchedBetAddSingleFormViewModel multipleMatchedBetAddSingleFormViewModel);
 
         void DeleteMatchedBet(int matchedBetId);
 
-        void SetHappenStatusOnEvent(int sportEventId, bool? newHappenStatus);
+        SportEvent SetHappenStatusOnEvent(int sportEventId, bool? newHappenStatus);
 
+        SportEvent GetNextUnmatchedEventInMultiple(int matchedBetId);
+
+        MatchedBet DeleteLastMatchedSingleInMultiple(int matchedBetId);
     }
 
     public class MatchedBetModelController : IMatchedBetModelController
     {
-        
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext context;
+        private readonly IMatchedBetsRepository _matchedBetsRepository;
 
-        public MatchedBetModelController()
+        public MatchedBetModelController(ApplicationDbContext context, IMatchedBetsRepository matchedBetsRepository)
         {
-            _context = new ApplicationDbContext();
+            this.context = context;
+            _matchedBetsRepository = matchedBetsRepository;
         }
 
-        public MatchedBetCreatedObjects CreateObjectsForSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel,
-            int userId)
+        public MatchedBet CreateNewSimpleMatchedBet(SimpleMatchedBetFormViewModel matchedBetViewModel,
+            int brokerAccountForUsedId)
         {
+            var brockerAccout = context.BrokerAccounts
+                .Where(ba => ba.Id == matchedBetViewModel.BackBrokerAccountId)
+                .Single();
+
+            var userId = brockerAccout.OwnerId;
+
             //Creo lo SportEvent (unico)
             var sportEvent = CreateSportEvent(matchedBetViewModel.EventDate, matchedBetViewModel.EventDescription);
 
@@ -82,62 +93,141 @@ namespace MatchedBetsTracker.BusinessLogic
                 secondBetTransaction.Validated = true;
             }
 
-            return new MatchedBetCreatedObjects
+            context.MatchedBets.Add(matchedBet);
+            context.SaveChanges();
+            return matchedBet;
+        }
+
+        public MatchedBet CreateNewMultipleMatchedBet(MultipleMatchedBetFormViewModel matchedBetViewModel,
+            int brokerAccountForUserId)
+        {
+            var brockerAccout = context.BrokerAccounts.Find(matchedBetViewModel.MultipleBrokerAccountId);
+            var userId = brockerAccout.OwnerId;
+
+            //Creo la matchedBet
+            var matchedBet = CreateMatchedBet(matchedBetViewModel.BetDescription, userId);
+
+            //creo la bet per la multipla
+            var multipleBet = CreateBet(matchedBetViewModel.BetDescription,
+                    matchedBetViewModel.MultipleBetDate,
+                    matchedBetViewModel.MultipleQuoteTotal,
+                    matchedBetViewModel.MultipleAmount,
+                    BetType.MultipleBack) 
+                .ForBrokerAccount(matchedBetViewModel.MultipleBrokerAccountId)
+                .ForUserAccount(userId)
+                .ForMatchedBet(matchedBet);
+
+            //Cre la transaction per la prima scommessa
+            var multiBetTransaction = CreateOpenBetTransaction(multipleBet);
+
+            var sportEvents = new List<SportEvent>();
+            var multipleBetEvents = new List<BetEvent>();
+
+            //Ciclo sugli eventi
+            matchedBetViewModel.Singles.ForEach(single =>
             {
-                MatchedBet = matchedBet,
-                Bets = new List<Bet> { firstBet, secondBet },
-                BetEvents = new List<BetEvent> { firstBetEvent, secondBetEvent },
-                Transactions = new List<Transaction> { firstBetTransaction, secondBetTransaction },
-                SportEvents = new List<SportEvent> { sportEvent }
-            };
+                //Creo lo SportEvent (unico)
+                var sportEvent = CreateSportEvent(single.EventDate, single.EventDescription);
+                sportEvents.Add(sportEvent);
+
+                //Creo la BetEvent per la prima scommessa
+                var multipleBetEvent = CreateBetEvent(single.QuoteInMultiple, BetEventType.BackHappen)
+                    .ForSportEvent(sportEvent)
+                    .ForBet(multipleBet);
+                multipleBetEvents.Add(multipleBetEvent);
+
+                //Questa è la logica che invece devo fare quando aggiungo la bet singola
+                /*
+                //Creo la Bet per la scommessa
+                var singleBet = CreateBet(matchedBetViewModel.BetDescription,
+                        single.SingleBetDate,
+                        single.QuoteInSingle,
+                        single.SingleAmount,
+                        single.IsSingleLay ? BetType.SingleLay : BetType.SingleBack)
+                    .ForBrokerAccount(single.SingleBrokerAccountId)
+                    .ForUserAccount(userId)
+                    .ForMatchedBet(matchedBet);
+
+                //Creo la BetEvent per la seconda scommessa
+                var singleBetEvent = CreateBetEvent(single.QuoteInSingle, single.IsSingleLay ? BetEventType.Lay : BetEventType.BackNotHappen)
+                    .ForSportEvent(sportEvent)
+                    .ForBet(singleBet);
+
+                //Creo la transaction per la seconda scommessa
+                var secondBetTransaction = CreateOpenBetTransaction(singleBet);
+
+                if (matchedBetViewModel.ValidateTransactions)
+                {
+                    secondBetTransaction.Validated = true;
+                }
+                */
+            });
+                      
+            if (matchedBetViewModel.ValidateTransactions)
+            {
+                multiBetTransaction.Validated = true;
+            }
+
+            context.MatchedBets.Add(matchedBet);
+            context.SaveChanges();
+            return matchedBet;
+        }
+
+        public MatchedBet AddSingleToMultipleMatchedBet(MultipleMatchedBetAddSingleFormViewModel multipleMatchedBetAddSingleFormViewModel)
+        {
+            var matchedBet = _matchedBetsRepository.LoadMatchedBet(multipleMatchedBetAddSingleFormViewModel.MatchedBetId);
+            var userId = matchedBet.Bets.Single(b => b.BetType == BetType.MultipleBack).UserAccountId;
+            /*
+            .Include(mb => mb.Bets)
+            .Include(mb => mb.Bets.Select(b => b.BetEvents));
+            */
+
+            var sportEvent =
+                context.SportEvents.Single(sp => sp.Id == multipleMatchedBetAddSingleFormViewModel.SportEventId);
+
+            //Creo la Bet per la scommessa
+            var singleBet = CreateBet(multipleMatchedBetAddSingleFormViewModel.SportEvent.EventDescription,
+                    multipleMatchedBetAddSingleFormViewModel.BetDate,
+                    multipleMatchedBetAddSingleFormViewModel.Quote,
+                    multipleMatchedBetAddSingleFormViewModel.Amount,
+                    multipleMatchedBetAddSingleFormViewModel.IsLay ? BetType.SingleLay : BetType.SingleBack)
+                .ForBrokerAccount(multipleMatchedBetAddSingleFormViewModel.BrokerAccountId)
+                .ForUserAccount(userId)
+                .ForMatchedBet(matchedBet);
+
+            //Creo la BetEvent per la seconda scommessa
+            var singleBetEvent = CreateBetEvent(multipleMatchedBetAddSingleFormViewModel.Quote, multipleMatchedBetAddSingleFormViewModel.IsLay ? BetEventType.Lay : BetEventType.BackNotHappen)
+                .ForSportEvent(sportEvent)
+                .ForBet(singleBet);
+
+            //Creo la transaction per la seconda scommessa
+            var secondBetTransaction = CreateOpenBetTransaction(singleBet);
+
+            if (multipleMatchedBetAddSingleFormViewModel.ValidateTransactions)
+            {
+                secondBetTransaction.Validated = true;
+            }
+
+            context.SaveChanges();
+            return matchedBet;
         }
 
         public void DeleteMatchedBet(int matchedBetId)
         {
-            var matchedBet = _context.MatchedBets
-                .Include(mb => mb.Bets)
-                .Include(mb => mb.Bets.Select(b => b.BetEvents))
-                .Include(mb => mb.Bets.Select(b => b.BetEvents.Select(betEvent => betEvent.SportEvent)))
-                .Include(mb => mb.Bets.Select(b => b.Status))
-                .Include(mb => mb.Bets.Select(b => b.BrokerAccount))
-                .Include(mb => mb.Bets.Select(b => b.UserAccount))
-                .Include(mb => mb.Bets.Select(b => b.Transactions))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.TransactionType)))
-                .Include(mb => mb.Bets.Select(b => b.Transactions.Select(t => t.UserAccount)))
-                .Single(mb => mb.Id == matchedBetId);
-
-            var transactions = matchedBet.Bets.SelectMany(bet => bet.Transactions).ToList();
-            var bets = matchedBet.Bets.ToList();
-            var betEvents = matchedBet.Bets.SelectMany(b => b.BetEvents);
-            var sportEvents = matchedBet.Bets.SelectMany(b => b.BetEvents)
-                .Select(be => be.SportEvent).ToList();
-
-            transactions.ForEach(transaction => _context.Transactions.Remove(transaction));
-            bets.ForEach(bet => _context.Bets.Remove(bet));
-            _context.SportEvents.RemoveRange(sportEvents);
-            _context.BetEvents.RemoveRange(betEvents);
-            _context.MatchedBets.Remove(matchedBet);
-
-            _context.SaveChanges(); 
+            _matchedBetsRepository.DeleteMatchedBet(matchedBetId);
         }
 
         //E' giusto che non venga ritornato nulla?!?! In questo caso dovrebbe essere lui ad occuparsi del salvataggio su DB...
 
-        public void SetHappenStatusOnEvent(int sportEventId, bool? newHappenStatus)
+        public SportEvent SetHappenStatusOnEvent(int sportEventId, bool? newHappenStatus)
         {
             //Verifico qual'è lo stato precedente
-            var sportEvent = _context.SportEvents
-                                .Include(se => se.BetEvents)
-                                .Include(se => se.BetEvents.Select(be => be.Bet))
-                                .Include(se => se.BetEvents.Select(be => be.Bet.Transactions))
-                                .Include(se => se.BetEvents.Select(be => be.Bet.MatchedBet))
-                                .Include(se => se.BetEvents.Select(be => be.Bet.MatchedBet.Bets))
-                                .SingleOrDefault(sp => sp.Id == sportEventId);
+            var sportEvent = _matchedBetsRepository.LoadSportEvent(sportEventId);
 
             bool? previousState = sportEvent.Happened;
 
             //Verifico intanto se lo stato esistente è diverso dallo stato attuale. Se no, ritorno senza fare nulla
-            if (previousState == newHappenStatus) return;
+            if (previousState == newHappenStatus) return sportEvent;
 
             //A questo punto aggiorno gli stati ed aggiungo le transazioni
             sportEvent.Happened = newHappenStatus;
@@ -161,28 +251,48 @@ namespace MatchedBetsTracker.BusinessLogic
                                                       .SelectMany(bet => bet.Transactions)
                     .Where(t => t.TransactionTypeId == TransactionType.CreditBet).ToList();
 
-                _context.Transactions.RemoveRange(creditBetTransactions);
+                context.Transactions.RemoveRange(creditBetTransactions);
             }
 
             //Aggiungo le Winning transactions
             var winninTransactions = sportEvent.BetEvents.Select(be => be.Bet)
                 .Where(b => b.BetStatusId == BetStatus.Won)
-                .Select(CreateCloseBetTransaction)
+                .Select(b => CreateCloseBetTransaction(b, sportEvent.EventDate))
                 .ToList();
 
-            _context.Transactions.AddRange(winninTransactions);
-            _context.SaveChanges();
+            context.Transactions.AddRange(winninTransactions);
+            context.SaveChanges();
+
+            return sportEvent;
         }
 
-        private byte GetBetStatus(bool? happened, bool isLay)
+        public SportEvent GetNextUnmatchedEventInMultiple(int matchedBetId)
         {
-            if (happened == null) return BetStatus.Open;
-            return (bool)happened 
-                            ? isLay ? BetStatus.Loss : BetStatus.Won 
-                            : isLay ? BetStatus.Won : BetStatus.Loss;
+            var matchedBet = _matchedBetsRepository.LoadMatchedBet(matchedBetId);
+            return matchedBet.Bets.SelectMany(b => b.BetEvents).Select(be => be.SportEvent).OrderBy(se => se.EventDate)
+                .FirstOrDefault(se => se.BetEvents.Count == 1);
         }
 
-        
+        public MatchedBet DeleteLastMatchedSingleInMultiple(int matchedBetId)
+        {
+            var matchedBet = _matchedBetsRepository.LoadMatchedBet(matchedBetId);
+            //TUTTA QUESTA LOGICA VA SPOSTATA NELLA BUSINESS!!!!
+            var sportEvent = matchedBet.Bets.SelectMany(b => b.BetEvents).Select(be => be.SportEvent).OrderByDescending(se => se.EventDate)
+                .FirstOrDefault(se => se.BetEvents.Count > 1);
+
+            //Se sportevent ha status diverso da unknown, non permettere la modifica
+            if (sportEvent.Happened != null) throw new Exception("Cannot remove Bet on Verified event!");
+
+            var betEventToRemove = sportEvent.BetEvents.Single(be => be.Bet.BetType != BetType.MultipleBack);
+            var betToRemove = betEventToRemove.Bet;
+
+            context.BetEvents.Remove(betEventToRemove);
+            context.Bets.Remove(betToRemove);
+            context.Transactions.RemoveRange(betToRemove.Transactions);
+
+            context.SaveChanges();
+            return matchedBet;
+        }
 
         private static MatchedBet CreateMatchedBet(string eventDescription, int userId)
         {
@@ -190,7 +300,8 @@ namespace MatchedBetsTracker.BusinessLogic
             {
                 EventDescription = eventDescription,
                 Status = MatchedBetStatus.Open,
-                UserAccountId = userId
+                UserAccountId = userId,
+                Bets = new List<Bet>()                
             };
         }
 
@@ -199,7 +310,8 @@ namespace MatchedBetsTracker.BusinessLogic
             return new SportEvent
             {
                 EventDate = eventDate,
-                EventDescription = eventDescription
+                EventDescription = eventDescription,
+                BetEvents = new List<BetEvent>()
             };
         }
 
@@ -209,7 +321,7 @@ namespace MatchedBetsTracker.BusinessLogic
             {
                 BetStatusId = BetStatus.Open,
                 Quote = quote,
-                BetEventType = betEventType
+                BetEventType = betEventType               
             };
         }
 
@@ -224,7 +336,9 @@ namespace MatchedBetsTracker.BusinessLogic
                 Responsability = ComputeResponsability(betType, betAmount, quote),
                 BetStatusId = BetStatus.Open,
                 ProfitLoss = 0,
-                BetType = betType
+                BetType = betType,
+                BetEvents = new List<BetEvent>(),
+                Transactions = new List<Transaction>()                
             };
         }
 
@@ -235,7 +349,7 @@ namespace MatchedBetsTracker.BusinessLogic
 
         public Transaction CreateOpenBetTransaction(Bet bet)
         {
-            return new Transaction
+            var transaction = new Transaction
             {
                 Date = bet.BetDate,
                 Amount = GetOpenBetAmount(bet),
@@ -245,15 +359,17 @@ namespace MatchedBetsTracker.BusinessLogic
                 Validated = false,
                 UserAccountId = bet.UserAccountId
             };
+            bet.Transactions.Add(transaction);
+            return transaction;
         }
 
-        public Transaction CreateCloseBetTransaction(Bet bet)
+        public Transaction CreateCloseBetTransaction(Bet bet, DateTime date)
         {
             if (bet.IsWon())
             {
-                return new Transaction
+                var transaction = new Transaction
                 {
-                    Date = bet.LastBetEvent().SportEvent.EventDate,
+                    Date = date,
                     Amount = bet.ProfitLoss - GetOpenBetAmount(bet),
                     Bet = bet,
                     BrokerAccountId = bet.BrokerAccountId,
@@ -261,13 +377,11 @@ namespace MatchedBetsTracker.BusinessLogic
                     Validated = false,
                     UserAccountId = bet.UserAccountId
                 };
+                bet.Transactions.Add(transaction);
+                return transaction;
             }
             return null;
         }
-
-        
-
-        
 
         public double GetOpenBetAmount(Bet bet)
         {
@@ -284,17 +398,19 @@ namespace MatchedBetsTracker.BusinessLogic
 
     internal static class MatchedBetControllerModelHelper
     {
-        public static double layBrokerNetGain = 0.95;
+        public static double LayBrokerNetGain = 0.95;
 
         public static Bet ForMatchedBet(this Bet bet, MatchedBet matchedBet)
         {
             bet.MatchedBet = matchedBet;
+            matchedBet.Bets.Add(bet);
             return bet;
         }
 
         public static Bet ForBrokerAccount(this Bet bet, BrokerAccount brokerAccount)
         {
             bet.BrokerAccount = brokerAccount;
+            brokerAccount.Bets.Add(bet);            
             return bet;
         }
 
@@ -306,7 +422,7 @@ namespace MatchedBetsTracker.BusinessLogic
 
         public static Bet ForUserAccount(this Bet bet, UserAccount userAccount)
         {
-            bet.UserAccount = userAccount;
+            bet.UserAccount = userAccount;            
             return bet;
         }
 
@@ -319,12 +435,14 @@ namespace MatchedBetsTracker.BusinessLogic
         public static BetEvent ForSportEvent(this BetEvent betEvent, SportEvent sportEvent)
         {
             betEvent.SportEvent = sportEvent;
+            sportEvent.BetEvents.Add(betEvent);
             return betEvent;
         }
 
         public static BetEvent ForBet(this BetEvent betEvent, Bet bet)
         {
             betEvent.Bet = bet;
+            bet.BetEvents.Add(betEvent);
             return betEvent;
         }
         public static void UpdateBetStatus(this BetEvent betEvent, bool? happened)
@@ -358,7 +476,7 @@ namespace MatchedBetsTracker.BusinessLogic
         public static void UpdateMatchedBetStatus(this MatchedBet matchedBet)
         {
             if (matchedBet.Bets.Any(b => b.BetStatusId == BetStatus.Open)) matchedBet.Status = MatchedBetStatus.Open;
-            else matchedBet.Status = MatchedBetStatus.BackWon; //TODO: PER CONVENZIONE. In realtà l'unico stato sensato è Closed or Open            
+            else matchedBet.Status = MatchedBetStatus.Closed;          
         }
 
         private static void RecomputeBetResponsabilityAndProfit(Bet bet)
@@ -376,7 +494,7 @@ namespace MatchedBetsTracker.BusinessLogic
             {
                 if (bet.IsWon())
                 {
-                    bet.ProfitLoss = bet.BetAmount * layBrokerNetGain;
+                    bet.ProfitLoss = bet.BetAmount * LayBrokerNetGain;
                 }
                 else if (bet.IsLost())
                 {
@@ -407,6 +525,17 @@ namespace MatchedBetsTracker.BusinessLogic
         public static double ComputeLayResponsability(double layQuote, double layAmount)
         {
             return (layQuote - 1) * layAmount;
+        }
+
+        public static MatchedBet MatchedBet(this SportEvent sportEvent)
+        {
+            return sportEvent.BetEvents.First().Bet.MatchedBet;
+        }
+
+        public static IEnumerable<SportEvent> SportEvents(this MatchedBet matchedBet)
+        {
+            return matchedBet.Bets.SelectMany(b => b.BetEvents).Select(be => be.SportEvent).GroupBy(se => se.Id)
+                .Select(grp => grp.First()).ToList();
         }
     }
 }

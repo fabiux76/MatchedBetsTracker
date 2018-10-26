@@ -199,6 +199,56 @@ namespace MatchedBetsTracker.BusinessLogic
             };
         }
 
+        public static MultipleMatchedBetFormViewModel ParseMultipleMatchedBet(String text)
+        {
+            var lines = text.Replace("\t", "").Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(line => line.Trim()).ToArray();
+
+            var multipleAmount = double.Parse(lines.GetValueForHeaderNextLine("IMPORTO PUNTATA"), CultureInfo.InvariantCulture);
+            var numSportEvents = int.Parse(lines.GetValueForHeaderNextLine("PARTITE"));
+            var betDescription = lines.GetValueForHeaderNextLine("NOME MULTIPLA");                        
+            var multipleQuoteTotal = double.Parse(lines.GetValueForHeaderNextLineAtOccurence("copia", numSportEvents, 2, 1));
+
+            var res = new MultipleMatchedBetFormViewModel()
+            {
+                BetDescription = betDescription,
+                MultipleAmount = multipleAmount,               
+                MultipleQuoteTotal = multipleQuoteTotal,
+                Singles = new List<SportEventDescriptionViewModel>()
+                //Questi in realtà non sono valorizzati da ninjabet
+                //MultipleBrokerAccountId = multipleBrokerAccountId,
+                //ValidateTransactions = 
+                //MultipleBetDate = multipleBetDate,
+            };
+
+            for (int i = 1; i < (numSportEvents + 1); i++)
+            {
+                var eventDescription = lines.GetValueForHeaderNextLineAtOccurence("copia", i, -6, 1);
+                var eventDescriptionResult = lines.GetValueForHeaderNextLineAtOccurence("copia", i, -5, 1);
+                var eventDateStr = lines.GetValueForHeaderNextLineAtOccurence("copia", i, -7, 1);
+                var eventDate = ParseDateFromNinjabet(eventDateStr);
+                var quoteInMultiple = double.Parse(lines.GetValueForHeaderNextLineAtOccurence("copia", i, -4, 1), CultureInfo.InvariantCulture);
+                var quoteInSingle = double.Parse(lines.GetValueForHeaderNextLineAtOccurence("copia", i, -3, 1), CultureInfo.InvariantCulture);
+                var singleAmount = double.Parse(lines.GetValueForHeaderNextLineAtOccurence("copia", i, -1, 1), CultureInfo.InvariantCulture);
+                
+                var ev = new SportEventDescriptionViewModel
+                {
+                    EventDescription = eventDescription + " : " + eventDescriptionResult,
+                    EventDate = eventDate,
+                    QuoteInMultiple = quoteInMultiple,
+                    QuoteInSingle = quoteInSingle,
+                    SingleAmount = singleAmount,
+                    //Questi valorizzati a parte
+                    //SingleBrokerAccountId = 
+                    //IsSingleLay = 
+                    //SingleBetDate = s
+                };
+
+                res.Singles.Add(ev);
+            }
+
+            return res;
+        }
+
         private static DateTime ParseDateFromNinjabet(string ninjabetDate)
         {
             return DateTime.ParseExact(ninjabetDate.Trim(), "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
@@ -249,7 +299,7 @@ namespace MatchedBetsTracker.BusinessLogic
                 {
                     var res = "";
                     for (var i = 0; i < numLines; i++)
-                        res += lines[index + skipLines + i] + " ";
+                        res += lines[index + skipLines + i] + (i < (numLines - 1) ? " " : "");
                     return res;
                 });
         } 
@@ -302,17 +352,6 @@ namespace MatchedBetsTracker.BusinessLogic
         public static bool IsLay(this Bet bet)
         {
             return bet.BetType == BetType.SingleLay;
-        }
-
-        public static bool IsWinning(this Bet bet, MatchedBetStatus status)
-        {
-            return (bet.IsLay() && status == MatchedBetStatus.LayWon) ||
-                   (!bet.IsLay() && status == MatchedBetStatus.BackWon);
-        }
-
-        public static BetEvent LastBetEvent(this Bet bet)
-        {
-            return bet.BetEvents.OrderBy(betEvent => betEvent.SportEvent.EventDate).FirstOrDefault();
         }
     }
     

@@ -30,7 +30,7 @@ namespace MatchedBetsTracker.Controllers.Api
         //GET /api/customers/1
         public TransactionDto GetTransaction(int id)
         {
-            var transaction = _context.Transactions.SingleOrDefault(t => t.Id == id);
+            var transaction = _context.Transactions.Single(t => t.Id == id);
 
             if (transaction == null) throw new HttpResponseException(HttpStatusCode.NotFound);
             return Mapper.Map<Transaction, TransactionDto>(transaction);
@@ -62,7 +62,7 @@ namespace MatchedBetsTracker.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var transactionInDb = _context.Transactions.SingleOrDefault(t => t.Id == id);
+            var transactionInDb = _context.Transactions.Single(t => t.Id == id);
 
             if (transactionInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -80,7 +80,7 @@ namespace MatchedBetsTracker.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var transactionInDb = _context.Transactions.SingleOrDefault(t => t.Id == id);
+            var transactionInDb = _context.Transactions.Single(t => t.Id == id);
 
             if (transactionInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
@@ -98,7 +98,7 @@ namespace MatchedBetsTracker.Controllers.Api
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var transactionInDb = _context.Transactions.SingleOrDefault(t => t.Id == id);
+            var transactionInDb = _context.Transactions.Single(t => t.Id == id);
 
             if (transactionInDb == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

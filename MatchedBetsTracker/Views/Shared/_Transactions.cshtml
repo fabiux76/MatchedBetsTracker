@@ -39,7 +39,7 @@
             <td>
                 @if (transaction.BetId != null)
                 {
-                    @Html.ActionLink(transaction.Bet.LastBetEvent().SportEvent.EventDescription, "Edit", "Bet", new { Id = transaction.Bet.Id }, null);
+                    @Html.ActionLink(transaction.Bet.BetDescription, "Edit", "Bet", new { Id = transaction.Bet.Id }, null);
                 }
             </td>
             @if (transaction.Validated)

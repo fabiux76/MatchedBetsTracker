@@ -22,7 +22,7 @@ namespace MatchedBetsTracker.Models
             var context = new ApplicationDbContext();
            
             var transaction = (Transaction)validationContext.ObjectInstance;
-            var brokerAccount = context.BrokerAccounts.Where(ba => ba.Id == transaction.BrokerAccountId).SingleOrDefault();
+            var brokerAccount = context.BrokerAccounts.Where(ba => ba.Id == transaction.BrokerAccountId).Single();
             return (!_transactionsAllowedToOwnerOnly.Contains(transaction.TransactionTypeId)
                     || transaction.UserAccountId == brokerAccount.OwnerId)
                 ? ValidationResult.Success

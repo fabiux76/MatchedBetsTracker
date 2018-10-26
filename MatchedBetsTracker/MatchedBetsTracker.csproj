@@ -229,6 +229,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\WindsorActivator.cs" />
     <Compile Include="BusinessLogic\EnumerableExtensions.cs" />
+    <Compile Include="BusinessLogic\MatchedBetsRepository.cs" />
     <Compile Include="BusinessLogic\PersistentStorage.cs" />
     <Compile Include="BusinessLogic\MatchedBetHandler.cs" />
     <Compile Include="BusinessLogic\MatchedBetModelController.cs" />
@@ -242,12 +243,14 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MatchedBetController.cs" />
     <Compile Include="Controllers\SportEventController.cs" />
+    <Compile Include="Controllers\TODOController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Dtos\TransactionDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Installers\ControllersInstaller.cs" />
+    <Compile Include="Installers\PersistenceInstaller.cs" />
     <Compile Include="Installers\ServicesInstaller.cs" />
     <Compile Include="Migrations\201808131033227_InitialModel.cs" />
     <Compile Include="Migrations\201808131033227_InitialModel.Designer.cs">
@@ -443,8 +446,11 @@
     <Compile Include="ViewModels\BrokerAccountFormViewModel.cs" />
     <Compile Include="ViewModels\BrokerAccountsSummaryViewModel.cs" />
     <Compile Include="ViewModels\BrokerAccountWithSummariesViewModel.cs" />
+    <Compile Include="ViewModels\MultipleMatchedBetAddSingleFormViewModel.cs" />
+    <Compile Include="ViewModels\MultipleMatchedBetFormViewModel.cs" />
     <Compile Include="ViewModels\NinjaBetOddsmatcherViewModel.cs" />
     <Compile Include="ViewModels\SimpleMatchedBetFormViewModel.cs" />
+    <Compile Include="ViewModels\TODOViewModel.cs" />
     <Compile Include="ViewModels\TransactionFormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -704,6 +710,12 @@
     <Content Include="Views\Shared\_Bets.cshtml" />
     <Content Include="Views\MatchedBet\ParseNinjaBetOddsmatcherView.cshtml" />
     <Content Include="Views\SportEvent\Index.cshtml" />
+    <Content Include="Views\MatchedBet\MultipleMatchedBetForm.cshtml" />
+    <Content Include="Views\MatchedBet\DetailsMultiple.cshtml" />
+    <Content Include="Views\MatchedBet\AddSingleToMultiple.cshtml" />
+    <Content Include="Views\TODO\Index.cshtml" />
+    <Content Include="Views\Shared\_SportEvents.cshtml" />
+    <Content Include="Views\Shared\_MatchedBets.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

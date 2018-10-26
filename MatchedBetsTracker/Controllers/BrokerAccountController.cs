@@ -9,18 +9,11 @@ namespace MatchedBetsTracker.Controllers
 {
     public class BrokerAccountController : Controller
     {
-        private readonly ISayHelloService _sayHelloService;
         private ApplicationDbContext _context;
 
-        public BrokerAccountController(ISayHelloService sayHelloService)
+        public BrokerAccountController(ApplicationDbContext context)
         {
-            _sayHelloService = sayHelloService;
-            _context = new ApplicationDbContext();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _context.Dispose();
+            _context = context;
         }
 
         // GET: BrokerAccount
@@ -40,14 +33,12 @@ namespace MatchedBetsTracker.Controllers
                 brokerAccounts.Select(MatchedBetHandler.CreateAccountWithSummeries)
                               .ToList(), userAccounts.ToList(), showInactive);
 
-            _sayHelloService.SayHello();
-
             return View(accountsWithSummary);
         }
 
         public ActionResult Details(int id)
         {
-            var brokerAccount = _context.BrokerAccounts.SingleOrDefault(account => account.Id == id);
+            var brokerAccount = _context.BrokerAccounts.Single(account => account.Id == id);
 
             if (brokerAccount == null) return HttpNotFound();
 
@@ -117,7 +108,7 @@ namespace MatchedBetsTracker.Controllers
         public ActionResult Edit(int id)
         {
 
-            var brokerAccount = _context.BrokerAccounts.SingleOrDefault(b => b.Id == id);
+            var brokerAccount = _context.BrokerAccounts.Single(b => b.Id == id);
 
             if (brokerAccount == null)
                 return HttpNotFound();
