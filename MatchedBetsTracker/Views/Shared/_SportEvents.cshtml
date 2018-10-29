@@ -1,9 +1,11 @@
+@using MatchedBetsTracker.BusinessLogic
 @model IEnumerable<MatchedBetsTracker.Models.SportEvent>
 
 <table id="sportEvents" class="table table-bordered table-hover">
     <thead>
     <tr>
         <th>ID</th>
+        <th>Matched Bet ID</th>
         <th>Date</th>
         <th>Description</th>
         <th>Bets</th>
@@ -16,15 +18,20 @@
     {
         <tr>
             <td>@sportEvent.Id</td>
+            <td>
+                @Html.ActionLink(sportEvent.MatchedBet().Id.ToString() + " - " + sportEvent.MatchedBet().EventDescription, "Details", "MatchedBet", new { Id = sportEvent.MatchedBet().Id }, null)
+            </td>
             <td>@sportEvent.EventDate.ToString("s")</td>
-            <td>@sportEvent.EventDescription</td>
+            <td>
+                <a href="https://www.google.it/search?q=@sportEvent.SearchQuery()" target="_blank">@sportEvent.EventDescription</a>
+            </td>
             
             <td>
                 <table>
                     <thead>
-                    <th>Broker</th>
-                    <th>Type</th>
-                    <th>Amunt</th>
+                    <tr>Broker</tr>
+                    <tr>Type</tr>
+                    <tr>Amunt</tr>
                     </thead>  
                     <tbody>
                     @foreach (var betEvent in sportEvent.BetEvents)

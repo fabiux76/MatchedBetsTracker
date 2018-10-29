@@ -234,6 +234,7 @@
     <Compile Include="BusinessLogic\MatchedBetHandler.cs" />
     <Compile Include="BusinessLogic\MatchedBetModelController.cs" />
     <Compile Include="BusinessLogic\SayHelloService.cs" />
+    <Compile Include="BusinessLogic\ViewHelpers.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BetsController.cs" />
     <Compile Include="Controllers\Api\TransactionsController.cs" />

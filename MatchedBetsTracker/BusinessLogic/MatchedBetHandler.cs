@@ -206,7 +206,7 @@ namespace MatchedBetsTracker.BusinessLogic
             var multipleAmount = double.Parse(lines.GetValueForHeaderNextLine("IMPORTO PUNTATA"), CultureInfo.InvariantCulture);
             var numSportEvents = int.Parse(lines.GetValueForHeaderNextLine("PARTITE"));
             var betDescription = lines.GetValueForHeaderNextLine("NOME MULTIPLA");                        
-            var multipleQuoteTotal = double.Parse(lines.GetValueForHeaderNextLineAtOccurence("copia", numSportEvents, 2, 1));
+            var multipleQuoteTotal = double.Parse(lines.GetValueForHeaderNextLineAtOccurence("copia", numSportEvents, 2, 1), CultureInfo.InvariantCulture);
 
             var res = new MultipleMatchedBetFormViewModel()
             {

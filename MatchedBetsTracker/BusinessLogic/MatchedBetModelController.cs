@@ -527,15 +527,12 @@ namespace MatchedBetsTracker.BusinessLogic
             return (layQuote - 1) * layAmount;
         }
 
-        public static MatchedBet MatchedBet(this SportEvent sportEvent)
-        {
-            return sportEvent.BetEvents.First().Bet.MatchedBet;
-        }
-
         public static IEnumerable<SportEvent> SportEvents(this MatchedBet matchedBet)
         {
             return matchedBet.Bets.SelectMany(b => b.BetEvents).Select(be => be.SportEvent).GroupBy(se => se.Id)
                 .Select(grp => grp.First()).ToList();
         }
+
+        
     }
 }

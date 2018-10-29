@@ -49,6 +49,7 @@ namespace MatchedBetsTracker.Controllers
                         .Include(se => se.BetEvents)
                         .Include(se => se.BetEvents.Select(be => be.Bet))
                         .Include(se => se.BetEvents.Select(be => be.Bet.BrokerAccount))
+                        .Include(se => se.BetEvents.Select(be => be.Bet.BrokerAccount))
                         .OrderByDescending(se => se.EventDate)
                         .ToList(),
                 ShowClosed = showClosed

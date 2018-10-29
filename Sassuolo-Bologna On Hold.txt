@@ -1,0 +1,42 @@
+Calcolatore - Sassuolo v Bologna
+	Data/Ora	
+2018-10-28 12:30:00
+copia
+	Partita	
+Sassuolo v Bologna
+copia
+Rating (%)	85.59	
+Competizione	Italian Serie A	
+Nazione	Italia	
+Punta	Banca
+Bologna
+4.55
+Bologna
+5.10
+€78.67 liquidità
+	
+NORMALE
+RISK FREE (RF)
+BONUS (BR)
+Planetwin365 - IMPORTO PUNTATA	€
+100
+Planetwin365 - QUOTA	
+4.55
+Betfair - QUOTA	
+4.9
+Betfair- COMMISSIONE	
+0.05
+%
+VAI SU Planetwin365
+PUNTA €100 A QUOTA 4.55
+VAI SU Betfair
+BANCA copia€
+93.81
+  A QUOTA 4.9
+LA RESPONSABILITA' SARA' €365.86
+GUADAGNERAI -€10.88
+[ RATING 89.1% ]
+Bancata non abbinata?
+BOOKMAKER	BETFAIR	TOTALE
+SE SCOMMESSA PUNTATA VINCE	+€355	-€365.86	-€10.86
+SE SCOMMESSA BANCATA VINCE	-€100	+€89.12	-€10.88
