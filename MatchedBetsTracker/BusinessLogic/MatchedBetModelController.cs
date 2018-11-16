@@ -286,9 +286,9 @@ namespace MatchedBetsTracker.BusinessLogic
             var betEventToRemove = sportEvent.BetEvents.Single(be => be.Bet.BetType != BetType.MultipleBack);
             var betToRemove = betEventToRemove.Bet;
 
-            context.BetEvents.Remove(betEventToRemove);
-            context.Bets.Remove(betToRemove);
             context.Transactions.RemoveRange(betToRemove.Transactions);
+            context.Bets.Remove(betToRemove);
+            context.BetEvents.Remove(betEventToRemove);
 
             context.SaveChanges();
             return matchedBet;
